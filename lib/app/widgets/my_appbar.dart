@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:supplier_snap/app/constants/colors.dart';
+import 'package:supplier_snap/app/constants/k_icons.dart';
+import 'package:supplier_snap/app/widgets/custom_image.dart';
 import 'package:supplier_snap/app/widgets/custom_text/custom_text.dart';
+import 'package:supplier_snap/app/widgets/custom_text_field.dart';
+import 'package:supplier_snap/app/widgets/glowing_border_button.dart';
 import 'package:supplier_snap/app/widgets/my_back_button.dart';
+import 'package:supplier_snap/app/widgets/my_container.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final dynamic title;
@@ -15,6 +20,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double? titleSpacing;
   final PreferredSizeWidget? bottom; // Added bottom property
   final Widget? leading;
+  final String? addBtnTitle;
+  final Function()? onAddBtnPressed;
+  final Function(String? val)? onSearchChanged;
 
   const MyAppBar({
     super.key,
@@ -27,7 +35,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.height = 70,
     this.titleSpacing,
     this.bottom,
-    this.leading, // Initialize bottom
+    this.leading,
+    this.addBtnTitle,
+    this.onAddBtnPressed,
+    this.onSearchChanged,
   });
 
   @override
@@ -61,14 +72,62 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       titleSpacing: 8.w,
-      actions: actions,
-      bottom: bottom, // Added bottom to AppBar
+      actions: [
+        ...?actions,
+        if (addBtnTitle != null && onAddBtnPressed != null)
+          HighlightedEdgeButton(
+            onTap: onAddBtnPressed,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
+              child: Row(
+                children: [
+                  Icon(Icons.add, color: Colors.black, size: 20.sp),
+                  5.horizontalSpace,
+                  CustomText.label14b400(addBtnTitle!),
+                ],
+              ),
+            ),
+          ),
+        20.horizontalSpace,
+      ],
+      bottom: _buildBottom(), // Added bottom to AppBar
     );
   }
 
   @override
   Size get preferredSize => Size.fromHeight(
     (height ?? kToolbarHeight + 10) +
-        (bottom?.preferredSize.height ?? 0), // Adjust height for bottom
+        (bottom?.preferredSize.height ??
+            _buildBottom()?.preferredSize.height ??
+            0),
   );
+
+  PreferredSizeWidget? _buildBottom() {
+    return bottom ??
+        (onSearchChanged == null
+            ? null
+            : PreferredSize(
+                preferredSize: Size.fromHeight(75.h),
+                child: _buildSearchBar(),
+              ));
+  }
+
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: EdgeInsetsGeometry.symmetric(horizontal: 20.w, vertical: 10.h),
+      child: CustomTextField(
+        borderRadius: 50.r,
+        hinText: 'Search',
+        suffixWidget: MyContainer(
+          height: 40.h,
+          width: 52.w,
+          margin: EdgeInsets.only(right: 8.w),
+          radius: 50.r,
+          color: KColors.white,
+          alignment: Alignment.center,
+          child: CustomImage(KIcons.search, width: 20.h, height: 20.h),
+        ),
+      ),
+    );
+  }
 }

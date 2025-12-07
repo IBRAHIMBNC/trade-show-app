@@ -19,6 +19,7 @@ class KColors {
   static const Color white60 = Color(0x99FFFFFF);
   static const Color white40 = Color(0x66FFFFFF);
   static const Color white30 = Color(0x4DFFFFFF);
+  static const Color white20 = Color(0x33FFFFFF);
   static const Color white10 = Color(0x1AFFFFFF);
   static const Color white5 = Color(0x0DFFFFFF);
 
@@ -32,15 +33,6 @@ class KColors {
   static const Color errorColor = Color(0xffE13434);
   static const Color cardColor = textField;
   static const Color mulledWine = Color(0xff624C79);
-
-  static const Color _gradientColor1 = Color(0xffEF8220);
-  static const Color _gradientColor2 = Color(0xffEF6820);
-
-  static const LinearGradient appBarGradient = LinearGradient(
-    colors: [_gradientColor2, _gradientColor1],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  );
 
   static const Color blue = Color(0xff278AE5);
   static const Color darkBlue = Color(0xff1F27EF);

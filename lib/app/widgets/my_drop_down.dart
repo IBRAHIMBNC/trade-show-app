@@ -23,6 +23,7 @@ class MyDropDownButton extends StatefulWidget {
     this.width,
     this.radius,
     this.fontSize,
+    this.validator,
   });
 
   /// The list of items to display in the drop-down menu.
@@ -54,6 +55,8 @@ class MyDropDownButton extends StatefulWidget {
 
   /// The font size of the drop-down button items.
   final int? fontSize;
+
+  final String? Function(String? val)? validator;
 
   @override
   State<MyDropDownButton> createState() => _MyDropDownButtonState();
@@ -87,6 +90,7 @@ class _MyDropDownButtonState extends State<MyDropDownButton> {
       ),
 
       child: DropdownButtonFormField<String>(
+        validator: widget.validator,
         menuMaxHeight: 0.5.sh,
         borderRadius: BorderRadius.circular(widget.radius ?? 15.r),
         dropdownColor: KColors.primaryBg,

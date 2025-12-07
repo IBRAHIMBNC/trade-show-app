@@ -28,4 +28,32 @@ class AuthValidators {
     }
     return null;
   }
+
+  static String? validatePrice(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Price cannot be empty';
+    }
+    final price = double.tryParse(value);
+    if (price == null) {
+      return 'Please enter a valid price';
+    }
+    if (price <= 0) {
+      return 'Price must be greater than 0';
+    }
+    return null;
+  }
+
+  static String? validateMOQ(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'MOQ cannot be empty';
+    }
+    final moq = int.tryParse(value);
+    if (moq == null) {
+      return 'Please enter a valid quantity';
+    }
+    if (moq <= 0) {
+      return 'MOQ must be greater than 0';
+    }
+    return null;
+  }
 }

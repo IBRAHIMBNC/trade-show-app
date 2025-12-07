@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supplier_snap/app/modules/home/home_view.dart';
+import 'package:supplier_snap/app/modules/profile/profile_detils/profile_detils_view.dart';
 
 class NavigationController extends GetxController {
   final currentIndex = 0.obs;
@@ -8,7 +9,7 @@ class NavigationController extends GetxController {
   final List<Widget> pages = [
     HomeView(),
     Container(color: Colors.green),
-    Container(color: Colors.blue),
+    ProfileDetilsView(),
   ];
 
   onTabChanged(int index) {

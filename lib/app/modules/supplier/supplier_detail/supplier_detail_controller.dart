@@ -17,11 +17,11 @@ class SupplierDetailController extends GetxController
   }
 
   gotoFiles() {
-    // Get.toNamed(Routes.PRODUCT_LISTING);
+    Get.toNamed(Routes.FILES_LISTING);
   }
 
   gotoNotes() {
-    Get.toNamed(Routes.PRODUCT_LISTING);
+    Get.toNamed(Routes.NOTES_LISTING);
   }
 
   goToAddProduct() {

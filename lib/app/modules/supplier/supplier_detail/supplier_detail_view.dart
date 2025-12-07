@@ -64,8 +64,16 @@ class SupplierDetailView extends GetView<SupplierDetailController> {
                 onTap: controller.gotoProductListing,
                 onAddTap: controller.goToAddProduct,
               ),
-              _buildAddTile(title: 'Files', leadingText: '6', onTap: () {}),
-              _buildAddTile(title: 'Notes', leadingText: '6', onTap: () {}),
+              _buildAddTile(
+                title: 'Files',
+                leadingText: '6',
+                onTap: controller.gotoFiles,
+              ),
+              _buildAddTile(
+                title: 'Notes',
+                leadingText: '6',
+                onTap: controller.gotoNotes,
+              ),
             ],
           ),
         ),

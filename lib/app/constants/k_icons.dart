@@ -16,4 +16,9 @@ class KIcons {
   static const String edit = '${basePath}edit.svg';
   static const String camera = '${basePath}camera.svg';
   static const String edit2 = '${basePath}pen.svg';
+  static const String upload = '${basePath}upload.svg';
+
+  static const String delete = '${basePath}delete.svg';
+  static const String lock = '${basePath}lock.svg';
+  static const String logout = '${basePath}logout.svg';
 }
