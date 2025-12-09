@@ -26,4 +26,8 @@ class SharedPrefrencesService {
     }
     return null;
   }
+
+  Future<void> clearUserData() async {
+    await _preferences.remove(userKey);
+  }
 }

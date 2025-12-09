@@ -10,9 +10,7 @@ class ConnectivityService extends GetxService {
 
   Stream<bool> get connectivityStream =>
       connectivity.onConnectivityChanged.map((result) {
-        final online =
-            result.contains(ConnectivityResult.wifi) ||
-            result.contains(ConnectivityResult.mobile);
+        final online = !result.contains(ConnectivityResult.none);
         isOnline.value = online;
         return online;
       });

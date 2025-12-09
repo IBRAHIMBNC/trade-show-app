@@ -128,7 +128,7 @@ class CustomImage extends StatelessWidget {
         children: [
           _buildImage(), // Image is the base layer
           if (child != null && !hideChild)
-            child!, // Display child on top if provided
+            Align(child: child!), // Display child on top if provided
         ],
       ),
     );
@@ -185,9 +185,14 @@ class CustomImage extends StatelessWidget {
     else if (_isNetworkImage(imagePath)) {
       return CachedNetworkImage(
         imageUrl: imagePath,
-        width: width, // Pass width
-        height: height, // Pass height
+        width: width,
+        height: height,
         fit: fit,
+        cacheKey: imagePath,
+        maxHeightDiskCache: 1000,
+        maxWidthDiskCache: 1000,
+        memCacheHeight: height.toInt(),
+        memCacheWidth: width.toInt(),
         placeholder: (context, url) => _buildShimmer(),
         errorWidget: (context, url, error) => _buildErrorWidget(),
         color: color,

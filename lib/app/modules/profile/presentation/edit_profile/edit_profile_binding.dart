@@ -5,6 +5,8 @@ import 'edit_profile_controller.dart';
 class EditProfileBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<EditProfileController>(() => EditProfileController());
+    Get.lazyPut<EditProfileController>(
+      () => EditProfileController(profileRepository: Get.find()),
+    );
   }
 }

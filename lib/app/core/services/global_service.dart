@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supplier_snap/app/core/models/app_user.dart';
 
 class GlobalService extends GetxService {
   final SupabaseClient supabaseClient;
@@ -10,4 +11,14 @@ class GlobalService extends GetxService {
   }
 
   bool get isUserLoggedIn => supabaseClient.auth.currentUser != null;
+
+  Rxn<AppUser> currentUser = Rxn<AppUser>();
+
+  setUser(AppUser user) {
+    currentUser.value = user;
+  }
+
+  clearUser() {
+    currentUser.value = null;
+  }
 }

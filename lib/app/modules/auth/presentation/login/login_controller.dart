@@ -21,7 +21,7 @@ class LoginController extends GetxController {
       final result = await authRepository.signIn(email, password);
       result.fold(
         (failure) {
-          showErrorSnackbar(failure.message);
+          showErrorSnackbar(message: failure.message);
           isLoading.value = false;
         },
         (userEmail) {

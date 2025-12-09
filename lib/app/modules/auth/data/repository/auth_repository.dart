@@ -28,15 +28,15 @@ class AuthRepository extends BaseRepository {
       }
       final response = await remoteSource.signUp(email, password, metaData);
       final appUser = AppUser.fromAuthResponse(response);
-
+      localSource.cacheUser(appUser);
       if (response.user == null) {
         return Left(NoUserFound("No user found after sign up"));
       }
       return Right(appUser);
+    } on AuthApiException catch (e) {
+      return _handleAuthException(e);
     } catch (e) {
-      final error = e as AuthApiException;
-      final message = ErrorHelper.getErrorMessage(error.code);
-      return Left(ServerFailure(message.toString()));
+      return Left(ServerFailure(e.toString()));
     }
   }
 
@@ -46,17 +46,23 @@ class AuthRepository extends BaseRepository {
         return Left(NetworkFailure(message: "No internet connection"));
       }
       final response = await remoteSource.signIn(email, password);
-      final appUser = AppUser.fromAuthResponse(response);
-
+      AppUser appUser = await remoteSource.getUserProfile(response.user!.id);
+      localSource.cacheUser(appUser);
       if (response.user == null) {
         return Left(NoUserFound("No user found after sign in"));
       }
       return Right(appUser);
+    } on AuthApiException catch (e) {
+      return _handleAuthException(e);
     } catch (e) {
-      final error = e as AuthApiException;
-      final message = ErrorHelper.getErrorMessage(error.code);
-      return Left(ServerFailure(message.toString()));
+      return Left(ServerFailure(e.toString()));
     }
+  }
+
+  /// Helper method to handle AuthApiException errors
+  Either<Failure, AppUser> _handleAuthException(AuthApiException error) {
+    final message = ErrorHelper.getErrorMessage(error.code);
+    return Left(ServerFailure(message.toString()));
   }
 
   Future<AppUser?> getUserProfile() async {

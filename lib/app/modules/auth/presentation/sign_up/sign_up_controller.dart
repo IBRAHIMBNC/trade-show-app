@@ -26,7 +26,7 @@ class SignUpController extends GetxController {
       result.fold(
         (failure) {
           isLoading.value = false;
-          showErrorSnackbar(failure.message);
+          showErrorSnackbar(message: failure.message);
         },
         (appUser) {
           isLoading.value = false;

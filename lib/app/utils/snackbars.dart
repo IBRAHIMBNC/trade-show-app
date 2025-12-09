@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:supplier_snap/app/constants/colors.dart';
 
-showErrorSnackbar(String message) {
+showErrorSnackbar({String title = 'Success', required String message}) {
   Get.snackbar(
-    'Error',
+    title,
     message,
     backgroundColor: KColors.errorBg,
     colorText: KColors.errorFont,
@@ -11,9 +11,9 @@ showErrorSnackbar(String message) {
   );
 }
 
-void showSuccessSnackbar(String message) {
+void showSuccessSnackbar({String title = 'Success', required String message}) {
   Get.snackbar(
-    'Success',
+    title,
     message,
     backgroundColor: KColors.successBg,
     colorText: KColors.successFont,
