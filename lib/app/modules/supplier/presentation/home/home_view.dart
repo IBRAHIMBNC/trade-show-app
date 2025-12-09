@@ -6,7 +6,7 @@ import 'package:supplier_snap/app/constants/k_icons.dart';
 import 'package:supplier_snap/app/constants/k_images.dart';
 import 'package:supplier_snap/app/constants/padding_constants.dart';
 import 'package:supplier_snap/app/core/extensions/double.dart';
-import 'package:supplier_snap/app/modules/home/widgets/supplier_details_card.dart';
+import 'package:supplier_snap/app/modules/supplier/presentation/home/widgets/supplier_details_card.dart';
 import 'package:supplier_snap/app/routes/app_pages.dart';
 import 'package:supplier_snap/app/widgets/custom_image.dart';
 import 'package:supplier_snap/app/widgets/custom_text/custom_text.dart';
@@ -35,19 +35,52 @@ class HomeView extends GetView<HomeController> {
               _buildSearchBar(),
               10.verticalSpace,
               Expanded(
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    20.verticalSpace,
-                    _buildAddSupplierCard(),
-                    24.verticalSpace,
-                    SupplierDetailsCard(),
-                    12.verticalSpace,
-                    SupplierDetailsCard(),
-                    50.verticalSpace,
+                child: CustomScrollView(
+                  slivers: [
+                    12.verticalSpaceSliver,
+                    SliverToBoxAdapter(child: _buildAddSupplierCard()),
+                    16.verticalSpaceSliver,
+                    Obx(
+                      () => SliverList.separated(
+                        itemCount: controller.suppliers.length,
+                        itemBuilder: (context, index) {
+                          return SupplierDetailsCard(
+                            supplier: controller.suppliers[index],
+                            onDeleteTap: () {
+                              controller.onDeleteSupplierTap(
+                                controller.suppliers[index].id!,
+                              );
+                            },
+                            onEditTap: () {
+                              controller.onEditSupplierTap(
+                                controller.suppliers[index],
+                              );
+                            },
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return 16.verticalSpace;
+                        },
+                      ),
+                    ),
+                    45.verticalSpaceSliver,
                   ],
                 ),
               ),
+              // Expanded(
+              //   child: ListView.separated(
+              //     padding: EdgeInsets.zero,
+              //     children: [
+              //       20.verticalSpace,
+              //       _buildAddSupplierCard(),
+              //       24.verticalSpace,
+              //       SupplierDetailsCard(),
+              //       12.verticalSpace,
+              //       SupplierDetailsCard(),
+              //       50.verticalSpace,
+              //     ],
+              //   ),
+              // ),
               // Text('HomeView is working', style: TextStyle(fontSize: 20)),
               // 20.verticalSpace,
               // RoundedButton(
@@ -163,4 +196,9 @@ class HomeView extends GetView<HomeController> {
       ),
     );
   }
+}
+
+extension on int {
+  get verticalSpaceSliver =>
+      SliverToBoxAdapter(child: SizedBox(height: toDouble().h));
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:supplier_snap/app/core/models/app_user.dart';
 import 'package:supplier_snap/app/core/services/file_picker_service.dart';
 import 'package:supplier_snap/app/core/services/global_service.dart';
 import 'package:supplier_snap/app/modules/profile/data/repository/profile_repository.dart';
@@ -66,10 +67,13 @@ class EditProfileController extends GetxController {
 
   Future<String?> uploadProfileImage() async {
     if (selectedImage.value == null) return null;
-    final userId = globalService.currentUser.value!.id;
+    final newFileName = 'profile_${DateTime.now().millisecond}.jpg';
+    final oldFileName = globalService.currentUser.value?.imagePath;
+
     final result = await profileRepository.uploadProfileImage(
       selectedImage.value!,
-      userId,
+      newFileName,
+      oldFileName,
     );
 
     String? imageUrl;

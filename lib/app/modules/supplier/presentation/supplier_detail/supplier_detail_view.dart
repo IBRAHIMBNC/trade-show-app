@@ -22,60 +22,72 @@ class SupplierDetailView extends GetView<SupplierDetailController> {
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.paddingOf(context).top;
-    return Scaffold(
-      body: Padding(
+    return Scaffold(body: Obx(() => _buildBody(topPadding)));
+  }
+
+  Padding _buildBody(double topPadding) {
+    if (controller.isLoading.value) {
+      return Padding(
         padding: EdgeInsets.only(
           right: kPadding20.w,
           left: kPadding20.w,
           top: topPadding.h,
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            spacing: 12.h,
-            children: [
-              _buildProfileCard(),
-              WeChatAndWhatsappBtns(bgColor: KColors.primaryBg),
-              MyContainer(
-                width: double.infinity,
-                padding: kPadding8.all,
-                child: Obx(
-                  () => Column(
-                    children: [
-                      CustomTabbar(
-                        onTabChanged: (index) {
-                          controller.tabIndex.value = index;
-                        },
-                        tabController: controller.tabController,
-                        tabs: [
-                          Tab(text: 'Scoring'),
-                          Tab(text: 'Info'),
-                          Tab(text: 'Remarks'),
-                        ],
-                      ),
-                      12.verticalSpace,
-                      controller.tabViews[controller.tabIndex.value],
-                    ],
-                  ),
+        child: Center(child: CircularProgressIndicator(color: KColors.brand)),
+      );
+    }
+    return Padding(
+      padding: EdgeInsets.only(
+        right: kPadding20.w,
+        left: kPadding20.w,
+        top: topPadding.h,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          spacing: 12.h,
+          children: [
+            _buildProfileCard(),
+            WeChatAndWhatsappBtns(bgColor: KColors.primaryBg),
+            MyContainer(
+              width: double.infinity,
+              padding: kPadding8.all,
+              child: Obx(
+                () => Column(
+                  children: [
+                    CustomTabbar(
+                      onTabChanged: (index) {
+                        controller.tabIndex.value = index;
+                      },
+                      tabController: controller.tabController,
+                      tabs: [
+                        Tab(text: 'Scoring'),
+                        Tab(text: 'Info'),
+                        Tab(text: 'Remarks'),
+                      ],
+                    ),
+                    12.verticalSpace,
+                    controller.tabViews[controller.tabIndex.value],
+                  ],
                 ),
               ),
-              _buildAddTile(
-                title: 'Products',
-                leadingText: '6',
-                onTap: controller.gotoProductListing,
-                onAddTap: controller.goToAddProduct,
-              ),
-              _buildAddTile(
-                title: 'Files',
-                leadingText: '6',
-                onTap: controller.gotoFiles,
-              ),
-              _buildAddTile(
-                title: 'Notes',
-                leadingText: '6',
-                onTap: controller.gotoNotes,
-              ),
-            ],
-          ),
+            ),
+            _buildAddTile(
+              title: 'Products',
+              leadingText: '6',
+              onTap: controller.gotoProductListing,
+              onAddTap: controller.goToAddProduct,
+            ),
+            _buildAddTile(
+              title: 'Files',
+              leadingText: '6',
+              onTap: controller.gotoFiles,
+            ),
+            _buildAddTile(
+              title: 'Notes',
+              leadingText: '6',
+              onTap: controller.gotoNotes,
+            ),
+          ],
         ),
       ),
     );
@@ -129,20 +141,37 @@ class SupplierDetailView extends GetView<SupplierDetailController> {
           MyBackButton(height: 50.h, width: 30.w),
           8.horizontalSpace,
           CircleAvatar(
-            radius: 30.r,
+            radius: 28.r,
             backgroundColor: KColors.brand,
-            child: CircleAvatar(radius: 28.r, backgroundColor: KColors.white),
+            child: CustomImage.cirlce(
+              controller.supplier.imageLocalPath ?? '',
+              size: 53.w,
+              hideChild: controller.supplier.imageLocalPath != null,
+              backgroundColor: KColors.white,
+              child: CustomImage.icon(
+                KIcons.user,
+                size: 22.sp,
+                color: KColors.black,
+              ),
+            ),
           ),
         ],
       ),
       horizontalSpacing: 8.w,
-      title: CustomText.label18b600('Bernard'),
-      verticalSpacing: 4.h,
+      title: Padding(
+        padding: kPadding8.right,
+        child: CustomText.label16b600(
+          controller.supplier.name,
+          maxLines: 2,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      verticalSpacing: 2.h,
       subtitle: Row(
         children: [
           Expanded(
             child: CustomText.label12b400(
-              'imibrahimnisar@gmail.com',
+              controller.supplier.company,
               maxLines: 1,
               color: KColors.black60,
             ),

@@ -5,12 +5,12 @@ import 'package:supplier_snap/app/constants/colors.dart';
 import 'package:supplier_snap/app/constants/k_icons.dart';
 import 'package:supplier_snap/app/constants/padding_constants.dart';
 import 'package:supplier_snap/app/core/extensions/double.dart';
-import 'package:supplier_snap/app/modules/supplier/add_supplier/widgets/add_supplier_info_section.dart';
 import 'package:supplier_snap/app/widgets/custom_image.dart';
 import 'package:supplier_snap/app/widgets/custom_text_field.dart';
 import 'package:supplier_snap/app/widgets/my_appbar.dart';
 import 'package:supplier_snap/app/widgets/my_container.dart';
 import 'package:supplier_snap/app/widgets/rounded_button/my_rounded_button.dart';
+import 'package:supplier_snap/app/widgets/user_profile_avatar.dart';
 
 import 'edit_profile_controller.dart';
 

@@ -15,6 +15,7 @@ class SupbaseStorageService extends GetxService {
   Future<String?> uploadFile({
     required File file,
     required String fileName,
+    String? oldFileName,
   }) async {
     try {
       await deleteFile(fileName);
@@ -22,7 +23,7 @@ class SupbaseStorageService extends GetxService {
           .from('avatars')
           .upload(fileName, file);
 
-      return _publicUrl + path;
+      return path;
     } catch (e) {
       debugPrint('Error uploading file: $e');
       return null;

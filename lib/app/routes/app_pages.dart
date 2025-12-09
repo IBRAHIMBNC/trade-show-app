@@ -8,8 +8,6 @@ import '../modules/auth/presentation/sign_up/sign_up_binding.dart';
 import '../modules/auth/presentation/sign_up/sign_up_view.dart';
 import '../modules/files_listing/files_listing_binding.dart';
 import '../modules/files_listing/files_listing_view.dart';
-import '../modules/home/home_binding.dart';
-import '../modules/home/home_view.dart';
 import '../modules/navigation/navigation_binding.dart';
 import '../modules/navigation/navigation_view.dart';
 import '../modules/notes/note_details/note_details_binding.dart';
@@ -34,10 +32,12 @@ import '../modules/profile/presentation/profile_detils/profile_detils_binding.da
 import '../modules/profile/presentation/profile_detils/profile_detils_view.dart';
 import '../modules/splash_screen/splash_screen_binding.dart';
 import '../modules/splash_screen/splash_screen_view.dart';
-import '../modules/supplier/add_supplier/add_supplier_binding.dart';
-import '../modules/supplier/add_supplier/add_supplier_view.dart';
-import '../modules/supplier/supplier_detail/supplier_detail_binding.dart';
-import '../modules/supplier/supplier_detail/supplier_detail_view.dart';
+import '../modules/supplier/presentation/add_supplier/add_supplier_binding.dart';
+import '../modules/supplier/presentation/add_supplier/add_supplier_view.dart';
+import '../modules/supplier/presentation/home/home_binding.dart';
+import '../modules/supplier/presentation/home/home_view.dart';
+import '../modules/supplier/presentation/supplier_detail/supplier_detail_binding.dart';
+import '../modules/supplier/presentation/supplier_detail/supplier_detail_view.dart';
 
 part 'app_routes.dart';
 

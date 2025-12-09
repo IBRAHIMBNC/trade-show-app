@@ -2,20 +2,21 @@
 import 'dart:convert';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supplier_snap/app/utils/my_utils.dart';
 
 class AppUser {
-  String id;
-  String name;
-  String email;
-  String _createdAt;
-  String? imageUrl;
+  final String id;
+  final String name;
+  final String email;
+  final String _createdAt;
+  final String? imagePath;
 
-  AppUser({
+  const AppUser({
     required this.id,
     required this.name,
     required this.email,
     required String createdAt,
-    this.imageUrl,
+    this.imagePath,
   }) : _createdAt = createdAt;
 
   static AppUser fromAuthResponse(AuthResponse response) {
@@ -33,7 +34,7 @@ class AppUser {
       'full_name': name,
       'email': email,
       'created_at': _createdAt,
-      'image_url': imageUrl,
+      'image_path': imagePath,
     };
   }
 
@@ -43,7 +44,7 @@ class AppUser {
       name: map['full_name'] as String,
       email: map['email'] as String,
       createdAt: map['created_at'] as String,
-      imageUrl: map['image_url'] as String?,
+      imagePath: map['image_path'] as String?,
     );
   }
 
@@ -64,7 +65,7 @@ class AppUser {
       name: name ?? this.name,
       email: email ?? this.email,
       createdAt: createdAt ?? _createdAt,
-      imageUrl: imageUrl ?? this.imageUrl,
+      imagePath: imageUrl ?? imagePath,
     );
   }
 
@@ -76,4 +77,7 @@ class AppUser {
 
 extension AppUserExtension on AppUser {
   DateTime get createdDateTime => DateTime.parse(_createdAt);
+
+  String? get imageUrl =>
+      imagePath == null ? null : MyUtils.getPublicUrl(imagePath!);
 }

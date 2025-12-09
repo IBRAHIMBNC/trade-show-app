@@ -15,12 +15,12 @@ class AlertSheet extends StatelessWidget {
     super.key,
     this.message,
     required this.title,
-    this.imagePath,
+    this.iconPath,
   });
 
   final String? message;
   final String title;
-  final String? imagePath;
+  final String? iconPath;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class AlertSheet extends StatelessWidget {
           CircleAvatar(
             radius: 44.r,
             backgroundColor: KColors.primaryBg,
-            child: CustomImage.icon(imagePath ?? KIcons.alert, size: 44.sp),
+            child: CustomImage.icon(iconPath ?? KIcons.alert, size: 44.sp),
           ),
           16.verticalSpace,
           CustomText.label24b800(title, fontWeight: FontWeight.w600),

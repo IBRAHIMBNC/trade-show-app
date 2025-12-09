@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:supplier_snap/app/modules/supplier/presentation/add_supplier/add_supplier_controller.dart';
 import 'package:supplier_snap/app/widgets/custom_text/custom_text.dart';
 import 'package:supplier_snap/app/widgets/custom_text_field.dart';
 import 'package:supplier_snap/app/widgets/my_container.dart';
 
-class ScoringSection extends StatelessWidget {
+class ScoringSection extends GetView<AddSupplierController> {
   const ScoringSection({super.key});
 
   @override
@@ -19,7 +21,15 @@ class ScoringSection extends StatelessWidget {
           32.verticalSpace,
           CustomText.label24b800('Remarks', fontWeight: FontWeight.w600),
           16.verticalSpace,
-          CustomTextField(hinText: 'Write your remarks here...', lines: 6),
+          Form(
+            key: controller.scoringFormKey,
+            child: CustomTextField(
+              controller: controller.remarksController,
+              onSave: (val) => controller.remarks = val?.trim(),
+              hinText: 'Write your remarks here...',
+              lines: 6,
+            ),
+          ),
         ],
       ),
     );

@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:supplier_snap/app/constants/colors.dart';
-import 'package:supplier_snap/app/constants/k_icons.dart';
-import 'package:supplier_snap/app/modules/supplier/add_supplier/add_supplier_controller.dart';
+import 'package:supplier_snap/app/modules/supplier/presentation/add_supplier/add_supplier_controller.dart';
 import 'package:supplier_snap/app/utils/auth_validators.dart';
-import 'package:supplier_snap/app/widgets/custom_image.dart';
 import 'package:supplier_snap/app/widgets/custom_text/custom_text.dart';
 import 'package:supplier_snap/app/widgets/custom_text_field.dart';
-import 'package:supplier_snap/app/widgets/my_container.dart';
 import 'package:supplier_snap/app/widgets/my_drop_down.dart';
+import 'package:supplier_snap/app/widgets/user_profile_avatar.dart';
 
 class AddSupplierInfoSection extends GetView<AddSupplierController> {
   const AddSupplierInfoSection({super.key});
@@ -27,10 +24,17 @@ class AddSupplierInfoSection extends GetView<AddSupplierController> {
               fontWeight: FontWeight.w600,
             ),
             32.verticalSpace,
-            UserProfileAvatar(),
+            Obx(
+              () => UserProfileAvatar(
+                onTap: controller.pickImage,
+                imageUrl: controller.imageUrl,
+                imageFile: controller.selectedImage.value?.path,
+              ),
+            ),
             32.verticalSpace,
             CustomTextField(
               controller: controller.fullNameController,
+              onSave: (val) => controller.fullName = val!.trim(),
               hinText: 'Full Name',
               textInputAction: TextInputAction.next,
               validator: (val) =>
@@ -39,6 +43,7 @@ class AddSupplierInfoSection extends GetView<AddSupplierController> {
             16.verticalSpace,
             CustomTextField(
               controller: controller.companyController,
+              onSave: (val) => controller.company = val!.trim(),
               hinText: 'Company',
               textInputAction: TextInputAction.next,
               validator: (val) => AuthValidators.requiredField(val, 'Company'),
@@ -46,6 +51,7 @@ class AddSupplierInfoSection extends GetView<AddSupplierController> {
             16.verticalSpace,
             CustomTextField(
               controller: controller.boothController,
+              onSave: (val) => controller.booth = val!.trim(),
               hinText: 'Booth',
               textInputAction: TextInputAction.next,
               validator: (val) => AuthValidators.requiredField(val, 'Booth'),
@@ -53,6 +59,7 @@ class AddSupplierInfoSection extends GetView<AddSupplierController> {
             16.verticalSpace,
             CustomTextField(
               controller: controller.locationController,
+              onSave: (val) => controller.location = val!.trim(),
               hinText: 'Location',
               textInputAction: TextInputAction.done,
               validator: (val) => AuthValidators.requiredField(val, 'Location'),
@@ -61,6 +68,7 @@ class AddSupplierInfoSection extends GetView<AddSupplierController> {
             MyDropDownButton(
               isExpanded: true,
               hint: 'Select Industry',
+              // value: controller.selectedIndustry,
               onChanged: (val) {
                 controller.selectedIndustry = val;
               },
@@ -70,6 +78,7 @@ class AddSupplierInfoSection extends GetView<AddSupplierController> {
             MyDropDownButton(
               isExpanded: true,
               hint: 'Interest Level',
+              // value: controller.selectedInterestLevel,
               onChanged: (val) {
                 controller.selectedInterestLevel = val;
               },
@@ -77,58 +86,6 @@ class AddSupplierInfoSection extends GetView<AddSupplierController> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class UserProfileAvatar extends StatelessWidget {
-  const UserProfileAvatar({
-    super.key,
-    this.imageUrl,
-    this.onTap,
-    this.imageFile,
-  });
-
-  final String? imageUrl;
-  final String? imageFile;
-  final Function()? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return MyContainer(
-      onTap: onTap,
-      color: Colors.transparent,
-      height: 100.h,
-      width: 100.w,
-      child: Stack(
-        children: [
-          if (imageUrl != null || imageFile != null)
-            CustomImage.cirlce(
-              imageFile ?? imageUrl!,
-              radius: 50.r,
-              size: 100.sp,
-            )
-          else
-            CircleAvatar(
-              radius: 50.r,
-              backgroundColor: KColors.primaryBg,
-              child: CustomImage.icon(
-                KIcons.user,
-                size: 29.sp,
-                color: KColors.black,
-              ),
-            ),
-          Positioned(
-            bottom: 5,
-            right: 5,
-            child: CircleAvatar(
-              radius: 12.r,
-              backgroundColor: KColors.black,
-              child: Icon(Icons.camera_alt, color: KColors.white, size: 15.r),
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -6,10 +6,18 @@ import 'package:supplier_snap/app/widgets/confirmation_sheet.dart';
 Future<bool?> showConfirmationSheet({
   String title = 'Are you sure?',
   String? content,
-  String? imagePath,
+  String? iconPath,
+  String? positiveButtonText,
+  String? negativeButtonText,
 }) {
   return Get.bottomSheet<bool>(
-    ConfirmationSheet(title: title, message: content, imagePath: imagePath),
+    ConfirmationSheet(
+      title: title,
+      message: content,
+      iconPath: iconPath,
+      positiveButtonText: positiveButtonText,
+      negativeButtonText: negativeButtonText,
+    ),
     isScrollControlled: true,
   );
 }
@@ -17,10 +25,10 @@ Future<bool?> showConfirmationSheet({
 Future<void> showAlertSheet({
   String title = 'Are you sure?',
   String? content,
-  String? imagePath,
+  String? iconPath,
 }) {
   return Get.bottomSheet<void>(
-    AlertSheet(title: title, message: content, imagePath: imagePath),
+    AlertSheet(title: title, message: content, iconPath: iconPath),
     isScrollControlled: true,
   );
 }

@@ -64,15 +64,17 @@ class ProfileRepository extends BaseRepository {
 
   Future<Either<Failure, String>> uploadProfileImage(
     File imageFile,
-    String userId,
-  ) async {
+    String newFileName, [
+    String? oldFileName,
+  ]) async {
     try {
       if (!connectivityService.isOnline.value) {
         return Left(NetworkFailure(message: "No internet connection"));
       }
       final imageUrl = await supbaseStorageService.uploadFile(
         file: imageFile,
-        fileName: userId,
+        fileName: newFileName,
+        oldFileName: oldFileName,
       );
       if (imageUrl == null) {
         return Left(CommonFailure("Image upload failed"));

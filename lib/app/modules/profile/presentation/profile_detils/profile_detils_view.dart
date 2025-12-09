@@ -5,6 +5,7 @@ import 'package:supplier_snap/app/constants/colors.dart';
 import 'package:supplier_snap/app/constants/k_icons.dart';
 import 'package:supplier_snap/app/constants/padding_constants.dart';
 import 'package:supplier_snap/app/core/extensions/double.dart';
+import 'package:supplier_snap/app/core/models/app_user.dart';
 import 'package:supplier_snap/app/widgets/custom_image.dart';
 import 'package:supplier_snap/app/widgets/custom_text/custom_text.dart';
 import 'package:supplier_snap/app/widgets/my_container.dart';

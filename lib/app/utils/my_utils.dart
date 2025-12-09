@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 class MyUtils {
   MyUtils._privateConstructor();
 
+  static const String _publicUrl =
+      'https://qbtemzrdshumbkbzpdak.supabase.co/storage/v1/object/public/';
+
   ///Returns random image url
   static String getTempLink({int height = 812, int width = 375}) {
     math.Random rand = math.Random();
@@ -31,6 +34,10 @@ class MyUtils {
     } catch (e) {
       return AssetImage(defaultImage ?? 'assets/images/profilePH.png');
     }
+  }
+
+  static String getPublicUrl(String filePath) {
+    return _publicUrl + filePath;
   }
 
   static ImageProvider getDummyImageProvider() {

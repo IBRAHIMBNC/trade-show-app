@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:supplier_snap/app/constants/colors.dart';
 
-showErrorSnackbar({String title = 'Success', required String message}) {
+showErrorSnackbar({String title = 'Error', required String message}) {
   Get.snackbar(
     title,
     message,

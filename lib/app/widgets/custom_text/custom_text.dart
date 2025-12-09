@@ -144,6 +144,8 @@ class CustomText extends StatelessWidget {
     double? fontSize,
     TextAlign? textAlign,
     FontWeight? fontWeight,
+    bool autoSized = true,
+    int? maxLines,
   }) {
     return CustomText(
       text,
@@ -152,8 +154,9 @@ class CustomText extends StatelessWidget {
         fontSize: fontSize?.sp,
         fontWeight: fontWeight,
       ),
+      maxLines: maxLines,
       textAlign: textAlign,
-      autoSized: true,
+      autoSized: autoSized,
       minSize: 12,
     );
   }
@@ -165,6 +168,7 @@ class CustomText extends StatelessWidget {
     TextAlign? textAlign,
     int? maxLines,
     FontWeight? fontWeight,
+    bool? autoSized,
   }) {
     return CustomText(
       text,
@@ -174,7 +178,7 @@ class CustomText extends StatelessWidget {
         fontWeight: fontWeight,
       ),
       textAlign: textAlign,
-      autoSized: true,
+      autoSized: autoSized ?? true,
       minSize: 12,
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines ?? 2,
