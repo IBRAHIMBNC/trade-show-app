@@ -58,6 +58,7 @@ class AddSupplierController extends GetxController {
   Rxn<File> selectedImage = Rxn<File>();
 
   String? imageUrl;
+  String? imageLocalPath; // Store permanent path
 
   late SupplierModel? supplier = Get.arguments as SupplierModel?;
 
@@ -132,7 +133,7 @@ class AddSupplierController extends GetxController {
       createdAt: supplier!.createdAt,
       updatedAt: DateTime.now(),
       imageUrl: imageUrl,
-      imageLocalPath: selectedImage.value?.path,
+      imageLocalPath: imageLocalPath ?? supplier!.imageLocalPath,
     );
     return supplierRepository.updateSupplier(supplier!.id!, updatedSupplier);
   }
@@ -153,7 +154,7 @@ class AddSupplierController extends GetxController {
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
       imageUrl: imageUrl,
-      imageLocalPath: selectedImage.value?.path,
+      imageLocalPath: imageLocalPath,
     );
     return supplierRepository.createSupplier(supplier);
   }
@@ -174,6 +175,7 @@ class AddSupplierController extends GetxController {
       remarksController.text = supplier!.notes ?? '';
 
       imageUrl = supplier!.imageUrl;
+      imageLocalPath = supplier!.imageLocalPath;
       print('supplier image local path: ${supplier!.imageLocalPath}');
       selectedImage.value = supplier!.imageLocalPath != null
           ? File(supplier!.imageLocalPath!)
@@ -184,15 +186,29 @@ class AddSupplierController extends GetxController {
     }
   }
 
-  pickImage() {
+  pickImage() async {
     final filePickerService = Get.find<FilePickerService>();
     isAppLoading = true;
-    filePickerService.pickImageFromGallery().then((file) {
+
+    try {
+      final file = await filePickerService.pickImageFromGallery();
       if (file != null) {
-        selectedImage.value = file;
+        // Save to permanent storage
+        final permanentPath = await filePickerService.saveFilePermanently(file);
+        if (permanentPath != null) {
+          // Delete old image if exists
+          if (imageLocalPath != null) {
+            await filePickerService.deletePermanentFile(imageLocalPath!);
+          }
+
+          imageLocalPath = permanentPath;
+          selectedImage.value = File(permanentPath);
+          print('Image saved permanently at: $permanentPath');
+        }
       }
+    } finally {
       isAppLoading = false;
-    });
+    }
   }
 
   @override
