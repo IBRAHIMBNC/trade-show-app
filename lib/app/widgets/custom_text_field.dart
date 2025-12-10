@@ -141,8 +141,17 @@ class _CustomTextFieldState extends State<CustomTextField> {
       autovalidateMode: widget.autoValidationMode,
       controller: widget.controller,
       validator: widget.validator,
-      onSaved: widget.onSave,
-      keyboardType: widget.keyboardType,
+      onSaved: (newValue) {
+        if (widget.keyboardType == TextInputType.number) {
+          newValue = newValue?.trim().replaceAll(',', '');
+          widget.onSave?.call(newValue);
+        } else {
+          widget.onSave?.call(newValue?.trim());
+        }
+      },
+      keyboardType: widget.textInputAction == TextInputAction.newline
+          ? TextInputType.multiline
+          : widget.keyboardType,
       obscureText: isVisible,
       cursorColor: lightGreyColor,
       autofillHints: widget.autofillHints,

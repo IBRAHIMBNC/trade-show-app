@@ -40,3 +40,17 @@ class ServerFailure extends Failure {
   @override
   List<Object?> get props => [message];
 }
+
+class DatabaseFailure extends Failure {
+  const DatabaseFailure(super.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class NotFoundFailure extends Failure {
+  const NotFoundFailure(super.message);
+
+  @override
+  List<Object?> get props => [message];
+}

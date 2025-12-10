@@ -1,12 +1,22 @@
 import 'package:get/get.dart';
+import 'package:supplier_snap/app/modules/products/data/datasources/products_local_datasource.dart';
+import 'package:supplier_snap/app/modules/products/data/repository/products_repository.dart';
 
 import 'product_listing_controller.dart';
 
 class ProductListingBinding extends Bindings {
   @override
   void dependencies() {
+    Get.lazyPut<ProductsLocalDatasource>(
+      () => ProductsLocalDatasource(database: Get.find()),
+    );
+    Get.lazyPut<ProductsRepository>(
+      () => ProductsRepository(localDatasource: Get.find()),
+    );
     Get.lazyPut<ProductListingController>(
-      () => ProductListingController(),
+      () => ProductListingController(
+        productsRepository: Get.find<ProductsRepository>(),
+      ),
     );
   }
 }

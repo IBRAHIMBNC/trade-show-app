@@ -1,11 +1,12 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:supplier_snap/app/core/database/tables/product_table.dart';
 import 'package:supplier_snap/app/core/database/tables/supplier_table.dart';
 
 part 'app_db.g.dart';
 
-@DriftDatabase(tables: [Supplier])
+@DriftDatabase(tables: [Supplier, ProductTable])
 class AppDatabase extends _$AppDatabase {
   // After generating code, this class needs to define a `schemaVersion` getter
   // and a constructor telling drift where the database should be stored.
@@ -13,7 +14,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
@@ -25,6 +26,10 @@ class AppDatabase extends _$AppDatabase {
         if (from < 3) {
           // Add imageLocalPath column when upgrading to version 3
           await m.addColumn(supplier, supplier.imageLocalPath);
+        }
+        if (from < 4) {
+          // Add ProductTable when upgrading to version 4
+          await m.createTable(productTable);
         }
       },
     );

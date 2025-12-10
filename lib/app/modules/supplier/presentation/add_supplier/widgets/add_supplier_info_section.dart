@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:supplier_snap/app/core/enums/industry_type_enum.dart';
+import 'package:supplier_snap/app/core/enums/interest_level_enum.dart';
 import 'package:supplier_snap/app/modules/supplier/presentation/add_supplier/add_supplier_controller.dart';
 import 'package:supplier_snap/app/utils/auth_validators.dart';
 import 'package:supplier_snap/app/widgets/custom_text/custom_text.dart';
@@ -68,21 +70,24 @@ class AddSupplierInfoSection extends GetView<AddSupplierController> {
             MyDropDownButton(
               isExpanded: true,
               hint: 'Select Industry',
-              // value: controller.selectedIndustry,
+              value: controller.industryEnum?.displayName,
               onChanged: (val) {
-                controller.selectedIndustry = val;
+                controller.industryEnum = IndustryTypeEnum.fromDisplayName(val);
               },
-              items: ['Industry 1', 'Industry 2', 'Industry 3'],
+              items: IndustryTypeEnum.values.map((e) => e.displayName).toList(),
             ),
             16.verticalSpace,
             MyDropDownButton(
               isExpanded: true,
               hint: 'Interest Level',
-              // value: controller.selectedInterestLevel,
+              value: controller.selectedInterestLevel?.displayName,
               onChanged: (val) {
-                controller.selectedInterestLevel = val;
+                controller.selectedInterestLevel =
+                    InterestLevelEnum.fromDisplayName(val);
               },
-              items: ['Industry 1', 'Industry 2', 'Industry 3'],
+              items: InterestLevelEnum.values
+                  .map((e) => e.displayName)
+                  .toList(),
             ),
           ],
         ),

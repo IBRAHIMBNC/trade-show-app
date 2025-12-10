@@ -19,11 +19,17 @@ class ProductListingView extends GetView<ProductListingController> {
         addBtnTitle: 'Add Product',
         onSearchChanged: (val) {},
       ),
-      body: ListView.separated(
-        padding: kPadding20.all,
-        itemBuilder: (context, index) => ProductCard(),
-        separatorBuilder: (context, index) => 12.verticalSpace,
-        itemCount: 10,
+      body: Obx(
+        () => ListView.separated(
+          padding: kPadding20.all,
+          itemBuilder: (context, index) => ProductCard(
+            product: controller.products[index],
+            onDeleteTap: () =>
+                controller.onProductDelete(controller.products[index].id!),
+          ),
+          separatorBuilder: (context, index) => 12.verticalSpace,
+          itemCount: controller.products.length,
+        ),
       ),
     );
   }

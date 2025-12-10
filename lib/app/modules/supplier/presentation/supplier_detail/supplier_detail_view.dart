@@ -21,11 +21,11 @@ class SupplierDetailView extends GetView<SupplierDetailController> {
   const SupplierDetailView({super.key});
   @override
   Widget build(BuildContext context) {
-    final topPadding = MediaQuery.paddingOf(context).top;
-    return Scaffold(body: Obx(() => _buildBody(topPadding)));
+    return Scaffold(body: Obx(() => _buildBody()));
   }
 
-  Padding _buildBody(double topPadding) {
+  Padding _buildBody() {
+    final topPadding = MediaQuery.paddingOf(Get.context!).top;
     if (controller.isLoading.value) {
       return Padding(
         padding: EdgeInsets.only(
@@ -37,15 +37,12 @@ class SupplierDetailView extends GetView<SupplierDetailController> {
       );
     }
     return Padding(
-      padding: EdgeInsets.only(
-        right: kPadding20.w,
-        left: kPadding20.w,
-        top: topPadding.h,
-      ),
+      padding: kPadding20.hp,
       child: SingleChildScrollView(
         child: Column(
           spacing: 12.h,
           children: [
+            topPadding.verticalSpace,
             _buildProfileCard(),
             WeChatAndWhatsappBtns(bgColor: KColors.primaryBg),
             MyContainer(
@@ -87,6 +84,7 @@ class SupplierDetailView extends GetView<SupplierDetailController> {
               leadingText: '6',
               onTap: controller.gotoNotes,
             ),
+            20.verticalSpace,
           ],
         ),
       ),

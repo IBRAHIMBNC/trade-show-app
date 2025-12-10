@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:supplier_snap/app/core/database/app_db.dart';
+import 'package:supplier_snap/app/core/enums/industry_type_enum.dart';
+import 'package:supplier_snap/app/core/enums/interest_level_enum.dart';
 
 class SupplierModel {
   final int? id;
@@ -14,8 +16,8 @@ class SupplierModel {
   final String? weChatID;
   final String? whatsAppNumber;
   final String? notes;
-  final String? industry;
-  final String? interestLevel;
+  final IndustryTypeEnum? industry;
+  final InterestLevelEnum? interestLevel;
   final String? imageUrl;
   final String? imageLocalPath;
   final int? score;
@@ -160,8 +162,8 @@ class SupplierModel {
     String? weChatID,
     String? whatsAppNumber,
     String? notes,
-    String? industry,
-    String? interestLevel,
+    IndustryTypeEnum? industry,
+    InterestLevelEnum? interestLevel,
     String? imageUrl,
     String? imageLocalPath,
     int? score,
@@ -203,8 +205,8 @@ class SupplierModel {
       weChatID: data.weChatID,
       whatsAppNumber: data.whatsAppNumber,
       notes: data.notes,
-      industry: data.industry,
-      interestLevel: data.interestLevel,
+      industry: IndustryTypeEnum.fromString(data.industry),
+      interestLevel: InterestLevelEnum.fromString(data.interestLevel),
       imageUrl: data.imageUrl,
       imageLocalPath: data.imageLocalPath,
       score: data.score,

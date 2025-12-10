@@ -33,6 +33,20 @@ class InfoTab extends GetView<SupplierDetailController> {
       detailItems.add({'title': 'Email', 'value': controller.supplier.email!});
     }
 
+    if (controller.supplier.whatsAppNumber?.isNotEmpty == true) {
+      detailItems.add({
+        'title': 'WhatsApp',
+        'value': controller.supplier.whatsAppNumber!,
+      });
+    }
+
+    if (controller.supplier.weChatID?.isNotEmpty == true) {
+      detailItems.add({
+        'title': 'WeChat',
+        'value': controller.supplier.weChatID!,
+      });
+    }
+
     if (controller.supplier.company.isNotEmpty) {
       detailItems.add({
         'title': 'Company',
@@ -40,17 +54,17 @@ class InfoTab extends GetView<SupplierDetailController> {
       });
     }
 
-    if (controller.supplier.industry?.isNotEmpty == true) {
+    if (controller.supplier.industry != null) {
       detailItems.add({
         'title': 'Industry',
-        'value': controller.supplier.industry!,
+        'value': controller.supplier.industry!.displayName,
       });
     }
 
-    if (controller.supplier.interestLevel?.isNotEmpty == true) {
+    if (controller.supplier.interestLevel != null) {
       detailItems.add({
         'title': 'Interest level',
-        'value': controller.supplier.interestLevel!,
+        'value': controller.supplier.interestLevel!.displayName,
       });
     }
 
@@ -89,7 +103,7 @@ class InfoTab extends GetView<SupplierDetailController> {
             CustomText.label14b600(value, fontWeight: FontWeight.w500),
             10.horizontalSpace,
             GestureDetector(
-              onTap: controller.onEditSupplierTap,
+              onTap: () => controller.copyToClipboard(value),
               child: CustomImage.icon(KIcons.edit, size: 20),
             ),
           ],

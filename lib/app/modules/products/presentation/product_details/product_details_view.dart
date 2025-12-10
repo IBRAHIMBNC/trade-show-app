@@ -31,11 +31,11 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                 children: [
                   MyListTile(
                     title: CustomText.label24b800(
-                      '\$15',
+                      '\$${controller.product.price}',
                       fontWeight: FontWeight.bold,
                     ),
                     subtitle: CustomText.label16b600(
-                      'Aschaltic Cement',
+                      controller.product.name,
                       fontWeight: FontWeight.w500,
                     ),
                     trailing: Row(
@@ -68,12 +68,21 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomText.label18b600('Details'),
-                        _buildInfoRow('Category', 'Cement'),
-                        _buildInfoRow('MOQ', '1000 tons'),
-                        _buildInfoRow('Lead Time', '18 days'),
+                        _buildInfoRow(
+                          'Category',
+                          controller.product.category.displayName,
+                        ),
+                        _buildInfoRow(
+                          'MOQ',
+                          '${controller.product.moq} ${controller.product.moqUnit}',
+                        ),
+                        _buildInfoRow(
+                          'Lead Time',
+                          '${controller.product.leadTimeDays} days',
+                        ),
                         _buildInfoRow(
                           'Certifications',
-                          'ISO 9001, ASTM',
+                          controller.product.certifications ?? 'N/A',
                           isLast: true,
                         ),
                       ],
@@ -81,6 +90,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                   ),
                   16.verticalSpace,
                   MyContainer(
+                    width: double.infinity,
                     color: KColors.white,
                     padding: kPadding16.all,
                     border: BorderSide(color: KColors.black5),
@@ -90,7 +100,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                         CustomText.label16b600('Specifications'),
                         8.verticalSpace,
                         CustomText.label14b400(
-                          'Aschaltic cement is a type of cement that is commonly used in construction projects. It is known for its durability and strength, making it ideal for building structures that require long-lasting performance.',
+                          controller.product.specifications ?? 'N/A',
                           color: KColors.black40,
                         ),
                       ],
@@ -100,6 +110,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                   MyContainer(
                     color: KColors.white,
                     padding: kPadding16.all,
+                    width: double.infinity,
                     border: BorderSide(color: KColors.black5),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +118,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                         CustomText.label16b600('Notes / Internal Comment'),
                         8.verticalSpace,
                         CustomText.label14b400(
-                          "With its sleek and captivating design, the Electronic Egg Toy immediately captures attention. Crafted with vibrant colors and smooth contours, it's visually appealing.",
+                          controller.product.notes ?? 'N/A',
                           color: KColors.black40,
                         ),
                       ],
@@ -131,7 +142,10 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
             Spacer(),
             CustomText.label14b600(value, fontWeight: FontWeight.w500),
             10.horizontalSpace,
-            CustomImage.icon(KIcons.edit, size: 20),
+            GestureDetector(
+              onTap: controller.onEditProdut,
+              child: CustomImage.icon(KIcons.edit, size: 20),
+            ),
           ],
         ),
         if (!isLast) ...[

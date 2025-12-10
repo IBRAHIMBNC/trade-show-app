@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:supplier_snap/app/constants/colors.dart';
 import 'package:supplier_snap/app/modules/products/presentation/product_details/product_details_controller.dart';
+import 'package:supplier_snap/app/widgets/custom_image.dart';
 import 'package:supplier_snap/app/widgets/my_container.dart';
 
 class ImageCarousel extends GetView<ProductDetailsController> {
@@ -19,7 +19,7 @@ class ImageCarousel extends GetView<ProductDetailsController> {
             height: 305.h,
             viewportFraction: 0.85,
             initialPage: 0,
-            enableInfiniteScroll: true,
+            enableInfiniteScroll: false,
             reverse: false,
             autoPlay: false,
             autoPlayInterval: Duration(seconds: 5),
@@ -32,15 +32,7 @@ class ImageCarousel extends GetView<ProductDetailsController> {
             scrollDirection: Axis.horizontal,
           ),
           items: controller.images.map((banner) {
-            return MyContainer(
-              onTap: () async {
-                // await _launchURL(banner.link);
-              },
-              backgroundImage: DecorationImage(
-                image: CachedNetworkImageProvider(banner),
-                fit: BoxFit.cover,
-              ),
-            );
+            return CustomImage.fromSize(banner, size: 305.h, radius: 20.r);
           }).toList(),
         ),
         16.verticalSpace,

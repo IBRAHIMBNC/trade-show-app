@@ -93,7 +93,7 @@ class SupplierDetailsCard extends StatelessWidget {
                         horizontal: 12.w,
                       ),
                       child: CustomText.label10b400(
-                        supplier.industry!,
+                        supplier.industry!.displayName,
                         color: KColors.black60,
                       ),
                     ),
@@ -105,7 +105,7 @@ class SupplierDetailsCard extends StatelessWidget {
                         horizontal: 12.w,
                       ),
                       child: CustomText.label10b400(
-                        supplier.industry!,
+                        supplier.industry!.displayName,
                         color: KColors.black60,
                       ),
                     ),

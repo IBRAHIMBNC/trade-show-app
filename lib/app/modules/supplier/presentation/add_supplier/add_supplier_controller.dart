@@ -4,6 +4,8 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supplier_snap/app/constants/k_icons.dart';
+import 'package:supplier_snap/app/core/enums/industry_type_enum.dart';
+import 'package:supplier_snap/app/core/enums/interest_level_enum.dart';
 import 'package:supplier_snap/app/core/failures/failures.dart';
 import 'package:supplier_snap/app/core/services/file_picker_service.dart';
 import 'package:supplier_snap/app/modules/supplier/data/models/supplier_model.dart';
@@ -52,8 +54,8 @@ class AddSupplierController extends GetxController {
 
   //=================
 
-  String selectedIndustry = 'Select Industry';
-  String selectedInterestLevel = 'Interest Level';
+  InterestLevelEnum? selectedInterestLevel;
+  IndustryTypeEnum? industryEnum;
 
   Rxn<File> selectedImage = Rxn<File>();
 
@@ -126,7 +128,7 @@ class AddSupplierController extends GetxController {
       weChatID: weChatID,
       whatsAppNumber: whatsAppNumber,
       notes: remarks,
-      industry: selectedIndustry != 'Select Industry' ? selectedIndustry : null,
+      industry: industryEnum,
       interestLevel: selectedInterestLevel != 'Interest Level'
           ? selectedInterestLevel
           : null,
@@ -150,7 +152,8 @@ class AddSupplierController extends GetxController {
       weChatID: weChatID,
       whatsAppNumber: whatsAppNumber,
       notes: remarks,
-      industry: selectedIndustry != 'Select Industry' ? selectedIndustry : null,
+      industry: industryEnum,
+      interestLevel: selectedInterestLevel,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
       imageUrl: imageUrl,
@@ -176,13 +179,12 @@ class AddSupplierController extends GetxController {
 
       imageUrl = supplier!.imageUrl;
       imageLocalPath = supplier!.imageLocalPath;
-      print('supplier image local path: ${supplier!.imageLocalPath}');
       selectedImage.value = supplier!.imageLocalPath != null
           ? File(supplier!.imageLocalPath!)
           : null;
 
-      selectedIndustry = supplier!.industry ?? 'Select Industry';
-      selectedInterestLevel = supplier!.interestLevel ?? 'Interest Level';
+      industryEnum = supplier!.industry;
+      selectedInterestLevel = supplier!.interestLevel;
     }
   }
 
@@ -203,7 +205,6 @@ class AddSupplierController extends GetxController {
 
           imageLocalPath = permanentPath;
           selectedImage.value = File(permanentPath);
-          print('Image saved permanently at: $permanentPath');
         }
       }
     } finally {

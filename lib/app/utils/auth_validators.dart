@@ -30,7 +30,9 @@ class AuthValidators {
   }
 
   static String? validatePrice(String? value) {
-    if (value == null || value.isEmpty) {
+    value = value?.trim().replaceAll(',', '') ?? '';
+
+    if (value.isEmpty) {
       return 'Price cannot be empty';
     }
     final price = double.tryParse(value);
@@ -44,7 +46,9 @@ class AuthValidators {
   }
 
   static String? validateMOQ(String? value) {
-    if (value == null || value.isEmpty) {
+    value = value?.trim().replaceAll(',', '') ?? '';
+
+    if (value.isEmpty) {
       return 'MOQ cannot be empty';
     }
     final moq = int.tryParse(value);
@@ -53,6 +57,21 @@ class AuthValidators {
     }
     if (moq <= 0) {
       return 'MOQ must be greater than 0';
+    }
+    return null;
+  }
+
+  static String? validateLeadTime(String? value) {
+    value = value?.trim().replaceAll(',', '') ?? '';
+    if (value.isEmpty) {
+      return 'Lead Time cannot be empty';
+    }
+    final leadTime = int.tryParse(value);
+    if (leadTime == null) {
+      return 'Please enter a valid number of days';
+    }
+    if (leadTime < 0) {
+      return 'Lead Time cannot be negative';
     }
     return null;
   }

@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:supplier_snap/app/modules/products/presentation/add_product/add_product_controller.dart';
 import 'package:supplier_snap/app/modules/supplier/data/models/supplier_model.dart';
 import 'package:supplier_snap/app/modules/supplier/data/repository/supplier_repository.dart';
 import 'package:supplier_snap/app/modules/supplier/presentation/supplier_detail/widgets/info_tab.dart';
@@ -7,6 +11,7 @@ import 'package:supplier_snap/app/modules/supplier/presentation/supplier_detail/
 import 'package:supplier_snap/app/modules/supplier/presentation/supplier_detail/widgets/scoring_tab.dart';
 import 'package:supplier_snap/app/routes/app_pages.dart';
 import 'package:supplier_snap/app/utils/bottom_sheets.dart';
+import 'package:supplier_snap/app/utils/snackbars.dart';
 
 class SupplierDetailController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -41,7 +46,10 @@ class SupplierDetailController extends GetxController
   }
 
   goToAddProduct() {
-    Get.toNamed(Routes.ADD_PRODUCT);
+    Get.toNamed(
+      Routes.ADD_PRODUCT,
+      arguments: AddProductViewArgs(supplier: supplier),
+    );
   }
 
   gotoAddFile() {
@@ -74,6 +82,12 @@ class SupplierDetailController extends GetxController
 
   onEditSupplierTap() {
     Get.toNamed(Routes.ADD_SUPPLIER, arguments: supplier);
+  }
+
+  copyToClipboard(String text) {
+    Clipboard.setData(ClipboardData(text: "text")).then((_) {
+      if (Platform.isIOS) showSuccessSnackbar(message: "Copied to clipboard");
+    });
   }
 
   onDeleteSupplierTap() async {
