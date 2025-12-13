@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:supplier_snap/app/core/database/app_db.dart';
 import 'package:supplier_snap/app/modules/supplier/data/models/supplier_model.dart';
+import 'package:supplier_snap/app/utils/my_utils.dart';
 
 class SupplierLocalDatasource {
   final AppDatabase database;
@@ -90,6 +91,11 @@ class SupplierLocalDatasource {
 
   /// Delete a supplier from local database
   Future<int> deleteSupplier(int id) async {
+    final supplier = await getSupplierById(id);
+    // Delete supplier image
+    if (supplier != null && supplier.imageLocalPath != null) {
+      MyUtils.deletePermanentFile(supplier.imageLocalPath!);
+    }
     return await (database.delete(
       database.supplier,
     )..where((tbl) => tbl.id.equals(id))).go();

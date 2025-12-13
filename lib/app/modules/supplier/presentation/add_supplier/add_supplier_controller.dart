@@ -15,6 +15,7 @@ import 'package:supplier_snap/app/modules/supplier/presentation/add_supplier/wid
 import 'package:supplier_snap/app/modules/supplier/presentation/add_supplier/widgets/scoring_section.dart';
 import 'package:supplier_snap/app/utils/bottom_sheets.dart';
 import 'package:supplier_snap/app/utils/loading_overlay.dart';
+import 'package:supplier_snap/app/utils/my_utils.dart';
 import 'package:supplier_snap/app/utils/snackbars.dart';
 
 class AddSupplierController extends GetxController {
@@ -96,12 +97,21 @@ class AddSupplierController extends GetxController {
             message: 'Failed to add supplier. Please try again.',
           );
         },
-        (supplier) async {
-          await showAlertSheet(
-            title: 'Supplier Added',
-            iconPath: KIcons.tick,
-            content: 'Supplier successfully added to your list.',
-          );
+        (sup) async {
+          if (supplier != null) {
+            await showAlertSheet(
+              title: 'Supplier Updated',
+              iconPath: KIcons.tick,
+              content: 'Supplier details have been updated successfully.',
+            );
+          } else {
+            await showAlertSheet(
+              title: 'Supplier Added',
+              iconPath: KIcons.tick,
+              content: 'Supplier successfully added to your list.',
+            );
+          }
+
           Get.until((route) => route.isFirst);
         },
       );
@@ -196,11 +206,15 @@ class AddSupplierController extends GetxController {
       final file = await filePickerService.pickImageFromGallery();
       if (file != null) {
         // Save to permanent storage
-        final permanentPath = await filePickerService.saveFilePermanently(file);
+        final permanentPath = await filePickerService.saveFilePermanently(
+          file,
+          subdirectory: 'suppliers',
+          prefix: 'supplier',
+        );
         if (permanentPath != null) {
           // Delete old image if exists
           if (imageLocalPath != null) {
-            await filePickerService.deletePermanentFile(imageLocalPath!);
+            await MyUtils.deletePermanentFile(imageLocalPath!);
           }
 
           imageLocalPath = permanentPath;

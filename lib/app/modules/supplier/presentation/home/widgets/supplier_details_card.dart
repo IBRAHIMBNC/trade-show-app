@@ -6,6 +6,7 @@ import 'package:supplier_snap/app/constants/k_icons.dart';
 import 'package:supplier_snap/app/constants/padding_constants.dart';
 import 'package:supplier_snap/app/core/extensions/double.dart';
 import 'package:supplier_snap/app/modules/supplier/data/models/supplier_model.dart';
+import 'package:supplier_snap/app/modules/supplier/data/services/supplier_card_service.dart';
 import 'package:supplier_snap/app/routes/app_pages.dart';
 import 'package:supplier_snap/app/widgets/custom_image.dart';
 import 'package:supplier_snap/app/widgets/custom_text/custom_text.dart';
@@ -23,9 +24,11 @@ class SupplierDetailsCard extends StatelessWidget {
   });
 
   final SupplierModel supplier;
-
   final Function()? onEditTap;
   final Function()? onDeleteTap;
+
+  SupplierCardService get supplierCardService =>
+      Get.find<SupplierCardService>();
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +96,7 @@ class SupplierDetailsCard extends StatelessWidget {
                         horizontal: 12.w,
                       ),
                       child: CustomText.label10b400(
-                        supplier.industry!.displayName,
+                        supplier.interestLevel!.displayName,
                         color: KColors.black60,
                       ),
                     ),
@@ -149,7 +152,19 @@ class SupplierDetailsCard extends StatelessWidget {
           Row(
             spacing: 4.w,
             children: [
-              _buildCountContainer(title: 'Products', count: '4'),
+              // Real-time product count using StreamBuilder
+              StreamBuilder<int>(
+                stream: supplierCardService.watchProductCountBySupplierId(
+                  supplier.id!,
+                ),
+                builder: (context, snapshot) {
+                  final count = snapshot.data ?? 0;
+                  return _buildCountContainer(
+                    title: 'Products',
+                    count: count.toString(),
+                  );
+                },
+              ),
 
               _buildCountContainer(title: 'Files', count: '12'),
 

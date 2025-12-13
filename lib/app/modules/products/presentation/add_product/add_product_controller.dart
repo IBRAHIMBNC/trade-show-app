@@ -66,6 +66,8 @@ class AddProductController extends GetxController {
         for (final file in files) {
           final permanentPath = await filePickerService.saveFilePermanently(
             file,
+            subdirectory: 'products',
+            prefix: 'product',
           );
           if (permanentPath != null) {
             imageLocalPaths.add(permanentPath);
@@ -110,6 +112,7 @@ class AddProductController extends GetxController {
         },
         (createdProduct) {
           isAppLoading = false;
+
           showAlertSheet(
             title: 'Product Added',
             iconPath: KIcons.tick,

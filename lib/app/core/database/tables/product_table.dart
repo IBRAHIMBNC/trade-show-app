@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
+// ignore_for_file: unused_import
+import 'package:supplier_snap/app/core/database/tables/supplier_table.dart';
 
 class ProductTable extends Table {
   IntColumn get id => integer().autoIncrement()();

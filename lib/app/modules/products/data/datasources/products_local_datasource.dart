@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:supplier_snap/app/core/database/app_db.dart';
 import 'package:supplier_snap/app/modules/products/data/models/product_model.dart';
+import 'package:supplier_snap/app/utils/my_utils.dart';
 
 class ProductsLocalDatasource {
   final AppDatabase database;
@@ -73,8 +74,8 @@ class ProductsLocalDatasource {
             supplierId: Value(product.supplierId),
             moq: Value(product.moq),
             moqUnit: Value(product.moqUnit),
-            imageLocalPaths: Value(product.imageLocalPaths ?? []),
-            imageUrls: Value(product.imageUrls ?? []),
+            imageLocalPaths: Value(product.imageLocalPaths),
+            imageUrls: Value(product.imageUrls),
             certifications: Value(product.certifications),
           ),
         );
@@ -82,6 +83,13 @@ class ProductsLocalDatasource {
 
   /// Delete a product from local database
   Future<int> deleteProduct(int id) async {
+    final product = await getProductById(id);
+
+    // Delete product images
+    if (product != null) {
+      await deleteProductImages(product.imageLocalPaths);
+    }
+
     return await (database.delete(
       database.productTable,
     )..where((tbl) => tbl.id.equals(id))).go();
@@ -126,8 +134,22 @@ class ProductsLocalDatasource {
 
   /// Delete all products for a specific supplier
   Future<int> deleteProductsBySupplierId(int supplierId) async {
+    // Delete products images
+    final products = await getProductsBySupplierId(supplierId);
+
+    Future.wait(
+      products.map((p) => deleteProductImages(p.imageLocalPaths)).toList(),
+    );
+
     return await (database.delete(
       database.productTable,
     )..where((tbl) => tbl.supplierId.equals(supplierId))).go();
+  }
+
+  Future<void> deleteProductImages(List<String>? imagePaths) async {
+    if (imagePaths == null) return;
+    for (var path in imagePaths) {
+      await MyUtils.deletePermanentFile(path);
+    }
   }
 }

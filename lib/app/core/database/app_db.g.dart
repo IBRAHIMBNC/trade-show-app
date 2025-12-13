@@ -1893,16 +1893,830 @@ class ProductTableCompanion extends UpdateCompanion<ProductTableData> {
   }
 }
 
+class $NotesTableTable extends NotesTable
+    with TableInfo<$NotesTableTable, NotesTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $NotesTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 255,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _contentMeta = const VerificationMeta(
+    'content',
+  );
+  @override
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+    'content',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 1000,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _supplierIdMeta = const VerificationMeta(
+    'supplierId',
+  );
+  @override
+  late final GeneratedColumn<int> supplierId = GeneratedColumn<int>(
+    'supplier_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'REFERENCES supplier(id) NOT NULL',
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    title,
+    content,
+    createdAt,
+    supplierId,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'notes_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<NotesTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('content')) {
+      context.handle(
+        _contentMeta,
+        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_contentMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('supplier_id')) {
+      context.handle(
+        _supplierIdMeta,
+        supplierId.isAcceptableOrUnknown(data['supplier_id']!, _supplierIdMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  NotesTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NotesTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      content: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      supplierId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}supplier_id'],
+      ),
+    );
+  }
+
+  @override
+  $NotesTableTable createAlias(String alias) {
+    return $NotesTableTable(attachedDatabase, alias);
+  }
+}
+
+class NotesTableData extends DataClass implements Insertable<NotesTableData> {
+  final int id;
+  final String title;
+  final String content;
+  final DateTime createdAt;
+  final int? supplierId;
+  const NotesTableData({
+    required this.id,
+    required this.title,
+    required this.content,
+    required this.createdAt,
+    this.supplierId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['title'] = Variable<String>(title);
+    map['content'] = Variable<String>(content);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || supplierId != null) {
+      map['supplier_id'] = Variable<int>(supplierId);
+    }
+    return map;
+  }
+
+  NotesTableCompanion toCompanion(bool nullToAbsent) {
+    return NotesTableCompanion(
+      id: Value(id),
+      title: Value(title),
+      content: Value(content),
+      createdAt: Value(createdAt),
+      supplierId: supplierId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(supplierId),
+    );
+  }
+
+  factory NotesTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return NotesTableData(
+      id: serializer.fromJson<int>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      content: serializer.fromJson<String>(json['content']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      supplierId: serializer.fromJson<int?>(json['supplierId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'title': serializer.toJson<String>(title),
+      'content': serializer.toJson<String>(content),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'supplierId': serializer.toJson<int?>(supplierId),
+    };
+  }
+
+  NotesTableData copyWith({
+    int? id,
+    String? title,
+    String? content,
+    DateTime? createdAt,
+    Value<int?> supplierId = const Value.absent(),
+  }) => NotesTableData(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    content: content ?? this.content,
+    createdAt: createdAt ?? this.createdAt,
+    supplierId: supplierId.present ? supplierId.value : this.supplierId,
+  );
+  NotesTableData copyWithCompanion(NotesTableCompanion data) {
+    return NotesTableData(
+      id: data.id.present ? data.id.value : this.id,
+      title: data.title.present ? data.title.value : this.title,
+      content: data.content.present ? data.content.value : this.content,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      supplierId: data.supplierId.present
+          ? data.supplierId.value
+          : this.supplierId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NotesTableData(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('content: $content, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('supplierId: $supplierId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, title, content, createdAt, supplierId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is NotesTableData &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.content == this.content &&
+          other.createdAt == this.createdAt &&
+          other.supplierId == this.supplierId);
+}
+
+class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
+  final Value<int> id;
+  final Value<String> title;
+  final Value<String> content;
+  final Value<DateTime> createdAt;
+  final Value<int?> supplierId;
+  const NotesTableCompanion({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.content = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.supplierId = const Value.absent(),
+  });
+  NotesTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String title,
+    required String content,
+    this.createdAt = const Value.absent(),
+    this.supplierId = const Value.absent(),
+  }) : title = Value(title),
+       content = Value(content);
+  static Insertable<NotesTableData> custom({
+    Expression<int>? id,
+    Expression<String>? title,
+    Expression<String>? content,
+    Expression<DateTime>? createdAt,
+    Expression<int>? supplierId,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (content != null) 'content': content,
+      if (createdAt != null) 'created_at': createdAt,
+      if (supplierId != null) 'supplier_id': supplierId,
+    });
+  }
+
+  NotesTableCompanion copyWith({
+    Value<int>? id,
+    Value<String>? title,
+    Value<String>? content,
+    Value<DateTime>? createdAt,
+    Value<int?>? supplierId,
+  }) {
+    return NotesTableCompanion(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      createdAt: createdAt ?? this.createdAt,
+      supplierId: supplierId ?? this.supplierId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (supplierId.present) {
+      map['supplier_id'] = Variable<int>(supplierId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NotesTableCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('content: $content, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('supplierId: $supplierId')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $DocumentTableTable extends DocumentTable
+    with TableInfo<$DocumentTableTable, DocumentTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DocumentTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _localPathMeta = const VerificationMeta(
+    'localPath',
+  );
+  @override
+  late final GeneratedColumn<String> localPath = GeneratedColumn<String>(
+    'local_path',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  @override
+  late final GeneratedColumn<String> url = GeneratedColumn<String>(
+    'url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 50,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _supplierIdMeta = const VerificationMeta(
+    'supplierId',
+  );
+  @override
+  late final GeneratedColumn<int> supplierId = GeneratedColumn<int>(
+    'supplier_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'REFERENCES supplier(id) NOT NULL',
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    title,
+    localPath,
+    url,
+    type,
+    createdAt,
+    supplierId,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'document_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DocumentTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('local_path')) {
+      context.handle(
+        _localPathMeta,
+        localPath.isAcceptableOrUnknown(data['local_path']!, _localPathMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_localPathMeta);
+    }
+    if (data.containsKey('url')) {
+      context.handle(
+        _urlMeta,
+        url.isAcceptableOrUnknown(data['url']!, _urlMeta),
+      );
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_typeMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('supplier_id')) {
+      context.handle(
+        _supplierIdMeta,
+        supplierId.isAcceptableOrUnknown(data['supplier_id']!, _supplierIdMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DocumentTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DocumentTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      localPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}local_path'],
+      )!,
+      url: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url'],
+      ),
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      supplierId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}supplier_id'],
+      ),
+    );
+  }
+
+  @override
+  $DocumentTableTable createAlias(String alias) {
+    return $DocumentTableTable(attachedDatabase, alias);
+  }
+}
+
+class DocumentTableData extends DataClass
+    implements Insertable<DocumentTableData> {
+  final int id;
+  final String title;
+  final String localPath;
+  final String? url;
+  final String type;
+  final DateTime createdAt;
+  final int? supplierId;
+  const DocumentTableData({
+    required this.id,
+    required this.title,
+    required this.localPath,
+    this.url,
+    required this.type,
+    required this.createdAt,
+    this.supplierId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['title'] = Variable<String>(title);
+    map['local_path'] = Variable<String>(localPath);
+    if (!nullToAbsent || url != null) {
+      map['url'] = Variable<String>(url);
+    }
+    map['type'] = Variable<String>(type);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || supplierId != null) {
+      map['supplier_id'] = Variable<int>(supplierId);
+    }
+    return map;
+  }
+
+  DocumentTableCompanion toCompanion(bool nullToAbsent) {
+    return DocumentTableCompanion(
+      id: Value(id),
+      title: Value(title),
+      localPath: Value(localPath),
+      url: url == null && nullToAbsent ? const Value.absent() : Value(url),
+      type: Value(type),
+      createdAt: Value(createdAt),
+      supplierId: supplierId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(supplierId),
+    );
+  }
+
+  factory DocumentTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DocumentTableData(
+      id: serializer.fromJson<int>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      localPath: serializer.fromJson<String>(json['localPath']),
+      url: serializer.fromJson<String?>(json['url']),
+      type: serializer.fromJson<String>(json['type']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      supplierId: serializer.fromJson<int?>(json['supplierId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'title': serializer.toJson<String>(title),
+      'localPath': serializer.toJson<String>(localPath),
+      'url': serializer.toJson<String?>(url),
+      'type': serializer.toJson<String>(type),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'supplierId': serializer.toJson<int?>(supplierId),
+    };
+  }
+
+  DocumentTableData copyWith({
+    int? id,
+    String? title,
+    String? localPath,
+    Value<String?> url = const Value.absent(),
+    String? type,
+    DateTime? createdAt,
+    Value<int?> supplierId = const Value.absent(),
+  }) => DocumentTableData(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    localPath: localPath ?? this.localPath,
+    url: url.present ? url.value : this.url,
+    type: type ?? this.type,
+    createdAt: createdAt ?? this.createdAt,
+    supplierId: supplierId.present ? supplierId.value : this.supplierId,
+  );
+  DocumentTableData copyWithCompanion(DocumentTableCompanion data) {
+    return DocumentTableData(
+      id: data.id.present ? data.id.value : this.id,
+      title: data.title.present ? data.title.value : this.title,
+      localPath: data.localPath.present ? data.localPath.value : this.localPath,
+      url: data.url.present ? data.url.value : this.url,
+      type: data.type.present ? data.type.value : this.type,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      supplierId: data.supplierId.present
+          ? data.supplierId.value
+          : this.supplierId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DocumentTableData(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('localPath: $localPath, ')
+          ..write('url: $url, ')
+          ..write('type: $type, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('supplierId: $supplierId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, title, localPath, url, type, createdAt, supplierId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DocumentTableData &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.localPath == this.localPath &&
+          other.url == this.url &&
+          other.type == this.type &&
+          other.createdAt == this.createdAt &&
+          other.supplierId == this.supplierId);
+}
+
+class DocumentTableCompanion extends UpdateCompanion<DocumentTableData> {
+  final Value<int> id;
+  final Value<String> title;
+  final Value<String> localPath;
+  final Value<String?> url;
+  final Value<String> type;
+  final Value<DateTime> createdAt;
+  final Value<int?> supplierId;
+  const DocumentTableCompanion({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.localPath = const Value.absent(),
+    this.url = const Value.absent(),
+    this.type = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.supplierId = const Value.absent(),
+  });
+  DocumentTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String title,
+    required String localPath,
+    this.url = const Value.absent(),
+    required String type,
+    this.createdAt = const Value.absent(),
+    this.supplierId = const Value.absent(),
+  }) : title = Value(title),
+       localPath = Value(localPath),
+       type = Value(type);
+  static Insertable<DocumentTableData> custom({
+    Expression<int>? id,
+    Expression<String>? title,
+    Expression<String>? localPath,
+    Expression<String>? url,
+    Expression<String>? type,
+    Expression<DateTime>? createdAt,
+    Expression<int>? supplierId,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (localPath != null) 'local_path': localPath,
+      if (url != null) 'url': url,
+      if (type != null) 'type': type,
+      if (createdAt != null) 'created_at': createdAt,
+      if (supplierId != null) 'supplier_id': supplierId,
+    });
+  }
+
+  DocumentTableCompanion copyWith({
+    Value<int>? id,
+    Value<String>? title,
+    Value<String>? localPath,
+    Value<String?>? url,
+    Value<String>? type,
+    Value<DateTime>? createdAt,
+    Value<int?>? supplierId,
+  }) {
+    return DocumentTableCompanion(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      localPath: localPath ?? this.localPath,
+      url: url ?? this.url,
+      type: type ?? this.type,
+      createdAt: createdAt ?? this.createdAt,
+      supplierId: supplierId ?? this.supplierId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (localPath.present) {
+      map['local_path'] = Variable<String>(localPath.value);
+    }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (supplierId.present) {
+      map['supplier_id'] = Variable<int>(supplierId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DocumentTableCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('localPath: $localPath, ')
+          ..write('url: $url, ')
+          ..write('type: $type, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('supplierId: $supplierId')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $SupplierTable supplier = $SupplierTable(this);
   late final $ProductTableTable productTable = $ProductTableTable(this);
+  late final $NotesTableTable notesTable = $NotesTableTable(this);
+  late final $DocumentTableTable documentTable = $DocumentTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [supplier, productTable];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    supplier,
+    productTable,
+    notesTable,
+    documentTable,
+  ];
 }
 
 typedef $$SupplierTableCreateCompanionBuilder =
@@ -1947,6 +2761,68 @@ typedef $$SupplierTableUpdateCompanionBuilder =
       Value<String?> createdAt,
       Value<String?> updatedAt,
     });
+
+final class $$SupplierTableReferences
+    extends BaseReferences<_$AppDatabase, $SupplierTable, SupplierData> {
+  $$SupplierTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$ProductTableTable, List<ProductTableData>>
+  _productTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.productTable,
+    aliasName: $_aliasNameGenerator(db.supplier.id, db.productTable.supplierId),
+  );
+
+  $$ProductTableTableProcessedTableManager get productTableRefs {
+    final manager = $$ProductTableTableTableManager(
+      $_db,
+      $_db.productTable,
+    ).filter((f) => f.supplierId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_productTableRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$NotesTableTable, List<NotesTableData>>
+  _notesTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.notesTable,
+    aliasName: $_aliasNameGenerator(db.supplier.id, db.notesTable.supplierId),
+  );
+
+  $$NotesTableTableProcessedTableManager get notesTableRefs {
+    final manager = $$NotesTableTableTableManager(
+      $_db,
+      $_db.notesTable,
+    ).filter((f) => f.supplierId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_notesTableRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$DocumentTableTable, List<DocumentTableData>>
+  _documentTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.documentTable,
+    aliasName: $_aliasNameGenerator(
+      db.supplier.id,
+      db.documentTable.supplierId,
+    ),
+  );
+
+  $$DocumentTableTableProcessedTableManager get documentTableRefs {
+    final manager = $$DocumentTableTableTableManager(
+      $_db,
+      $_db.documentTable,
+    ).filter((f) => f.supplierId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_documentTableRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
 
 class $$SupplierTableFilterComposer
     extends Composer<_$AppDatabase, $SupplierTable> {
@@ -2046,6 +2922,81 @@ class $$SupplierTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> productTableRefs(
+    Expression<bool> Function($$ProductTableTableFilterComposer f) f,
+  ) {
+    final $$ProductTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.productTable,
+      getReferencedColumn: (t) => t.supplierId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProductTableTableFilterComposer(
+            $db: $db,
+            $table: $db.productTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> notesTableRefs(
+    Expression<bool> Function($$NotesTableTableFilterComposer f) f,
+  ) {
+    final $$NotesTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.notesTable,
+      getReferencedColumn: (t) => t.supplierId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$NotesTableTableFilterComposer(
+            $db: $db,
+            $table: $db.notesTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> documentTableRefs(
+    Expression<bool> Function($$DocumentTableTableFilterComposer f) f,
+  ) {
+    final $$DocumentTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.documentTable,
+      getReferencedColumn: (t) => t.supplierId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentTableTableFilterComposer(
+            $db: $db,
+            $table: $db.documentTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$SupplierTableOrderingComposer
@@ -2216,6 +3167,81 @@ class $$SupplierTableAnnotationComposer
 
   GeneratedColumn<String> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  Expression<T> productTableRefs<T extends Object>(
+    Expression<T> Function($$ProductTableTableAnnotationComposer a) f,
+  ) {
+    final $$ProductTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.productTable,
+      getReferencedColumn: (t) => t.supplierId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProductTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.productTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> notesTableRefs<T extends Object>(
+    Expression<T> Function($$NotesTableTableAnnotationComposer a) f,
+  ) {
+    final $$NotesTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.notesTable,
+      getReferencedColumn: (t) => t.supplierId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$NotesTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.notesTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> documentTableRefs<T extends Object>(
+    Expression<T> Function($$DocumentTableTableAnnotationComposer a) f,
+  ) {
+    final $$DocumentTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.documentTable,
+      getReferencedColumn: (t) => t.supplierId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.documentTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$SupplierTableTableManager
@@ -2229,12 +3255,13 @@ class $$SupplierTableTableManager
           $$SupplierTableAnnotationComposer,
           $$SupplierTableCreateCompanionBuilder,
           $$SupplierTableUpdateCompanionBuilder,
-          (
-            SupplierData,
-            BaseReferences<_$AppDatabase, $SupplierTable, SupplierData>,
-          ),
+          (SupplierData, $$SupplierTableReferences),
           SupplierData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool productTableRefs,
+            bool notesTableRefs,
+            bool documentTableRefs,
+          })
         > {
   $$SupplierTableTableManager(_$AppDatabase db, $SupplierTable table)
     : super(
@@ -2328,9 +3355,96 @@ class $$SupplierTableTableManager
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$SupplierTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({
+                productTableRefs = false,
+                notesTableRefs = false,
+                documentTableRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (productTableRefs) db.productTable,
+                    if (notesTableRefs) db.notesTable,
+                    if (documentTableRefs) db.documentTable,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (productTableRefs)
+                        await $_getPrefetchedData<
+                          SupplierData,
+                          $SupplierTable,
+                          ProductTableData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$SupplierTableReferences
+                              ._productTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$SupplierTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).productTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.supplierId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (notesTableRefs)
+                        await $_getPrefetchedData<
+                          SupplierData,
+                          $SupplierTable,
+                          NotesTableData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$SupplierTableReferences
+                              ._notesTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$SupplierTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).notesTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.supplierId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (documentTableRefs)
+                        await $_getPrefetchedData<
+                          SupplierData,
+                          $SupplierTable,
+                          DocumentTableData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$SupplierTableReferences
+                              ._documentTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$SupplierTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).documentTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.supplierId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
         ),
       );
 }
@@ -2345,12 +3459,13 @@ typedef $$SupplierTableProcessedTableManager =
       $$SupplierTableAnnotationComposer,
       $$SupplierTableCreateCompanionBuilder,
       $$SupplierTableUpdateCompanionBuilder,
-      (
-        SupplierData,
-        BaseReferences<_$AppDatabase, $SupplierTable, SupplierData>,
-      ),
+      (SupplierData, $$SupplierTableReferences),
       SupplierData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({
+        bool productTableRefs,
+        bool notesTableRefs,
+        bool documentTableRefs,
+      })
     >;
 typedef $$ProductTableTableCreateCompanionBuilder =
     ProductTableCompanion Function({
@@ -2386,6 +3501,31 @@ typedef $$ProductTableTableUpdateCompanionBuilder =
       Value<List<String>?> imageUrls,
       Value<String?> certifications,
     });
+
+final class $$ProductTableTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $ProductTableTable, ProductTableData> {
+  $$ProductTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $SupplierTable _supplierIdTable(_$AppDatabase db) =>
+      db.supplier.createAlias(
+        $_aliasNameGenerator(db.productTable.supplierId, db.supplier.id),
+      );
+
+  $$SupplierTableProcessedTableManager? get supplierId {
+    final $_column = $_itemColumn<int>('supplier_id');
+    if ($_column == null) return null;
+    final manager = $$SupplierTableTableManager(
+      $_db,
+      $_db.supplier,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_supplierIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$ProductTableTableFilterComposer
     extends Composer<_$AppDatabase, $ProductTableTable> {
@@ -2436,11 +3576,6 @@ class $$ProductTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get supplierId => $composableBuilder(
-    column: $table.supplierId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<int> get moq => $composableBuilder(
     column: $table.moq,
     builder: (column) => ColumnFilters(column),
@@ -2467,6 +3602,29 @@ class $$ProductTableTableFilterComposer
     column: $table.certifications,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$SupplierTableFilterComposer get supplierId {
+    final $$SupplierTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.supplierId,
+      referencedTable: $db.supplier,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SupplierTableFilterComposer(
+            $db: $db,
+            $table: $db.supplier,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ProductTableTableOrderingComposer
@@ -2518,11 +3676,6 @@ class $$ProductTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get supplierId => $composableBuilder(
-    column: $table.supplierId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<int> get moq => $composableBuilder(
     column: $table.moq,
     builder: (column) => ColumnOrderings(column),
@@ -2547,6 +3700,29 @@ class $$ProductTableTableOrderingComposer
     column: $table.certifications,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$SupplierTableOrderingComposer get supplierId {
+    final $$SupplierTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.supplierId,
+      referencedTable: $db.supplier,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SupplierTableOrderingComposer(
+            $db: $db,
+            $table: $db.supplier,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ProductTableTableAnnotationComposer
@@ -2586,11 +3762,6 @@ class $$ProductTableTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<int> get supplierId => $composableBuilder(
-    column: $table.supplierId,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<int> get moq =>
       $composableBuilder(column: $table.moq, builder: (column) => column);
 
@@ -2610,6 +3781,29 @@ class $$ProductTableTableAnnotationComposer
     column: $table.certifications,
     builder: (column) => column,
   );
+
+  $$SupplierTableAnnotationComposer get supplierId {
+    final $$SupplierTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.supplierId,
+      referencedTable: $db.supplier,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SupplierTableAnnotationComposer(
+            $db: $db,
+            $table: $db.supplier,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ProductTableTableTableManager
@@ -2623,12 +3817,9 @@ class $$ProductTableTableTableManager
           $$ProductTableTableAnnotationComposer,
           $$ProductTableTableCreateCompanionBuilder,
           $$ProductTableTableUpdateCompanionBuilder,
-          (
-            ProductTableData,
-            BaseReferences<_$AppDatabase, $ProductTableTable, ProductTableData>,
-          ),
+          (ProductTableData, $$ProductTableTableReferences),
           ProductTableData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool supplierId})
         > {
   $$ProductTableTableTableManager(_$AppDatabase db, $ProductTableTable table)
     : super(
@@ -2706,9 +3897,54 @@ class $$ProductTableTableTableManager
                 certifications: certifications,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ProductTableTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({supplierId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (supplierId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.supplierId,
+                                referencedTable: $$ProductTableTableReferences
+                                    ._supplierIdTable(db),
+                                referencedColumn: $$ProductTableTableReferences
+                                    ._supplierIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -2723,12 +3959,678 @@ typedef $$ProductTableTableProcessedTableManager =
       $$ProductTableTableAnnotationComposer,
       $$ProductTableTableCreateCompanionBuilder,
       $$ProductTableTableUpdateCompanionBuilder,
-      (
-        ProductTableData,
-        BaseReferences<_$AppDatabase, $ProductTableTable, ProductTableData>,
-      ),
+      (ProductTableData, $$ProductTableTableReferences),
       ProductTableData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool supplierId})
+    >;
+typedef $$NotesTableTableCreateCompanionBuilder =
+    NotesTableCompanion Function({
+      Value<int> id,
+      required String title,
+      required String content,
+      Value<DateTime> createdAt,
+      Value<int?> supplierId,
+    });
+typedef $$NotesTableTableUpdateCompanionBuilder =
+    NotesTableCompanion Function({
+      Value<int> id,
+      Value<String> title,
+      Value<String> content,
+      Value<DateTime> createdAt,
+      Value<int?> supplierId,
+    });
+
+final class $$NotesTableTableReferences
+    extends BaseReferences<_$AppDatabase, $NotesTableTable, NotesTableData> {
+  $$NotesTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $SupplierTable _supplierIdTable(_$AppDatabase db) =>
+      db.supplier.createAlias(
+        $_aliasNameGenerator(db.notesTable.supplierId, db.supplier.id),
+      );
+
+  $$SupplierTableProcessedTableManager? get supplierId {
+    final $_column = $_itemColumn<int>('supplier_id');
+    if ($_column == null) return null;
+    final manager = $$SupplierTableTableManager(
+      $_db,
+      $_db.supplier,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_supplierIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$NotesTableTableFilterComposer
+    extends Composer<_$AppDatabase, $NotesTableTable> {
+  $$NotesTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$SupplierTableFilterComposer get supplierId {
+    final $$SupplierTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.supplierId,
+      referencedTable: $db.supplier,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SupplierTableFilterComposer(
+            $db: $db,
+            $table: $db.supplier,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$NotesTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $NotesTableTable> {
+  $$NotesTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$SupplierTableOrderingComposer get supplierId {
+    final $$SupplierTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.supplierId,
+      referencedTable: $db.supplier,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SupplierTableOrderingComposer(
+            $db: $db,
+            $table: $db.supplier,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$NotesTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $NotesTableTable> {
+  $$NotesTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get content =>
+      $composableBuilder(column: $table.content, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$SupplierTableAnnotationComposer get supplierId {
+    final $$SupplierTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.supplierId,
+      referencedTable: $db.supplier,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SupplierTableAnnotationComposer(
+            $db: $db,
+            $table: $db.supplier,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$NotesTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $NotesTableTable,
+          NotesTableData,
+          $$NotesTableTableFilterComposer,
+          $$NotesTableTableOrderingComposer,
+          $$NotesTableTableAnnotationComposer,
+          $$NotesTableTableCreateCompanionBuilder,
+          $$NotesTableTableUpdateCompanionBuilder,
+          (NotesTableData, $$NotesTableTableReferences),
+          NotesTableData,
+          PrefetchHooks Function({bool supplierId})
+        > {
+  $$NotesTableTableTableManager(_$AppDatabase db, $NotesTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$NotesTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$NotesTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$NotesTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String> content = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int?> supplierId = const Value.absent(),
+              }) => NotesTableCompanion(
+                id: id,
+                title: title,
+                content: content,
+                createdAt: createdAt,
+                supplierId: supplierId,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String title,
+                required String content,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int?> supplierId = const Value.absent(),
+              }) => NotesTableCompanion.insert(
+                id: id,
+                title: title,
+                content: content,
+                createdAt: createdAt,
+                supplierId: supplierId,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$NotesTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({supplierId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (supplierId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.supplierId,
+                                referencedTable: $$NotesTableTableReferences
+                                    ._supplierIdTable(db),
+                                referencedColumn: $$NotesTableTableReferences
+                                    ._supplierIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$NotesTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $NotesTableTable,
+      NotesTableData,
+      $$NotesTableTableFilterComposer,
+      $$NotesTableTableOrderingComposer,
+      $$NotesTableTableAnnotationComposer,
+      $$NotesTableTableCreateCompanionBuilder,
+      $$NotesTableTableUpdateCompanionBuilder,
+      (NotesTableData, $$NotesTableTableReferences),
+      NotesTableData,
+      PrefetchHooks Function({bool supplierId})
+    >;
+typedef $$DocumentTableTableCreateCompanionBuilder =
+    DocumentTableCompanion Function({
+      Value<int> id,
+      required String title,
+      required String localPath,
+      Value<String?> url,
+      required String type,
+      Value<DateTime> createdAt,
+      Value<int?> supplierId,
+    });
+typedef $$DocumentTableTableUpdateCompanionBuilder =
+    DocumentTableCompanion Function({
+      Value<int> id,
+      Value<String> title,
+      Value<String> localPath,
+      Value<String?> url,
+      Value<String> type,
+      Value<DateTime> createdAt,
+      Value<int?> supplierId,
+    });
+
+final class $$DocumentTableTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $DocumentTableTable, DocumentTableData> {
+  $$DocumentTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $SupplierTable _supplierIdTable(_$AppDatabase db) =>
+      db.supplier.createAlias(
+        $_aliasNameGenerator(db.documentTable.supplierId, db.supplier.id),
+      );
+
+  $$SupplierTableProcessedTableManager? get supplierId {
+    final $_column = $_itemColumn<int>('supplier_id');
+    if ($_column == null) return null;
+    final manager = $$SupplierTableTableManager(
+      $_db,
+      $_db.supplier,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_supplierIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DocumentTableTableFilterComposer
+    extends Composer<_$AppDatabase, $DocumentTableTable> {
+  $$DocumentTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get localPath => $composableBuilder(
+    column: $table.localPath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$SupplierTableFilterComposer get supplierId {
+    final $$SupplierTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.supplierId,
+      referencedTable: $db.supplier,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SupplierTableFilterComposer(
+            $db: $db,
+            $table: $db.supplier,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DocumentTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $DocumentTableTable> {
+  $$DocumentTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get localPath => $composableBuilder(
+    column: $table.localPath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$SupplierTableOrderingComposer get supplierId {
+    final $$SupplierTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.supplierId,
+      referencedTable: $db.supplier,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SupplierTableOrderingComposer(
+            $db: $db,
+            $table: $db.supplier,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DocumentTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DocumentTableTable> {
+  $$DocumentTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get localPath =>
+      $composableBuilder(column: $table.localPath, builder: (column) => column);
+
+  GeneratedColumn<String> get url =>
+      $composableBuilder(column: $table.url, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$SupplierTableAnnotationComposer get supplierId {
+    final $$SupplierTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.supplierId,
+      referencedTable: $db.supplier,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SupplierTableAnnotationComposer(
+            $db: $db,
+            $table: $db.supplier,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DocumentTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DocumentTableTable,
+          DocumentTableData,
+          $$DocumentTableTableFilterComposer,
+          $$DocumentTableTableOrderingComposer,
+          $$DocumentTableTableAnnotationComposer,
+          $$DocumentTableTableCreateCompanionBuilder,
+          $$DocumentTableTableUpdateCompanionBuilder,
+          (DocumentTableData, $$DocumentTableTableReferences),
+          DocumentTableData,
+          PrefetchHooks Function({bool supplierId})
+        > {
+  $$DocumentTableTableTableManager(_$AppDatabase db, $DocumentTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DocumentTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DocumentTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DocumentTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String> localPath = const Value.absent(),
+                Value<String?> url = const Value.absent(),
+                Value<String> type = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int?> supplierId = const Value.absent(),
+              }) => DocumentTableCompanion(
+                id: id,
+                title: title,
+                localPath: localPath,
+                url: url,
+                type: type,
+                createdAt: createdAt,
+                supplierId: supplierId,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String title,
+                required String localPath,
+                Value<String?> url = const Value.absent(),
+                required String type,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int?> supplierId = const Value.absent(),
+              }) => DocumentTableCompanion.insert(
+                id: id,
+                title: title,
+                localPath: localPath,
+                url: url,
+                type: type,
+                createdAt: createdAt,
+                supplierId: supplierId,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DocumentTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({supplierId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (supplierId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.supplierId,
+                                referencedTable: $$DocumentTableTableReferences
+                                    ._supplierIdTable(db),
+                                referencedColumn: $$DocumentTableTableReferences
+                                    ._supplierIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DocumentTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DocumentTableTable,
+      DocumentTableData,
+      $$DocumentTableTableFilterComposer,
+      $$DocumentTableTableOrderingComposer,
+      $$DocumentTableTableAnnotationComposer,
+      $$DocumentTableTableCreateCompanionBuilder,
+      $$DocumentTableTableUpdateCompanionBuilder,
+      (DocumentTableData, $$DocumentTableTableReferences),
+      DocumentTableData,
+      PrefetchHooks Function({bool supplierId})
     >;
 
 class $AppDatabaseManager {
@@ -2738,4 +4640,8 @@ class $AppDatabaseManager {
       $$SupplierTableTableManager(_db, _db.supplier);
   $$ProductTableTableTableManager get productTable =>
       $$ProductTableTableTableManager(_db, _db.productTable);
+  $$NotesTableTableTableManager get notesTable =>
+      $$NotesTableTableTableManager(_db, _db.notesTable);
+  $$DocumentTableTableTableManager get documentTable =>
+      $$DocumentTableTableTableManager(_db, _db.documentTable);
 }

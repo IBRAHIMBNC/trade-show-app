@@ -1,12 +1,14 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:supplier_snap/app/core/database/tables/documents_table.dart';
+import 'package:supplier_snap/app/core/database/tables/notes_table.dart';
 import 'package:supplier_snap/app/core/database/tables/product_table.dart';
 import 'package:supplier_snap/app/core/database/tables/supplier_table.dart';
 
 part 'app_db.g.dart';
 
-@DriftDatabase(tables: [Supplier, ProductTable])
+@DriftDatabase(tables: [Supplier, ProductTable, NotesTable, DocumentTable])
 class AppDatabase extends _$AppDatabase {
   // After generating code, this class needs to define a `schemaVersion` getter
   // and a constructor telling drift where the database should be stored.
@@ -14,7 +16,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration {
@@ -30,6 +32,11 @@ class AppDatabase extends _$AppDatabase {
         if (from < 4) {
           // Add ProductTable when upgrading to version 4
           await m.createTable(productTable);
+        }
+        if (from < 5) {
+          // Add NotesTable and DocumentTable when upgrading to version 5
+          await m.createTable(notesTable);
+          await m.createTable(documentTable);
         }
       },
     );

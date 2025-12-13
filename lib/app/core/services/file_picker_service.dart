@@ -188,47 +188,43 @@ class FilePickerService extends GetxService {
   }
 
   /// Save file to permanent storage
-  /// This copies the file from temp directory to app's documents directory
-  Future<String?> saveFilePermanently(File file, {String? customName}) async {
+  /// This copies the file from temp directory to app's support directory
+  /// [subdirectory] - Optional subdirectory name (e.g., 'suppliers', 'products')
+  /// [prefix] - Optional filename prefix (e.g., 'supplier', 'product')
+  Future<String?> saveFilePermanently(
+    File file, {
+    String? customName,
+    String subdirectory = 'media',
+    String prefix = 'file',
+  }) async {
     try {
-      // Get the app's documents directory
-      final Directory appDocDir = await getApplicationDocumentsDirectory();
+      final Directory appSupportDir = await getApplicationSupportDirectory();
 
-      // Create a suppliers subdirectory
-      final Directory suppliersDir = Directory('${appDocDir.path}/suppliers');
-      if (!await suppliersDir.exists()) {
-        await suppliersDir.create(recursive: true);
+      // Create the specified subdirectory
+      final Directory targetDir = Directory(
+        '${appSupportDir.path}/$subdirectory',
+      );
+      if (!await targetDir.exists()) {
+        await targetDir.create(recursive: true);
       }
 
-      // Generate a unique filename
+      // Generate a unique filename with better uniqueness
       final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+      final String randomSuffix = DateTime.now().microsecond.toString();
       final String extension = path.extension(file.path);
-      final String fileName = customName ?? 'supplier_$timestamp$extension';
+      final String fileName =
+          customName ?? '${prefix}_${timestamp}_$randomSuffix$extension';
 
       // Copy the file to permanent storage
-      final String permanentPath = '${suppliersDir.path}/$fileName';
+      final String permanentPath = '${targetDir.path}/$fileName';
       final File permanentFile = await file.copy(permanentPath);
 
+      debugPrint('File saved permanently at: $permanentPath');
       return permanentFile.path;
     } catch (e) {
       debugPrint('Error saving file permanently: $e');
       Get.snackbar('Error', 'Failed to save file');
       return null;
-    }
-  }
-
-  /// Delete a file from permanent storage
-  Future<bool> deletePermanentFile(String filePath) async {
-    try {
-      final File file = File(filePath);
-      if (await file.exists()) {
-        await file.delete();
-        return true;
-      }
-      return false;
-    } catch (e) {
-      debugPrint('Error deleting file: $e');
-      return false;
     }
   }
 }

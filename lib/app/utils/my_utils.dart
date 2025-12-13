@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -42,5 +43,20 @@ class MyUtils {
 
   static ImageProvider getDummyImageProvider() {
     return CachedNetworkImageProvider(getTempLink());
+  }
+
+  /// Delete a file from permanent storage
+  static Future<bool> deletePermanentFile(String filePath) async {
+    try {
+      final File file = File(filePath);
+      if (await file.exists()) {
+        await file.delete();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      debugPrint('Error deleting file: $e');
+      return false;
+    }
   }
 }

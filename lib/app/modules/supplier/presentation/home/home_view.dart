@@ -124,18 +124,28 @@ class HomeView extends GetView<HomeController> {
                   radius: 50.r,
                   color: KColors.white40,
                   padding: kPadding8.all,
-                  child: Row(
-                    children: [
-                      12.horizontalSpace,
-                      CustomText.label16b600('20', fontWeight: FontWeight.w500),
-                      20.horizontalSpace,
-                      _buildCircleOverlappedProfiles([
-                        KImages.blackLogo,
-                        KImages.blackLogo,
-                        KImages.blackLogo,
-                      ]),
-                      8.horizontalSpace,
-                    ],
+                  child: Obx(
+                    () => Row(
+                      children: [
+                        12.horizontalSpace,
+                        CustomText.label16b600(
+                          controller.suppliers.length.toString(),
+                          fontWeight: FontWeight.w500,
+                        ),
+                        20.horizontalSpace,
+                        if (controller.suppliers.isNotEmpty) ...[
+                          _buildCircleOverlappedProfiles(
+                            controller.suppliers
+                                .take(3)
+                                .map(
+                                  (e) => e.imageLocalPath ?? KImages.blackLogo,
+                                )
+                                .toList(),
+                          ),
+                          8.horizontalSpace,
+                        ],
+                      ],
+                    ),
                   ),
                 ),
               ],
