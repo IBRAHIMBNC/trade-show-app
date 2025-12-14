@@ -29,69 +29,133 @@ class HomeView extends GetView<HomeController> {
             vertical: topPadding.h,
             horizontal: kPadding20.w,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              _buildSearchBar(),
-              10.verticalSpace,
-              Expanded(
-                child: CustomScrollView(
-                  slivers: [
-                    12.verticalSpaceSliver,
-                    SliverToBoxAdapter(child: _buildAddSupplierCard()),
-                    16.verticalSpaceSliver,
-                    Obx(
-                      () => SliverList.separated(
-                        itemCount: controller.suppliers.length,
-                        itemBuilder: (context, index) {
-                          return SupplierDetailsCard(
-                            supplier: controller.suppliers[index],
-                            onDeleteTap: () {
-                              controller.onDeleteSupplierTap(
-                                controller.suppliers[index].id!,
-                              );
-                            },
-                            onEditTap: () {
-                              controller.onEditSupplierTap(
-                                controller.suppliers[index],
-                              );
-                            },
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return 16.verticalSpace;
-                        },
-                      ),
-                    ),
-                    45.verticalSpaceSliver,
-                  ],
-                ),
-              ),
-              // Expanded(
-              //   child: ListView.separated(
-              //     padding: EdgeInsets.zero,
-              //     children: [
-              //       20.verticalSpace,
-              //       _buildAddSupplierCard(),
-              //       24.verticalSpace,
-              //       SupplierDetailsCard(),
-              //       12.verticalSpace,
-              //       SupplierDetailsCard(),
-              //       50.verticalSpace,
-              //     ],
-              //   ),
-              // ),
-              // Text('HomeView is working', style: TextStyle(fontSize: 20)),
-              // 20.verticalSpace,
-              // RoundedButton(
-              //   'Logout',
-              //   onTap: () {
-              //     controller.logout();
-              //   },
-              // ),
-            ],
+          child: Obx(
+            () => Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                if (controller.suppliers.isNotEmpty) ...[
+                  _buildSearchBar(),
+                  10.verticalSpace,
+                ],
+                _buildSupplierList(),
+                // Expanded(
+                //   child: ListView.separated(
+                //     padding: EdgeInsets.zero,
+                //     children: [
+                //       20.verticalSpace,
+                //       _buildAddSupplierCard(),
+                //       24.verticalSpace,
+                //       SupplierDetailsCard(),
+                //       12.verticalSpace,
+                //       SupplierDetailsCard(),
+                //       50.verticalSpace,
+                //     ],
+                //   ),
+                // ),
+                // Text('HomeView is working', style: TextStyle(fontSize: 20)),
+                // 20.verticalSpace,
+                // RoundedButton(
+                //   'Logout',
+                //   onTap: () {
+                //     controller.logout();
+                //   },
+                // ),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Expanded _buildSupplierList() {
+    if (controller.suppliers.isEmpty) {
+      return _buildEmptyState();
+    }
+    return Expanded(
+      child: CustomScrollView(
+        slivers: [
+          12.verticalSpaceSliver,
+          SliverToBoxAdapter(child: _buildAddSupplierCard()),
+          16.verticalSpaceSliver,
+          Obx(() {
+            return SliverList.separated(
+              itemCount: controller.suppliers.length,
+              itemBuilder: (context, index) {
+                return SupplierDetailsCard(
+                  supplier: controller.suppliers[index],
+                  onDeleteTap: () {
+                    controller.onDeleteSupplierTap(
+                      controller.suppliers[index].id!,
+                    );
+                  },
+                  onEditTap: () {
+                    controller.onEditSupplierTap(controller.suppliers[index]);
+                  },
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return 16.verticalSpace;
+              },
+            );
+          }),
+          45.verticalSpaceSliver,
+        ],
+      ),
+    );
+  }
+
+  Expanded _buildEmptyState() {
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          MyContainer(
+            radius: 200.r,
+            width: 133.w,
+            height: 133.h,
+            color: null,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: KColors.primaryBg,
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(left: 12.w),
+              child: CustomImage.icon(KIcons.emptySuppliers, size: 120.w),
+            ),
+          ),
+          24.verticalSpace,
+          CustomText.label24b800(
+            'No Suppliers Added Yet',
+            fontWeight: FontWeight.w600,
+          ),
+          12.verticalSpace,
+          Padding(
+            padding: kPadding16.hp,
+            child: CustomText.label12b400(
+              'Start building your supplier database by adding your first contact.',
+              color: KColors.black60,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          24.verticalSpace,
+          RoundedButton(
+            Row(
+              children: [
+                Icon(Icons.add, color: KColors.black, size: 25.sp),
+                8.horizontalSpace,
+                CustomText.label16b600(
+                  'Add New Supplier',
+                  color: KColors.black,
+                ),
+              ],
+            ),
+            onTap: () {
+              Get.toNamed(Routes.ADD_SUPPLIER);
+            },
+          ),
+          80.verticalSpace,
+        ],
       ),
     );
   }
@@ -138,7 +202,8 @@ class HomeView extends GetView<HomeController> {
                             controller.suppliers
                                 .take(3)
                                 .map(
-                                  (e) => e.imageLocalPath ?? KImages.blackLogo,
+                                  (e) =>
+                                      e.absoluteImagePath ?? KImages.blackLogo,
                                 )
                                 .toList(),
                           ),

@@ -16,7 +16,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration {
@@ -37,6 +37,11 @@ class AppDatabase extends _$AppDatabase {
           // Add NotesTable and DocumentTable when upgrading to version 5
           await m.createTable(notesTable);
           await m.createTable(documentTable);
+        }
+        if (from < 6) {
+          // Recreate notes table with increased content length
+          await m.deleteTable('notes_table');
+          await m.createTable(notesTable);
         }
       },
     );

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:supplier_snap/app/core/failures/failures.dart';
 import 'package:supplier_snap/app/modules/notes/data/datasources/notes_local_datasource.dart';
@@ -53,21 +55,6 @@ class NotesRepository {
         );
   }
 
-  // /// Get note count for a supplier (EFFICIENT)
-  // Future<Either<Failure, int>> getNoteCountBySupplierId(int supplierId) async {
-  //   try {
-  //     final count = await localDatasource.getNoteCountBySupplierId(supplierId);
-  //     return Right(count);
-  //   } catch (e) {
-  //     return Left(DatabaseFailure(e.toString()));
-  //   }
-  // }
-
-  // /// Watch note count for a supplier (REACTIVE)
-  // Stream<int> watchNoteCountBySupplierId(int supplierId) {
-  //   return localDatasource.watchNoteCountBySupplierId(supplierId);
-  // }
-
   /// Get a single note by ID
   Future<Either<Failure, NoteModel>> getNoteById(int id) async {
     try {
@@ -93,6 +80,7 @@ class NotesRepository {
       }
       return Left(DatabaseFailure('Failed to update note'));
     } catch (e) {
+      log(e.toString());
       return Left(DatabaseFailure(e.toString()));
     }
   }

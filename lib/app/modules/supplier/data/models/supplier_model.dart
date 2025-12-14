@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:supplier_snap/app/core/database/app_db.dart';
 import 'package:supplier_snap/app/core/enums/industry_type_enum.dart';
 import 'package:supplier_snap/app/core/enums/interest_level_enum.dart';
+import 'package:supplier_snap/app/core/extensions/string.dart';
 
 class SupplierModel {
   final int? id;
@@ -19,10 +20,14 @@ class SupplierModel {
   final IndustryTypeEnum? industry;
   final InterestLevelEnum? interestLevel;
   final String? imageUrl;
-  final String? imageLocalPath;
+  final String? _imageLocalPath;
   final int? score;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+
+  String? get absoluteImagePath => _imageLocalPath?.toAbsolutePath;
+
+  String? get relativeImagePath => _imageLocalPath;
 
   const SupplierModel({
     this.id,
@@ -39,11 +44,11 @@ class SupplierModel {
     this.industry,
     this.interestLevel,
     this.imageUrl,
-    this.imageLocalPath,
+    String? imageLocalPath,
     this.score,
     this.createdAt,
     this.updatedAt,
-  });
+  }) : _imageLocalPath = imageLocalPath;
 
   Map<String, dynamic> toMap() {
     return {
@@ -61,7 +66,7 @@ class SupplierModel {
       'industry': industry,
       'interest_level': interestLevel,
       'image_url': imageUrl,
-      'image_local_path': imageLocalPath,
+      'image_local_path': _imageLocalPath,
       'score': score,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
@@ -185,7 +190,7 @@ class SupplierModel {
       industry: industry ?? this.industry,
       interestLevel: interestLevel ?? this.interestLevel,
       imageUrl: imageUrl ?? this.imageUrl,
-      imageLocalPath: imageLocalPath ?? this.imageLocalPath,
+      imageLocalPath: imageLocalPath ?? _imageLocalPath,
       score: score ?? this.score,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,

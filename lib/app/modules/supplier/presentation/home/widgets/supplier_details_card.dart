@@ -6,7 +6,7 @@ import 'package:supplier_snap/app/constants/k_icons.dart';
 import 'package:supplier_snap/app/constants/padding_constants.dart';
 import 'package:supplier_snap/app/core/extensions/double.dart';
 import 'package:supplier_snap/app/modules/supplier/data/models/supplier_model.dart';
-import 'package:supplier_snap/app/modules/supplier/data/services/supplier_card_service.dart';
+import 'package:supplier_snap/app/modules/supplier/data/services/supplier_info_service.dart';
 import 'package:supplier_snap/app/routes/app_pages.dart';
 import 'package:supplier_snap/app/widgets/custom_image.dart';
 import 'package:supplier_snap/app/widgets/custom_text/custom_text.dart';
@@ -27,8 +27,8 @@ class SupplierDetailsCard extends StatelessWidget {
   final Function()? onEditTap;
   final Function()? onDeleteTap;
 
-  SupplierCardService get supplierCardService =>
-      Get.find<SupplierCardService>();
+  SupplierInfoService get supplierCardService =>
+      Get.find<SupplierInfoService>();
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +49,9 @@ class SupplierDetailsCard extends StatelessWidget {
               radius: 32.r,
               backgroundColor: KColors.brand,
               child: CustomImage.cirlce(
-                supplier.imageLocalPath ?? '',
+                supplier.absoluteImagePath ?? '',
                 size: 60.w,
-                hideChild: supplier.imageLocalPath != null,
+                hideChild: supplier.absoluteImagePath != null,
                 backgroundColor: KColors.white,
                 child: CustomImage.icon(
                   KIcons.user,
@@ -152,23 +152,25 @@ class SupplierDetailsCard extends StatelessWidget {
           Row(
             spacing: 4.w,
             children: [
-              // Real-time product count using StreamBuilder
-              StreamBuilder<int>(
-                stream: supplierCardService.watchProductCountBySupplierId(
+              _buildStreamCountContainer(
+                title: 'Products',
+                countStream: supplierCardService.watchProductCountBySupplierId(
                   supplier.id!,
                 ),
-                builder: (context, snapshot) {
-                  final count = snapshot.data ?? 0;
-                  return _buildCountContainer(
-                    title: 'Products',
-                    count: count.toString(),
-                  );
-                },
               ),
 
-              _buildCountContainer(title: 'Files', count: '12'),
-
-              _buildCountContainer(title: 'Notes', count: '85'),
+              _buildStreamCountContainer(
+                title: 'Notes',
+                countStream: supplierCardService.watchNoteCountBySupplierId(
+                  supplier.id!,
+                ),
+              ),
+              _buildStreamCountContainer(
+                title: 'Files',
+                countStream: supplierCardService.watchDocumentCountBySupplierId(
+                  supplier.id!,
+                ),
+              ),
             ],
           ),
           12.verticalSpace,
@@ -176,6 +178,19 @@ class SupplierDetailsCard extends StatelessWidget {
           WeChatAndWhatsappBtns(),
         ],
       ),
+    );
+  }
+
+  _buildStreamCountContainer({
+    required String title,
+    required Stream<int> countStream,
+  }) {
+    return StreamBuilder<int>(
+      stream: countStream,
+      builder: (context, snapshot) {
+        final count = snapshot.data ?? 0;
+        return _buildCountContainer(title: title, count: count.toString());
+      },
     );
   }
 

@@ -21,4 +21,10 @@ class KIcons {
   static const String delete = '${basePath}delete.svg';
   static const String lock = '${basePath}lock.svg';
   static const String logout = '${basePath}logout.svg';
+
+  //Empty state icons
+  static const String emptySuppliers = '${basePath}no_suppliers.svg';
+  static const String emptyNotes = '${basePath}no_notes.svg';
+  static const String emptyProducts = '${basePath}no_products.svg';
+  static const String emptyFiles = '${basePath}no_files.svg';
 }

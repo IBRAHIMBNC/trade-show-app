@@ -34,7 +34,7 @@ class ProductCard extends StatelessWidget {
       padding: kPadding16.all,
       border: BorderSide(color: KColors.black5),
       leading: CustomImage.fromSize(
-        product.imageLocalPaths.first,
+        product.absoluteImagePaths.first,
         size: 75.h,
         radius: 15.r,
       ),

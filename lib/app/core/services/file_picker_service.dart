@@ -5,10 +5,20 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:supplier_snap/app/utils/snackbars.dart';
 
 /// Service to handle file and image picking operations
 class FilePickerService extends GetxService {
   final ImagePicker _imagePicker = ImagePicker();
+
+  late String appSupportDirectoryPath;
+
+  Future<FilePickerService> init() async {
+    final Directory appSupportDir = await getApplicationSupportDirectory();
+    appSupportDirectoryPath = appSupportDir.path;
+
+    return this;
+  }
 
   /// Pick a single image from gallery
   Future<File?> pickImageFromGallery({
@@ -198,11 +208,9 @@ class FilePickerService extends GetxService {
     String prefix = 'file',
   }) async {
     try {
-      final Directory appSupportDir = await getApplicationSupportDirectory();
-
       // Create the specified subdirectory
       final Directory targetDir = Directory(
-        '${appSupportDir.path}/$subdirectory',
+        '$appSupportDirectoryPath/$subdirectory',
       );
       if (!await targetDir.exists()) {
         await targetDir.create(recursive: true);
@@ -219,11 +227,15 @@ class FilePickerService extends GetxService {
       final String permanentPath = '${targetDir.path}/$fileName';
       final File permanentFile = await file.copy(permanentPath);
 
-      debugPrint('File saved permanently at: $permanentPath');
-      return permanentFile.path;
+      final relativePath = path.relative(
+        permanentFile.path,
+        from: appSupportDirectoryPath,
+      );
+
+      return relativePath;
     } catch (e) {
       debugPrint('Error saving file permanently: $e');
-      Get.snackbar('Error', 'Failed to save file');
+      showErrorSnackbar(message: 'Failed to save file');
       return null;
     }
   }

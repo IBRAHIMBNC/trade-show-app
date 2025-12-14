@@ -205,7 +205,9 @@ class CustomImage extends StatelessWidget {
         width: width, // Pass width
         height: height, // Pass height
         fit: fit,
-        errorBuilder: (context, error, stackTrace) => _buildErrorWidget(),
+        errorBuilder: (context, error, stackTrace) {
+          return _buildErrorWidget();
+        },
         color: color,
       );
     }

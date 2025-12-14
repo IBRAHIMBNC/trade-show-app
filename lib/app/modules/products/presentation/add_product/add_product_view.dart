@@ -33,8 +33,7 @@ class AddProductView extends GetView<AddProductController> {
                   hinText: 'Name',
                   textInputAction: TextInputAction.next,
                   onSave: (val) {
-                    print('Name saved: ${val!.trim()}');
-                    controller.name = val.trim();
+                    controller.name = val!.trim();
                   },
                   controller: controller.nameController,
                   validator: (value) =>

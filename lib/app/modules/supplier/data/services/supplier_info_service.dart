@@ -1,10 +1,10 @@
 import 'package:drift/drift.dart';
 import 'package:supplier_snap/app/core/database/app_db.dart';
 
-class SupplierCardService {
+class SupplierInfoService {
   final AppDatabase database;
 
-  const SupplierCardService({required this.database});
+  const SupplierInfoService({required this.database});
 
   /// Get product count for a supplier (EFFICIENT - count only, no data loading)
   Future<int> getProductCountBySupplierId(int supplierId) async {

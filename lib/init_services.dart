@@ -10,6 +10,7 @@ import 'package:supplier_snap/app/core/services/supbase_storage_service.dart';
 
 class InitServices {
   static Future<void> init() async {
+    await Get.putAsync<FilePickerService>(() => FilePickerService().init());
     Get.put(AppDatabase());
     Get.put(ConnectivityService(connectivity: Connectivity()));
     Get.lazyPut(

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:supplier_snap/app/modules/products/presentation/add_product/add_product_controller.dart';
 import 'package:supplier_snap/app/modules/supplier/data/models/supplier_model.dart';
 import 'package:supplier_snap/app/modules/supplier/data/repository/supplier_repository.dart';
+import 'package:supplier_snap/app/modules/supplier/data/services/supplier_info_service.dart';
 import 'package:supplier_snap/app/modules/supplier/presentation/supplier_detail/widgets/info_tab.dart';
 import 'package:supplier_snap/app/modules/supplier/presentation/supplier_detail/widgets/remarks_tab.dart';
 import 'package:supplier_snap/app/modules/supplier/presentation/supplier_detail/widgets/scoring_tab.dart';
@@ -32,6 +33,17 @@ class SupplierDetailController extends GetxController
   late SupplierModel supplier;
 
   final RxBool isLoading = false.obs;
+
+  final supplierInfoServie = Get.find<SupplierInfoService>();
+
+  Stream<int> get productsCountStream =>
+      supplierInfoServie.watchProductCountBySupplierId(supplierId);
+
+  Stream<int> get filesCountStream =>
+      supplierInfoServie.watchDocumentCountBySupplierId(supplierId);
+
+  Stream<int> get notesCountStream =>
+      supplierInfoServie.watchNoteCountBySupplierId(supplierId);
 
   gotoProductListing() {
     Get.toNamed(Routes.PRODUCT_LISTING);

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:supplier_snap/app/core/failures/failures.dart';
 import 'package:supplier_snap/app/core/services/auth_service.dart';
@@ -100,6 +102,7 @@ class SupplierRepository extends BaseRepository {
 
       return Right(updatedSupplier);
     } catch (e) {
+      log(e.toString());
       return Left(ServerFailure(e.toString()));
     }
   }

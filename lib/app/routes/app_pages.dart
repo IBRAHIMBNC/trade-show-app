@@ -6,6 +6,8 @@ import '../modules/auth/presentation/login/login_binding.dart';
 import '../modules/auth/presentation/login/login_view.dart';
 import '../modules/auth/presentation/sign_up/sign_up_binding.dart';
 import '../modules/auth/presentation/sign_up/sign_up_view.dart';
+import '../modules/files/presentation/file_viewer/bindings/file_viewer_binding.dart';
+import '../modules/files/presentation/file_viewer/views/file_viewer_view.dart';
 import '../modules/files/presentation/files_listing/files_listing_binding.dart';
 import '../modules/files/presentation/files_listing/files_listing_view.dart';
 import '../modules/navigation/navigation_binding.dart';
@@ -141,6 +143,11 @@ class AppPages {
       name: _Paths.F_A_QS,
       page: () => const FAQsView(),
       binding: FAQsBinding(),
+    ),
+    GetPage(
+      name: _Paths.FILE_VIEWER,
+      page: () => const FileViewerView(),
+      binding: FileViewerBinding(),
     ),
   ];
 }

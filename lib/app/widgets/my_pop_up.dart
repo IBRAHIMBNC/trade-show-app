@@ -70,6 +70,12 @@ class MyPopupMenu extends StatelessWidget {
                 width: 0.3.sw,
                 child: Row(
                   children: [
+                    if (icons.isNotEmpty)
+                      Icon(
+                        icons[items.indexOf(e)],
+                        size: 16.r,
+                        color: KColors.black,
+                      ),
                     12.horizontalSpace,
                     CustomText(e, textAlign: TextAlign.start, size: 14),
                   ],

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:supplier_snap/app/core/database/app_db.dart';
 import 'package:supplier_snap/app/core/enums/product_category_enum.dart';
+import 'package:supplier_snap/app/core/extensions/string.dart';
 
 class ProductModel {
   final int? id;
@@ -15,9 +16,14 @@ class ProductModel {
   final int supplierId;
   final int? moq;
   final String? moqUnit;
-  final List<String> imageLocalPaths;
+  final List<String> _imageLocalPaths;
   final List<String> imageUrls;
   final String? certifications;
+
+  List<String> get absoluteImagePaths =>
+      _imageLocalPaths.map((e) => e.toAbsolutePath).toList();
+
+  List<String> get relativeImagePaths => _imageLocalPaths;
 
   const ProductModel({
     this.id,
@@ -31,10 +37,10 @@ class ProductModel {
     required this.supplierId,
     this.moq,
     this.moqUnit,
-    this.imageLocalPaths = const [],
+    List<String> imageLocalPaths = const [],
     this.imageUrls = const [],
     this.certifications,
-  });
+  }) : _imageLocalPaths = imageLocalPaths;
 
   Map<String, dynamic> toMap() {
     return {
@@ -49,7 +55,7 @@ class ProductModel {
       'supplier_id': supplierId,
       'moq': moq,
       'moq_unit': moqUnit,
-      'image_local_paths': imageLocalPaths,
+      'image_local_paths': _imageLocalPaths,
       'image_urls': imageUrls,
       'certifications': certifications,
     };
@@ -113,9 +119,9 @@ class ProductModel {
       supplierId: supplierId ?? this.supplierId,
       moq: moq ?? this.moq,
       moqUnit: moqUnit ?? this.moqUnit,
-      imageLocalPaths: imageLocalPaths ?? this.imageLocalPaths,
       imageUrls: imageUrls ?? this.imageUrls,
       certifications: certifications ?? this.certifications,
+      imageLocalPaths: imageLocalPaths ?? _imageLocalPaths,
     );
   }
 
@@ -138,5 +144,3 @@ class ProductModel {
     );
   }
 }
-
-extension ProductModelExtension on ProductModel {}

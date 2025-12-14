@@ -1935,7 +1935,7 @@ class $NotesTableTable extends NotesTable
     false,
     additionalChecks: GeneratedColumn.checkTextLength(
       minTextLength: 1,
-      maxTextLength: 1000,
+      maxTextLength: 10000,
     ),
     type: DriftSqlType.string,
     requiredDuringInsert: true,

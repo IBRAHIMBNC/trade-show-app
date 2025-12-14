@@ -12,7 +12,7 @@ class FilesListingView extends GetView<FilesListingController> {
       appBar: MyAppBar(
         title: 'Files',
         addBtnTitle: 'Add File',
-        onAddBtnPressed: () {},
+        onAddBtnPressed: controller.addFile,
         onSearchChanged: (val) {},
       ),
       body: const Center(

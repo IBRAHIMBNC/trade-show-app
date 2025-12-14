@@ -70,19 +70,19 @@ class SupplierDetailView extends GetView<SupplierDetailController> {
             ),
             _buildAddTile(
               title: 'Products',
-              leadingText: '6',
+              countingStream: controller.productsCountStream,
               onTap: controller.gotoProductListing,
               onAddTap: controller.goToAddProduct,
             ),
             _buildAddTile(
-              title: 'Files',
-              leadingText: '6',
-              onTap: controller.gotoFiles,
+              title: 'Notes',
+              countingStream: controller.notesCountStream,
+              onTap: controller.gotoNotes,
             ),
             _buildAddTile(
-              title: 'Notes',
-              leadingText: '6',
-              onTap: controller.gotoNotes,
+              title: 'Files',
+              countingStream: controller.filesCountStream,
+              onTap: controller.gotoFiles,
             ),
             20.verticalSpace,
           ],
@@ -91,41 +91,47 @@ class SupplierDetailView extends GetView<SupplierDetailController> {
     );
   }
 
-  MyContainer _buildAddTile({
+  Widget _buildAddTile({
     required String title,
-    required String leadingText,
+    required Stream<int> countingStream,
     Function()? onTap,
     Function()? onAddTap,
   }) {
-    return MyContainer(
-      padding: kPadding4.all,
-      radius: 40.r,
-      child: MyListTile(
-        onTap: onTap,
-        horizontalSpacing: 8.w,
-        leading: CircleAvatar(
-          radius: 17.r,
-          backgroundColor: KColors.white,
-          child: CustomText.label14b400(leadingText),
-        ),
+    return StreamBuilder(
+      stream: countingStream,
+      builder: (context, snap) {
+        final countingStream = snap.data ?? 0;
+        return MyContainer(
+          padding: kPadding4.all,
+          radius: 40.r,
+          child: MyListTile(
+            onTap: onTap,
+            horizontalSpacing: 8.w,
+            leading: CircleAvatar(
+              radius: 17.r,
+              backgroundColor: KColors.white,
+              child: CustomText.label14b400(countingStream.toString()),
+            ),
 
-        title: CustomText.label12b400(title),
-        trailing: Row(
-          children: [
-            HighlightedEdgeButton(
-              onTap: onAddTap,
-              child: Icon(Icons.add, color: KColors.black, size: 20.sp),
+            title: CustomText.label12b400(title),
+            trailing: Row(
+              children: [
+                HighlightedEdgeButton(
+                  onTap: onAddTap,
+                  child: Icon(Icons.add, color: KColors.black, size: 20.sp),
+                ),
+                20.horizontalSpace,
+                Icon(
+                  CupertinoIcons.chevron_forward,
+                  size: 15.w,
+                  color: KColors.black60,
+                ),
+                8.horizontalSpace,
+              ],
             ),
-            20.horizontalSpace,
-            Icon(
-              CupertinoIcons.chevron_forward,
-              size: 15.w,
-              color: KColors.black60,
-            ),
-            8.horizontalSpace,
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -142,9 +148,9 @@ class SupplierDetailView extends GetView<SupplierDetailController> {
             radius: 28.r,
             backgroundColor: KColors.brand,
             child: CustomImage.cirlce(
-              controller.supplier.imageLocalPath ?? '',
+              controller.supplier.absoluteImagePath ?? '',
               size: 53.w,
-              hideChild: controller.supplier.imageLocalPath != null,
+              hideChild: controller.supplier.absoluteImagePath != null,
               backgroundColor: KColors.white,
               child: CustomImage.icon(
                 KIcons.user,

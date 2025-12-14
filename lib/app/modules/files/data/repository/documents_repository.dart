@@ -62,25 +62,6 @@ class DocumentsRepository {
         );
   }
 
-  // /// Get document count for a supplier (EFFICIENT)
-  // Future<Either<Failure, int>> getDocumentCountBySupplierId(
-  //   int supplierId,
-  // ) async {
-  //   try {
-  //     final count = await localDatasource.getDocumentCountBySupplierId(
-  //       supplierId,
-  //     );
-  //     return Right(count);
-  //   } catch (e) {
-  //     return Left(DatabaseFailure(e.toString()));
-  //   }
-  // }
-
-  // /// Watch document count for a supplier (REACTIVE)
-  // Stream<int> watchDocumentCountBySupplierId(int supplierId) {
-  //   return localDatasource.watchDocumentCountBySupplierId(supplierId);
-  // }
-
   /// Get a single document by ID
   Future<Either<Failure, DocumentModel>> getDocumentById(int id) async {
     try {

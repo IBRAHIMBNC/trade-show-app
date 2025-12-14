@@ -22,6 +22,7 @@ abstract class Routes {
   static const CHANGE_PASSWORD = _Paths.CHANGE_PASSWORD;
   static const DELETE_ACCOUNT = _Paths.DELETE_ACCOUNT;
   static const F_A_QS = _Paths.F_A_QS;
+  static const FILE_VIEWER = _Paths.FILE_VIEWER;
 }
 
 abstract class _Paths {
@@ -45,4 +46,5 @@ abstract class _Paths {
   static const CHANGE_PASSWORD = '/change-password';
   static const DELETE_ACCOUNT = '/delete-account';
   static const F_A_QS = '/f-a-qs';
+  static const FILE_VIEWER = '/file-viewer';
 }

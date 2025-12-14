@@ -10,7 +10,7 @@ class ProductDetailsController extends GetxController {
 
   late ProductModel product = Get.arguments as ProductModel;
 
-  List<String> get images => [...product.imageLocalPaths];
+  List<String> get images => [...product.absoluteImagePaths];
 
   onEditProdut() {
     Get.toNamed(

@@ -45,27 +45,6 @@ class DocumentsLocalDatasource {
     )..where((tbl) => tbl.supplierId.equals(supplierId))).watch();
   }
 
-  // /// Get document count for a supplier (EFFICIENT)
-  // Future<int> getDocumentCountBySupplierId(int supplierId) async {
-  //   final countQuery = database.selectOnly(database.documentTable)
-  //     ..addColumns([database.documentTable.id.count()])
-  //     ..where(database.documentTable.supplierId.equals(supplierId));
-
-  //   final result = await countQuery.getSingle();
-  //   return result.read(database.documentTable.id.count()) ?? 0;
-  // }
-
-  // /// Watch document count for a supplier (REACTIVE)
-  // Stream<int> watchDocumentCountBySupplierId(int supplierId) {
-  //   final countQuery = database.selectOnly(database.documentTable)
-  //     ..addColumns([database.documentTable.id.count()])
-  //     ..where(database.documentTable.supplierId.equals(supplierId));
-
-  //   return countQuery.watchSingle().map(
-  //     (row) => row.read(database.documentTable.id.count()) ?? 0,
-  //   );
-  // }
-
   /// Get a single document by ID
   Future<DocumentTableData?> getDocumentById(int id) async {
     return await (database.select(

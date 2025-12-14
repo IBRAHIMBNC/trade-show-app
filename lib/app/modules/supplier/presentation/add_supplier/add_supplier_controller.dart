@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:supplier_snap/app/constants/k_icons.dart';
 import 'package:supplier_snap/app/core/enums/industry_type_enum.dart';
 import 'package:supplier_snap/app/core/enums/interest_level_enum.dart';
+import 'package:supplier_snap/app/core/extensions/string.dart';
 import 'package:supplier_snap/app/core/failures/failures.dart';
 import 'package:supplier_snap/app/core/services/file_picker_service.dart';
 import 'package:supplier_snap/app/modules/supplier/data/models/supplier_model.dart';
@@ -139,13 +140,11 @@ class AddSupplierController extends GetxController {
       whatsAppNumber: whatsAppNumber,
       notes: remarks,
       industry: industryEnum,
-      interestLevel: selectedInterestLevel != 'Interest Level'
-          ? selectedInterestLevel
-          : null,
+      interestLevel: selectedInterestLevel,
       createdAt: supplier!.createdAt,
       updatedAt: DateTime.now(),
       imageUrl: imageUrl,
-      imageLocalPath: imageLocalPath ?? supplier!.imageLocalPath,
+      imageLocalPath: imageLocalPath ?? supplier!.relativeImagePath,
     );
     return supplierRepository.updateSupplier(supplier!.id!, updatedSupplier);
   }
@@ -188,9 +187,9 @@ class AddSupplierController extends GetxController {
       remarksController.text = supplier!.notes ?? '';
 
       imageUrl = supplier!.imageUrl;
-      imageLocalPath = supplier!.imageLocalPath;
-      selectedImage.value = supplier!.imageLocalPath != null
-          ? File(supplier!.imageLocalPath!)
+      imageLocalPath = supplier!.relativeImagePath;
+      selectedImage.value = supplier!.absoluteImagePath != null
+          ? File(supplier!.absoluteImagePath!)
           : null;
 
       industryEnum = supplier!.industry;
@@ -218,7 +217,7 @@ class AddSupplierController extends GetxController {
           }
 
           imageLocalPath = permanentPath;
-          selectedImage.value = File(permanentPath);
+          selectedImage.value = File(permanentPath.toAbsolutePath);
         }
       }
     } finally {

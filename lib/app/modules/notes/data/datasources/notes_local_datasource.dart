@@ -40,27 +40,6 @@ class NotesLocalDatasource {
     )..where((tbl) => tbl.supplierId.equals(supplierId))).watch();
   }
 
-  // /// Get note count for a supplier (EFFICIENT)
-  // Future<int> getNoteCountBySupplierId(int supplierId) async {
-  //   final countQuery = database.selectOnly(database.notesTable)
-  //     ..addColumns([database.notesTable.id.count()])
-  //     ..where(database.notesTable.supplierId.equals(supplierId));
-
-  //   final result = await countQuery.getSingle();
-  //   return result.read(database.notesTable.id.count()) ?? 0;
-  // }
-
-  // /// Watch note count for a supplier (REACTIVE)
-  // Stream<int> watchNoteCountBySupplierId(int supplierId) {
-  //   final countQuery = database.selectOnly(database.notesTable)
-  //     ..addColumns([database.notesTable.id.count()])
-  //     ..where(database.notesTable.supplierId.equals(supplierId));
-
-  //   return countQuery.watchSingle().map(
-  //     (row) => row.read(database.notesTable.id.count()) ?? 0,
-  //   );
-  // }
-
   /// Get a single note by ID
   Future<NotesTableData?> getNoteById(int id) async {
     return await (database.select(

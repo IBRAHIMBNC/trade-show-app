@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supplier_snap/app/constants/k_icons.dart';
 import 'package:supplier_snap/app/core/enums/product_category_enum.dart';
+import 'package:supplier_snap/app/core/extensions/string.dart';
 import 'package:supplier_snap/app/core/services/file_picker_service.dart';
 import 'package:supplier_snap/app/modules/products/data/models/product_model.dart';
 import 'package:supplier_snap/app/modules/products/data/repository/products_repository.dart';
@@ -25,7 +26,7 @@ class AddProductController extends GetxController {
   final count = 0.obs;
 
   RxList<String> images = RxList<String>();
-  List<String> imageLocalPaths = []; // Store permanent paths
+  List<String> relativePaths = []; // Store permanent paths
 
   // Text editing controllers
   final nameController = TextEditingController();
@@ -70,8 +71,8 @@ class AddProductController extends GetxController {
             prefix: 'product',
           );
           if (permanentPath != null) {
-            imageLocalPaths.add(permanentPath);
-            images.add(permanentPath);
+            relativePaths.add(permanentPath);
+            images.add(permanentPath.toAbsolutePath);
           }
         }
       }
@@ -96,7 +97,7 @@ class AddProductController extends GetxController {
         supplierId: supplier!.id!,
         moq: moq,
         moqUnit: moqUnit,
-        imageLocalPaths: imageLocalPaths,
+        imageLocalPaths: relativePaths,
         category: selectedCategory!,
         imageUrls: [],
         certifications: certifications,
@@ -135,7 +136,7 @@ class AddProductController extends GetxController {
         leadTimeDays: leadTimeDays,
         moq: moq,
         moqUnit: moqUnit,
-        imageLocalPaths: imageLocalPaths,
+        imageLocalPaths: relativePaths,
         certifications: certifications,
         category: selectedCategory!,
       );
@@ -164,6 +165,11 @@ class AddProductController extends GetxController {
     }
   }
 
+  deleteImage(int index) {
+    images.removeAt(index);
+    relativePaths.removeAt(index);
+  }
+
   init() {
     // If editing an existing product, populate fields
     if (product != null) {
@@ -176,8 +182,8 @@ class AddProductController extends GetxController {
       certificationsController.text = product!.certifications ?? '';
       notesController.text = product!.notes ?? '';
       selectedCategory = product!.category;
-      imageLocalPaths = List<String>.from(product!.imageLocalPaths);
-      images.addAll(product!.imageLocalPaths);
+      relativePaths = List<String>.from(product!.relativeImagePaths);
+      images.addAll(product!.absoluteImagePaths);
     }
   }
 

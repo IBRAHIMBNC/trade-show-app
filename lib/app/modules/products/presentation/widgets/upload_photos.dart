@@ -45,10 +45,7 @@ class UploadPhotos extends GetView<AddProductController> {
                   padding: kPadding4.all,
                   alignment: Alignment.topRight,
                   child: GestureDetector(
-                    onTap: () {
-                      controller.images.removeAt(index);
-                      controller.update();
-                    },
+                    onTap: () => controller.deleteImage(index),
                     child: CircleAvatar(
                       radius: 10.r,
                       backgroundColor: KColors.white,

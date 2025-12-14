@@ -12,7 +12,7 @@ class MyContainer extends Container {
     this.shadow,
     super.key,
     super.child,
-    super.color = KColors.primaryBg,
+    this.color = KColors.primaryBg,
     super.decoration,
     super.foregroundDecoration,
     super.padding,
@@ -22,6 +22,9 @@ class MyContainer extends Container {
     super.transformAlignment,
     this.gradient,
   });
+
+  @override
+  final Color? color;
   final dynamic radius;
   final double? height;
   final double? width;
