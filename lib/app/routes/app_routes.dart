@@ -23,6 +23,7 @@ abstract class Routes {
   static const DELETE_ACCOUNT = _Paths.DELETE_ACCOUNT;
   static const F_A_QS = _Paths.F_A_QS;
   static const FILE_VIEWER = _Paths.FILE_VIEWER;
+  static const COMPARISON = _Paths.COMPARISON;
 }
 
 abstract class _Paths {
@@ -47,4 +48,5 @@ abstract class _Paths {
   static const DELETE_ACCOUNT = '/delete-account';
   static const F_A_QS = '/f-a-qs';
   static const FILE_VIEWER = '/file-viewer';
+  static const COMPARISON = '/comparison';
 }

@@ -6,6 +6,8 @@ import '../modules/auth/presentation/login/login_binding.dart';
 import '../modules/auth/presentation/login/login_view.dart';
 import '../modules/auth/presentation/sign_up/sign_up_binding.dart';
 import '../modules/auth/presentation/sign_up/sign_up_view.dart';
+import '../modules/comparison/comparison_binding.dart';
+import '../modules/comparison/comparison_view.dart';
 import '../modules/file_viewer/file_viewer_binding.dart';
 import '../modules/file_viewer/file_viewer_view.dart';
 import '../modules/files/presentation/files_listing/files_listing_binding.dart';
@@ -77,7 +79,12 @@ class AppPages {
     GetPage(
       name: _Paths.NAVIGATION,
       page: () => const NavigationView(),
-      bindings: [NavigationBinding(), HomeBinding(), ProfileDetilsBinding()],
+      bindings: [
+        NavigationBinding(),
+        HomeBinding(),
+        ComparisonBinding(),
+        ProfileDetilsBinding(),
+      ],
     ),
     GetPage(
       name: _Paths.SUPPLIER_DETAIL,
@@ -148,6 +155,11 @@ class AppPages {
       name: _Paths.FILE_VIEWER,
       page: () => const FileViewerView(),
       binding: FileViewerBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMPARISON,
+      page: () => const ComparisonView(),
+      binding: ComparisonBinding(),
     ),
   ];
 }
