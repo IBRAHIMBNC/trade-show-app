@@ -6,7 +6,7 @@ class ConnectivityService extends GetxService {
 
   ConnectivityService({required this.connectivity});
 
-  RxBool isOnline = true.obs;
+  final RxBool isOnline = true.obs;
 
   Stream<bool> get connectivityStream =>
       connectivity.onConnectivityChanged.map((result) {
