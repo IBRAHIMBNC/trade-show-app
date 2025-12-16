@@ -16,7 +16,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration {
@@ -42,6 +42,13 @@ class AppDatabase extends _$AppDatabase {
           // Recreate notes table with increased content length
           await m.deleteTable('notes_table');
           await m.createTable(notesTable);
+        }
+        if (from < 7) {
+          // Add isSynced column to all tables
+          await m.addColumn(supplier, supplier.isSynced);
+          await m.addColumn(productTable, productTable.isSynced);
+          await m.addColumn(notesTable, notesTable.isSynced);
+          await m.addColumn(documentTable, documentTable.isSynced);
         }
       },
     );

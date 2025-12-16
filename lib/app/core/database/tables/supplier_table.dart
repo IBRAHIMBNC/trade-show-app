@@ -20,4 +20,5 @@ class Supplier extends Table {
   IntColumn get score => integer().nullable()();
   TextColumn get createdAt => text().nullable()();
   TextColumn get updatedAt => text().nullable()();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
 }

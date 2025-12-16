@@ -27,6 +27,7 @@ class ProductTable extends Table {
       text().nullable().map(const StringListConverter())();
 
   TextColumn get certifications => text().nullable()();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
 }
 
 // Converter to store List<String> as JSON in database

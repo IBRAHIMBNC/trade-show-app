@@ -11,4 +11,5 @@ class NotesTable extends Table {
   IntColumn get supplierId => integer().nullable().customConstraint(
     'REFERENCES supplier(id) NOT NULL',
   )();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
 }
