@@ -7,17 +7,15 @@ class Supplier extends Table {
   TextColumn get name => text().withLength(min: 1, max: 50)();
   TextColumn get company => text().withLength(min: 1, max: 100)();
   TextColumn get booth => text().withLength(min: 1, max: 50)();
-  TextColumn get address => text().nullable().withLength(min: 1, max: 200)();
-  TextColumn get email => text().nullable().withLength(min: 1, max: 100)();
-  TextColumn get phone => text().nullable().withLength(min: 1, max: 15)();
-  TextColumn get weChatID => text().nullable().withLength(min: 1, max: 50)();
-  TextColumn get whatsAppNumber =>
-      text().nullable().withLength(min: 1, max: 15)();
-  TextColumn get notes => text().nullable().withLength(min: 1, max: 500)();
-  TextColumn get industry => text().nullable().withLength(min: 1, max: 100)();
-  TextColumn get interestLevel =>
-      text().nullable().withLength(min: 1, max: 50)();
-  TextColumn get imageUrl => text().nullable().withLength(min: 1, max: 500)();
+  TextColumn get address => text().nullable().withLength(max: 200)();
+  TextColumn get email => text().nullable().withLength(max: 100)();
+  TextColumn get phone => text().nullable().withLength(max: 15)();
+  TextColumn get weChatID => text().nullable().withLength(max: 50)();
+  TextColumn get whatsAppNumber => text().nullable().withLength(max: 15)();
+  TextColumn get notes => text().nullable().withLength(max: 500)();
+  TextColumn get industry => text().nullable().withLength(max: 100)();
+  TextColumn get interestLevel => text().nullable().withLength(max: 50)();
+  TextColumn get imageUrl => text().nullable().withLength(max: 500)();
   TextColumn get imageLocalPath => text().nullable()();
   IntColumn get score => integer().nullable()();
   TextColumn get createdAt => text().nullable()();

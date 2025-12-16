@@ -9,6 +9,7 @@ import 'package:supplier_snap/app/modules/files/data/models/document_model.dart'
 import 'package:supplier_snap/app/modules/files/data/repository/documents_repository.dart';
 import 'package:supplier_snap/app/modules/files/presentation/widgets/add_file_sheet.dart';
 import 'package:supplier_snap/app/modules/supplier/presentation/supplier_detail/supplier_detail_controller.dart';
+import 'package:supplier_snap/app/routes/app_pages.dart';
 import 'package:supplier_snap/app/utils/bottom_sheets.dart';
 import 'package:supplier_snap/app/utils/loading_overlay.dart';
 import 'package:supplier_snap/app/utils/my_utils.dart';
@@ -161,6 +162,10 @@ class FilesListingController extends GetxController {
         showSuccessSnackbar(message: 'Document deleted successfully.');
       },
     );
+  }
+
+  onFileTap(DocumentModel document) {
+    Get.toNamed(Routes.FILE_VIEWER, arguments: document);
   }
 
   @override

@@ -39,6 +39,7 @@ class SupplierRepository extends BaseRepository {
       final id = await localSource.insertSupplier(supplierWithUser);
       return Right(supplierWithUser.copyWith(id: id));
     } catch (e) {
+      log(e.toString());
       return Left(ServerFailure(e.toString()));
     }
   }

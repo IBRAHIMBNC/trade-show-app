@@ -84,10 +84,7 @@ class $SupplierTable extends Supplier
     'address',
     aliasedName,
     true,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 1,
-      maxTextLength: 200,
-    ),
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 200),
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
@@ -97,10 +94,7 @@ class $SupplierTable extends Supplier
     'email',
     aliasedName,
     true,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 1,
-      maxTextLength: 100,
-    ),
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 100),
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
@@ -110,10 +104,7 @@ class $SupplierTable extends Supplier
     'phone',
     aliasedName,
     true,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 1,
-      maxTextLength: 15,
-    ),
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 15),
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
@@ -125,10 +116,7 @@ class $SupplierTable extends Supplier
     'we_chat_i_d',
     aliasedName,
     true,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 1,
-      maxTextLength: 50,
-    ),
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
@@ -140,10 +128,7 @@ class $SupplierTable extends Supplier
     'whats_app_number',
     aliasedName,
     true,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 1,
-      maxTextLength: 15,
-    ),
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 15),
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
@@ -153,10 +138,7 @@ class $SupplierTable extends Supplier
     'notes',
     aliasedName,
     true,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 1,
-      maxTextLength: 500,
-    ),
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 500),
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
@@ -168,10 +150,7 @@ class $SupplierTable extends Supplier
     'industry',
     aliasedName,
     true,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 1,
-      maxTextLength: 100,
-    ),
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 100),
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
@@ -183,10 +162,7 @@ class $SupplierTable extends Supplier
     'interest_level',
     aliasedName,
     true,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 1,
-      maxTextLength: 50,
-    ),
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
@@ -198,10 +174,7 @@ class $SupplierTable extends Supplier
     'image_url',
     aliasedName,
     true,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 1,
-      maxTextLength: 500,
-    ),
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 500),
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
