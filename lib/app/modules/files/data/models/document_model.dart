@@ -1,15 +1,19 @@
 import 'dart:convert';
 
 import 'package:supplier_snap/app/core/database/app_db.dart';
+import 'package:supplier_snap/app/core/enums/file_type_enum.dart';
+import 'package:supplier_snap/app/core/extensions/string.dart';
 
 class DocumentModel {
   final int? id;
   final String title;
   final String localPath;
   final String? url;
-  final String type;
+  final DocumentType type;
   final DateTime? createdAt;
   final int supplierId;
+
+  String get absolutePath => localPath.toAbsolutePath;
 
   const DocumentModel({
     this.id,
@@ -57,7 +61,7 @@ class DocumentModel {
     String? title,
     String? localPath,
     String? url,
-    String? type,
+    DocumentType? type,
     DateTime? createdAt,
     int? supplierId,
   }) {
@@ -78,7 +82,7 @@ class DocumentModel {
       title: data.title,
       localPath: data.localPath,
       url: data.url,
-      type: data.type,
+      type: DocumentType.fromString(data.type) ?? DocumentType.unknown,
       createdAt: data.createdAt,
       supplierId: data.supplierId!,
     );

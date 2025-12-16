@@ -12,7 +12,7 @@ showErrorSnackbar({
     message,
     backgroundColor: KColors.errorBg,
     colorText: KColors.errorFont,
-    snackPosition: SnackPosition.BOTTOM,
+    snackPosition: SnackPosition.TOP,
     duration: duration,
   );
 }
@@ -28,7 +28,7 @@ void showSuccessSnackbar({
     message,
     backgroundColor: KColors.successBg,
     colorText: KColors.successFont,
-    snackPosition: SnackPosition.BOTTOM,
+    snackPosition: SnackPosition.TOP,
     duration: duration,
   );
 }

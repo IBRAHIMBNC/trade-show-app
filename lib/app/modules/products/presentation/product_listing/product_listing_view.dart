@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:supplier_snap/app/constants/k_icons.dart';
 import 'package:supplier_snap/app/constants/padding_constants.dart';
 import 'package:supplier_snap/app/core/extensions/double.dart';
 import 'package:supplier_snap/app/modules/products/presentation/widgets/product_card.dart';
+import 'package:supplier_snap/app/widgets/empty_state.dart';
 import 'package:supplier_snap/app/widgets/my_appbar.dart';
 
 import 'product_listing_controller.dart';
@@ -19,18 +21,28 @@ class ProductListingView extends GetView<ProductListingController> {
         addBtnTitle: 'Add Product',
         onSearchChanged: (val) {},
       ),
-      body: Obx(
-        () => ListView.separated(
-          padding: kPadding20.all,
-          itemBuilder: (context, index) => ProductCard(
-            product: controller.products[index],
-            onDeleteTap: () =>
-                controller.onProductDelete(controller.products[index].id!),
-          ),
-          separatorBuilder: (context, index) => 12.verticalSpace,
-          itemCount: controller.products.length,
-        ),
+      body: Obx(() => _buildBody()),
+    );
+  }
+
+  Widget _buildBody() {
+    if (controller.products.isEmpty) {
+      return EmptyState(
+        onAddTap: controller.goToAddProduct,
+        title: 'No Products Available',
+        iconPath: KIcons.emptyProducts,
+        btnTitle: 'Add Product',
+      );
+    }
+    return ListView.separated(
+      padding: kPadding20.all,
+      itemBuilder: (context, index) => ProductCard(
+        product: controller.products[index],
+        onDeleteTap: () =>
+            controller.onProductDelete(controller.products[index].id!),
       ),
+      separatorBuilder: (context, index) => 12.verticalSpace,
+      itemCount: controller.products.length,
     );
   }
 }
