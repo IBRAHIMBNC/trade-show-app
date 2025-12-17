@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 
 class Supplier extends Table {
@@ -17,8 +19,29 @@ class Supplier extends Table {
   TextColumn get interestLevel => text().nullable().withLength(max: 50)();
   TextColumn get imageUrl => text().nullable().withLength(max: 500)();
   TextColumn get imageLocalPath => text().nullable()();
-  IntColumn get score => integer().nullable()();
   TextColumn get createdAt => text().nullable()();
   TextColumn get updatedAt => text().nullable()();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  TextColumn get scores => text().nullable().map(const StringMapConverter())();
+}
+
+class StringMapConverter extends TypeConverter<Map<String, String>, String> {
+  const StringMapConverter();
+
+  @override
+  Map<String, String> fromSql(String fromDb) {
+    try {
+      final Map<String, dynamic> map = Map<String, dynamic>.from(
+        jsonDecode(fromDb),
+      );
+      return map.map((key, value) => MapEntry(key, value.toString()));
+    } catch (e) {
+      return {};
+    }
+  }
+
+  @override
+  String toSql(Map<String, String>? value) {
+    return jsonEncode(value);
+  }
 }

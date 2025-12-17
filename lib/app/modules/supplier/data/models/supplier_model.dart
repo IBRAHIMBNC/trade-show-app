@@ -4,6 +4,7 @@ import 'package:supplier_snap/app/core/database/app_db.dart';
 import 'package:supplier_snap/app/core/enums/industry_type_enum.dart';
 import 'package:supplier_snap/app/core/enums/interest_level_enum.dart';
 import 'package:supplier_snap/app/core/extensions/string.dart';
+import 'package:supplier_snap/app/modules/supplier/data/models/scores_model.dart';
 
 class SupplierModel {
   final int? id;
@@ -22,6 +23,7 @@ class SupplierModel {
   final String? imageUrl;
   final String? _imageLocalPath;
   final int? score;
+  final ScoresModel scores;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -46,6 +48,7 @@ class SupplierModel {
     this.imageUrl,
     String? imageLocalPath,
     this.score,
+    this.scores = ScoresModel.emptyScores,
     this.createdAt,
     this.updatedAt,
   }) : _imageLocalPath = imageLocalPath;
@@ -68,6 +71,7 @@ class SupplierModel {
       'image_url': imageUrl,
       'image_local_path': _imageLocalPath,
       'score': score,
+      'scores': scores.toMap(),
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
     };
@@ -91,6 +95,7 @@ class SupplierModel {
       'interestLevel': interestLevel,
       'imageUrl': imageUrl,
       'score': score,
+      'scores': scores.toMap(),
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
     };
@@ -114,6 +119,9 @@ class SupplierModel {
       imageUrl: map['image_url'],
       imageLocalPath: map['image_local_path'],
       score: map['score']?.toInt(),
+      scores: map['scores'] != null
+          ? ScoresModel.fromMap(map['scores'])
+          : ScoresModel.emptyScores,
       createdAt: map['created_at'] != null
           ? DateTime.parse(map['created_at'])
           : null,
@@ -141,6 +149,9 @@ class SupplierModel {
       interestLevel: map['interestLevel'],
       imageUrl: map['imageUrl'],
       score: map['score']?.toInt(),
+      scores: map['scores'] != null
+          ? ScoresModel.fromMap(map['scores'])
+          : ScoresModel.emptyScores,
       createdAt: map['createdAt'] != null
           ? DateTime.parse(map['createdAt'])
           : null,
@@ -171,7 +182,7 @@ class SupplierModel {
     InterestLevelEnum? interestLevel,
     String? imageUrl,
     String? imageLocalPath,
-    int? score,
+    ScoresModel? scores,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -191,7 +202,7 @@ class SupplierModel {
       interestLevel: interestLevel ?? this.interestLevel,
       imageUrl: imageUrl ?? this.imageUrl,
       imageLocalPath: imageLocalPath ?? _imageLocalPath,
-      score: score ?? this.score,
+      scores: scores ?? this.scores,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -214,7 +225,7 @@ class SupplierModel {
       interestLevel: InterestLevelEnum.fromString(data.interestLevel),
       imageUrl: data.imageUrl,
       imageLocalPath: data.imageLocalPath,
-      score: data.score,
+      scores: ScoresModel.fromMap(data.scores ?? {}),
       createdAt: data.createdAt != null
           ? DateTime.parse(data.createdAt!)
           : null,

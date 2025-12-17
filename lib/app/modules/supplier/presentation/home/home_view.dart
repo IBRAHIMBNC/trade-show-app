@@ -21,14 +21,11 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    final topPadding = MediaQuery.paddingOf(context).top;
+    // final topPadding = MediaQuery.paddingOf(context).top;
     return Scaffold(
       body: Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: topPadding.h,
-            horizontal: kPadding20.w,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: kPadding20.w),
           child: Obx(
             () => Column(
               mainAxisAlignment: MainAxisAlignment.start,

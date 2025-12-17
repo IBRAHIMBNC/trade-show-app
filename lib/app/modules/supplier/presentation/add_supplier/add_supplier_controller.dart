@@ -9,6 +9,7 @@ import 'package:supplier_snap/app/core/enums/interest_level_enum.dart';
 import 'package:supplier_snap/app/core/extensions/string.dart';
 import 'package:supplier_snap/app/core/failures/failures.dart';
 import 'package:supplier_snap/app/core/services/file_picker_service.dart';
+import 'package:supplier_snap/app/modules/supplier/data/models/scores_model.dart';
 import 'package:supplier_snap/app/modules/supplier/data/models/supplier_model.dart';
 import 'package:supplier_snap/app/modules/supplier/data/repository/supplier_repository.dart';
 import 'package:supplier_snap/app/modules/supplier/presentation/add_supplier/widgets/add_contact_info_section.dart';
@@ -53,6 +54,8 @@ class AddSupplierController extends GetxController {
   String? weChatID;
   String? whatsAppNumber;
   String? remarks;
+
+  Rx<ScoresModel> scores = ScoresModel.emptyScores.obs;
 
   //=================
 
@@ -145,6 +148,7 @@ class AddSupplierController extends GetxController {
       updatedAt: DateTime.now(),
       imageUrl: imageUrl,
       imageLocalPath: imageLocalPath ?? supplier!.relativeImagePath,
+      scores: scores.value,
     );
     return supplierRepository.updateSupplier(supplier!.id!, updatedSupplier);
   }
@@ -167,6 +171,7 @@ class AddSupplierController extends GetxController {
       updatedAt: DateTime.now(),
       imageUrl: imageUrl,
       imageLocalPath: imageLocalPath,
+      scores: scores.value,
     );
     return supplierRepository.createSupplier(supplier);
   }
@@ -185,6 +190,8 @@ class AddSupplierController extends GetxController {
       whatsappController.text = supplier!.whatsAppNumber ?? '';
 
       remarksController.text = supplier!.notes ?? '';
+
+      scores.value = supplier!.scores;
 
       imageUrl = supplier!.imageUrl;
       imageLocalPath = supplier!.relativeImagePath;

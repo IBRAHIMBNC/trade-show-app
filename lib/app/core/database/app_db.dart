@@ -16,7 +16,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration {
@@ -49,6 +49,11 @@ class AppDatabase extends _$AppDatabase {
           await m.addColumn(productTable, productTable.isSynced);
           await m.addColumn(notesTable, notesTable.isSynced);
           await m.addColumn(documentTable, documentTable.isSynced);
+        }
+        if (from < 8) {
+          // Replace score field with scores field in supplier table
+          await m.addColumn(supplier, supplier.scores);
+          // Note: The old 'score' column will be automatically ignored if removed from the table definition
         }
       },
     );

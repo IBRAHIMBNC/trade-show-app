@@ -189,15 +189,6 @@ class $SupplierTable extends Supplier
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _scoreMeta = const VerificationMeta('score');
-  @override
-  late final GeneratedColumn<int> score = GeneratedColumn<int>(
-    'score',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -236,6 +227,15 @@ class $SupplierTable extends Supplier
     defaultValue: const Constant(false),
   );
   @override
+  late final GeneratedColumnWithTypeConverter<Map<String, String>?, String>
+  scores = GeneratedColumn<String>(
+    'scores',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<Map<String, String>?>($SupplierTable.$converterscoresn);
+  @override
   List<GeneratedColumn> get $columns => [
     id,
     userId,
@@ -252,10 +252,10 @@ class $SupplierTable extends Supplier
     interestLevel,
     imageUrl,
     imageLocalPath,
-    score,
     createdAt,
     updatedAt,
     isSynced,
+    scores,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -373,12 +373,6 @@ class $SupplierTable extends Supplier
         ),
       );
     }
-    if (data.containsKey('score')) {
-      context.handle(
-        _scoreMeta,
-        score.isAcceptableOrUnknown(data['score']!, _scoreMeta),
-      );
-    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -466,10 +460,6 @@ class $SupplierTable extends Supplier
         DriftSqlType.string,
         data['${effectivePrefix}image_local_path'],
       ),
-      score: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}score'],
-      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}created_at'],
@@ -482,6 +472,12 @@ class $SupplierTable extends Supplier
         DriftSqlType.bool,
         data['${effectivePrefix}is_synced'],
       )!,
+      scores: $SupplierTable.$converterscoresn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}scores'],
+        ),
+      ),
     );
   }
 
@@ -489,6 +485,11 @@ class $SupplierTable extends Supplier
   $SupplierTable createAlias(String alias) {
     return $SupplierTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<Map<String, String>, String> $converterscores =
+      const StringMapConverter();
+  static TypeConverter<Map<String, String>?, String?> $converterscoresn =
+      NullAwareTypeConverter.wrap($converterscores);
 }
 
 class SupplierData extends DataClass implements Insertable<SupplierData> {
@@ -507,10 +508,10 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
   final String? interestLevel;
   final String? imageUrl;
   final String? imageLocalPath;
-  final int? score;
   final String? createdAt;
   final String? updatedAt;
   final bool isSynced;
+  final Map<String, String>? scores;
   const SupplierData({
     required this.id,
     required this.userId,
@@ -527,10 +528,10 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
     this.interestLevel,
     this.imageUrl,
     this.imageLocalPath,
-    this.score,
     this.createdAt,
     this.updatedAt,
     required this.isSynced,
+    this.scores,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -570,9 +571,6 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
     if (!nullToAbsent || imageLocalPath != null) {
       map['image_local_path'] = Variable<String>(imageLocalPath);
     }
-    if (!nullToAbsent || score != null) {
-      map['score'] = Variable<int>(score);
-    }
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<String>(createdAt);
     }
@@ -580,6 +578,11 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
       map['updated_at'] = Variable<String>(updatedAt);
     }
     map['is_synced'] = Variable<bool>(isSynced);
+    if (!nullToAbsent || scores != null) {
+      map['scores'] = Variable<String>(
+        $SupplierTable.$converterscoresn.toSql(scores),
+      );
+    }
     return map;
   }
 
@@ -620,9 +623,6 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
       imageLocalPath: imageLocalPath == null && nullToAbsent
           ? const Value.absent()
           : Value(imageLocalPath),
-      score: score == null && nullToAbsent
-          ? const Value.absent()
-          : Value(score),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -630,6 +630,9 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
           ? const Value.absent()
           : Value(updatedAt),
       isSynced: Value(isSynced),
+      scores: scores == null && nullToAbsent
+          ? const Value.absent()
+          : Value(scores),
     );
   }
 
@@ -654,10 +657,10 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
       interestLevel: serializer.fromJson<String?>(json['interestLevel']),
       imageUrl: serializer.fromJson<String?>(json['imageUrl']),
       imageLocalPath: serializer.fromJson<String?>(json['imageLocalPath']),
-      score: serializer.fromJson<int?>(json['score']),
       createdAt: serializer.fromJson<String?>(json['createdAt']),
       updatedAt: serializer.fromJson<String?>(json['updatedAt']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
+      scores: serializer.fromJson<Map<String, String>?>(json['scores']),
     );
   }
   @override
@@ -679,10 +682,10 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
       'interestLevel': serializer.toJson<String?>(interestLevel),
       'imageUrl': serializer.toJson<String?>(imageUrl),
       'imageLocalPath': serializer.toJson<String?>(imageLocalPath),
-      'score': serializer.toJson<int?>(score),
       'createdAt': serializer.toJson<String?>(createdAt),
       'updatedAt': serializer.toJson<String?>(updatedAt),
       'isSynced': serializer.toJson<bool>(isSynced),
+      'scores': serializer.toJson<Map<String, String>?>(scores),
     };
   }
 
@@ -702,10 +705,10 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
     Value<String?> interestLevel = const Value.absent(),
     Value<String?> imageUrl = const Value.absent(),
     Value<String?> imageLocalPath = const Value.absent(),
-    Value<int?> score = const Value.absent(),
     Value<String?> createdAt = const Value.absent(),
     Value<String?> updatedAt = const Value.absent(),
     bool? isSynced,
+    Value<Map<String, String>?> scores = const Value.absent(),
   }) => SupplierData(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -728,10 +731,10 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
     imageLocalPath: imageLocalPath.present
         ? imageLocalPath.value
         : this.imageLocalPath,
-    score: score.present ? score.value : this.score,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
     isSynced: isSynced ?? this.isSynced,
+    scores: scores.present ? scores.value : this.scores,
   );
   SupplierData copyWithCompanion(SupplierCompanion data) {
     return SupplierData(
@@ -756,10 +759,10 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
       imageLocalPath: data.imageLocalPath.present
           ? data.imageLocalPath.value
           : this.imageLocalPath,
-      score: data.score.present ? data.score.value : this.score,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      scores: data.scores.present ? data.scores.value : this.scores,
     );
   }
 
@@ -781,10 +784,10 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
           ..write('interestLevel: $interestLevel, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('imageLocalPath: $imageLocalPath, ')
-          ..write('score: $score, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('isSynced: $isSynced')
+          ..write('isSynced: $isSynced, ')
+          ..write('scores: $scores')
           ..write(')'))
         .toString();
   }
@@ -806,10 +809,10 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
     interestLevel,
     imageUrl,
     imageLocalPath,
-    score,
     createdAt,
     updatedAt,
     isSynced,
+    scores,
   );
   @override
   bool operator ==(Object other) =>
@@ -830,10 +833,10 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
           other.interestLevel == this.interestLevel &&
           other.imageUrl == this.imageUrl &&
           other.imageLocalPath == this.imageLocalPath &&
-          other.score == this.score &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
-          other.isSynced == this.isSynced);
+          other.isSynced == this.isSynced &&
+          other.scores == this.scores);
 }
 
 class SupplierCompanion extends UpdateCompanion<SupplierData> {
@@ -852,10 +855,10 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
   final Value<String?> interestLevel;
   final Value<String?> imageUrl;
   final Value<String?> imageLocalPath;
-  final Value<int?> score;
   final Value<String?> createdAt;
   final Value<String?> updatedAt;
   final Value<bool> isSynced;
+  final Value<Map<String, String>?> scores;
   const SupplierCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
@@ -872,10 +875,10 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
     this.interestLevel = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.imageLocalPath = const Value.absent(),
-    this.score = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.isSynced = const Value.absent(),
+    this.scores = const Value.absent(),
   });
   SupplierCompanion.insert({
     this.id = const Value.absent(),
@@ -893,10 +896,10 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
     this.interestLevel = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.imageLocalPath = const Value.absent(),
-    this.score = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.isSynced = const Value.absent(),
+    this.scores = const Value.absent(),
   }) : userId = Value(userId),
        name = Value(name),
        company = Value(company),
@@ -917,10 +920,10 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
     Expression<String>? interestLevel,
     Expression<String>? imageUrl,
     Expression<String>? imageLocalPath,
-    Expression<int>? score,
     Expression<String>? createdAt,
     Expression<String>? updatedAt,
     Expression<bool>? isSynced,
+    Expression<String>? scores,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -938,10 +941,10 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
       if (interestLevel != null) 'interest_level': interestLevel,
       if (imageUrl != null) 'image_url': imageUrl,
       if (imageLocalPath != null) 'image_local_path': imageLocalPath,
-      if (score != null) 'score': score,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (isSynced != null) 'is_synced': isSynced,
+      if (scores != null) 'scores': scores,
     });
   }
 
@@ -961,10 +964,10 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
     Value<String?>? interestLevel,
     Value<String?>? imageUrl,
     Value<String?>? imageLocalPath,
-    Value<int?>? score,
     Value<String?>? createdAt,
     Value<String?>? updatedAt,
     Value<bool>? isSynced,
+    Value<Map<String, String>?>? scores,
   }) {
     return SupplierCompanion(
       id: id ?? this.id,
@@ -982,10 +985,10 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
       interestLevel: interestLevel ?? this.interestLevel,
       imageUrl: imageUrl ?? this.imageUrl,
       imageLocalPath: imageLocalPath ?? this.imageLocalPath,
-      score: score ?? this.score,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isSynced: isSynced ?? this.isSynced,
+      scores: scores ?? this.scores,
     );
   }
 
@@ -1037,9 +1040,6 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
     if (imageLocalPath.present) {
       map['image_local_path'] = Variable<String>(imageLocalPath.value);
     }
-    if (score.present) {
-      map['score'] = Variable<int>(score.value);
-    }
     if (createdAt.present) {
       map['created_at'] = Variable<String>(createdAt.value);
     }
@@ -1048,6 +1048,11 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
     }
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (scores.present) {
+      map['scores'] = Variable<String>(
+        $SupplierTable.$converterscoresn.toSql(scores.value),
+      );
     }
     return map;
   }
@@ -1070,10 +1075,10 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
           ..write('interestLevel: $interestLevel, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('imageLocalPath: $imageLocalPath, ')
-          ..write('score: $score, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('isSynced: $isSynced')
+          ..write('isSynced: $isSynced, ')
+          ..write('scores: $scores')
           ..write(')'))
         .toString();
   }
@@ -2912,10 +2917,10 @@ typedef $$SupplierTableCreateCompanionBuilder =
       Value<String?> interestLevel,
       Value<String?> imageUrl,
       Value<String?> imageLocalPath,
-      Value<int?> score,
       Value<String?> createdAt,
       Value<String?> updatedAt,
       Value<bool> isSynced,
+      Value<Map<String, String>?> scores,
     });
 typedef $$SupplierTableUpdateCompanionBuilder =
     SupplierCompanion Function({
@@ -2934,10 +2939,10 @@ typedef $$SupplierTableUpdateCompanionBuilder =
       Value<String?> interestLevel,
       Value<String?> imageUrl,
       Value<String?> imageLocalPath,
-      Value<int?> score,
       Value<String?> createdAt,
       Value<String?> updatedAt,
       Value<bool> isSynced,
+      Value<Map<String, String>?> scores,
     });
 
 final class $$SupplierTableReferences
@@ -3086,11 +3091,6 @@ class $$SupplierTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get score => $composableBuilder(
-    column: $table.score,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
@@ -3104,6 +3104,16 @@ class $$SupplierTableFilterComposer
   ColumnFilters<bool> get isSynced => $composableBuilder(
     column: $table.isSynced,
     builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<
+    Map<String, String>?,
+    Map<String, String>,
+    String
+  >
+  get scores => $composableBuilder(
+    column: $table.scores,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   Expression<bool> productTableRefs(
@@ -3266,11 +3276,6 @@ class $$SupplierTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get score => $composableBuilder(
-    column: $table.score,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -3283,6 +3288,11 @@ class $$SupplierTableOrderingComposer
 
   ColumnOrderings<bool> get isSynced => $composableBuilder(
     column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get scores => $composableBuilder(
+    column: $table.scores,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -3347,9 +3357,6 @@ class $$SupplierTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<int> get score =>
-      $composableBuilder(column: $table.score, builder: (column) => column);
-
   GeneratedColumn<String> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -3358,6 +3365,9 @@ class $$SupplierTableAnnotationComposer
 
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Map<String, String>?, String> get scores =>
+      $composableBuilder(column: $table.scores, builder: (column) => column);
 
   Expression<T> productTableRefs<T extends Object>(
     Expression<T> Function($$ProductTableTableAnnotationComposer a) f,
@@ -3482,10 +3492,10 @@ class $$SupplierTableTableManager
                 Value<String?> interestLevel = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
                 Value<String?> imageLocalPath = const Value.absent(),
-                Value<int?> score = const Value.absent(),
                 Value<String?> createdAt = const Value.absent(),
                 Value<String?> updatedAt = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
+                Value<Map<String, String>?> scores = const Value.absent(),
               }) => SupplierCompanion(
                 id: id,
                 userId: userId,
@@ -3502,10 +3512,10 @@ class $$SupplierTableTableManager
                 interestLevel: interestLevel,
                 imageUrl: imageUrl,
                 imageLocalPath: imageLocalPath,
-                score: score,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 isSynced: isSynced,
+                scores: scores,
               ),
           createCompanionCallback:
               ({
@@ -3524,10 +3534,10 @@ class $$SupplierTableTableManager
                 Value<String?> interestLevel = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
                 Value<String?> imageLocalPath = const Value.absent(),
-                Value<int?> score = const Value.absent(),
                 Value<String?> createdAt = const Value.absent(),
                 Value<String?> updatedAt = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
+                Value<Map<String, String>?> scores = const Value.absent(),
               }) => SupplierCompanion.insert(
                 id: id,
                 userId: userId,
@@ -3544,10 +3554,10 @@ class $$SupplierTableTableManager
                 interestLevel: interestLevel,
                 imageUrl: imageUrl,
                 imageLocalPath: imageLocalPath,
-                score: score,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 isSynced: isSynced,
+                scores: scores,
               ),
           withReferenceMapper: (p0) => p0
               .map(

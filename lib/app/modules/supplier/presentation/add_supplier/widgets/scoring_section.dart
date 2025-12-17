@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:supplier_snap/app/constants/colors.dart';
+import 'package:supplier_snap/app/constants/padding_constants.dart';
+import 'package:supplier_snap/app/core/extensions/double.dart';
 import 'package:supplier_snap/app/modules/supplier/presentation/add_supplier/add_supplier_controller.dart';
+import 'package:supplier_snap/app/modules/supplier/presentation/supplier_detail/widgets/scoring_tab.dart';
 import 'package:supplier_snap/app/widgets/custom_text/custom_text.dart';
 import 'package:supplier_snap/app/widgets/custom_text_field.dart';
 import 'package:supplier_snap/app/widgets/my_container.dart';
@@ -17,8 +21,21 @@ class ScoringSection extends GetView<AddSupplierController> {
         children: [
           CustomText.label24b800('Scoring', fontWeight: FontWeight.w600),
           16.verticalSpace,
-          MyContainer(width: double.infinity, height: 300.h),
-          32.verticalSpace,
+          MyContainer(
+            color: KColors.primaryBg,
+            padding: kPadding8.all,
+            width: double.infinity,
+            child: Obx(
+              () => ScoringBoard(
+                bgColor: KColors.primaryBg,
+                scores: controller.scores.value,
+                onChanged: (scores) {
+                  controller.scores.value = scores;
+                },
+              ),
+            ),
+          ),
+          20.verticalSpace,
           CustomText.label24b800('Remarks', fontWeight: FontWeight.w600),
           16.verticalSpace,
           Form(

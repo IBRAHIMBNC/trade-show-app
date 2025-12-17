@@ -97,10 +97,8 @@ class SupplierRepository extends BaseRepository {
     try {
       // Update timestamps
       final updatedSupplier = supplier.copyWith(updatedAt: DateTime.now());
-
       // Update in local database
       await localSource.updateSupplier(id, updatedSupplier);
-
       return Right(updatedSupplier);
     } catch (e) {
       log(e.toString());

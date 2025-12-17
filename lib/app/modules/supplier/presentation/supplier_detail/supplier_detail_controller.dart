@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:supplier_snap/app/modules/products/presentation/add_product/add_product_controller.dart';
+import 'package:supplier_snap/app/modules/supplier/data/models/scores_model.dart';
 import 'package:supplier_snap/app/modules/supplier/data/models/supplier_model.dart';
 import 'package:supplier_snap/app/modules/supplier/data/repository/supplier_repository.dart';
 import 'package:supplier_snap/app/modules/supplier/data/services/supplier_info_service.dart';
@@ -31,6 +32,8 @@ class SupplierDetailController extends GetxController
   late int supplierId = Get.arguments as int;
 
   late SupplierModel supplier;
+
+  late final Rx<ScoresModel> scores;
 
   final RxBool isLoading = false.obs;
 
@@ -78,6 +81,7 @@ class SupplierDetailController extends GetxController
       },
       (data) {
         supplier = data;
+        scores = Rx<ScoresModel>(supplier.scores);
         isLoading.value = false;
       },
     );
@@ -120,8 +124,12 @@ class SupplierDetailController extends GetxController
   }
 
   @override
-  void dispose() {
+  void onClose() {
     tabController.dispose();
-    super.dispose();
+    supplierRepository.updateSupplier(
+      supplierId,
+      supplier.copyWith(scores: scores.value),
+    );
+    super.onClose();
   }
 }

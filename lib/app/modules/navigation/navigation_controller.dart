@@ -7,6 +7,9 @@ import 'package:supplier_snap/app/modules/supplier/presentation/home/home_view.d
 class NavigationController extends GetxController {
   final currentIndex = 0.obs;
   final pageController = PageController(initialPage: 0);
+
+  final RxBool isSyncing = false.obs;
+
   final List<Widget> pages = [
     HomeView(),
     ComparisonView(),

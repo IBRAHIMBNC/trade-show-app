@@ -54,10 +54,9 @@ class FilesListingController extends GetxController {
 
     final relativePath = await filePickerService.saveFilePermanently(
       selectedFile.value!,
-      prefix: 'document_',
+      prefix: 'document',
       subdirectory: 'documents',
     );
-
     if (relativePath == null) {
       showErrorSnackbar(message: 'Failed to save the file. Please try again.');
       return;
