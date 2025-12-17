@@ -1,12 +1,23 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
+import 'package:drift/drift.dart';
+import 'package:supplier_snap/app/core/database/app_db.dart';
 import 'package:supplier_snap/app/core/failures/failures.dart';
+import 'package:supplier_snap/app/modules/auth/data/repository/auth_repository.dart';
 import 'package:supplier_snap/app/modules/files/data/datasources/documents_local_datasource.dart';
+import 'package:supplier_snap/app/modules/files/data/datasources/documents_remote_datasource.dart';
 import 'package:supplier_snap/app/modules/files/data/models/document_model.dart';
 
-class DocumentsRepository {
+class DocumentsRepository extends BaseRepository {
   final DocumentsLocalDatasource localDatasource;
+  final DocumentsRemoteDatasource remoteDatasource;
 
-  DocumentsRepository({required this.localDatasource});
+  DocumentsRepository({
+    required this.localDatasource,
+    required this.remoteDatasource,
+    required super.connectivityService,
+  });
 
   /// Create a new document
   Future<Either<Failure, DocumentModel>> createDocument(
@@ -14,10 +25,22 @@ class DocumentsRepository {
   ) async {
     try {
       final id = await localDatasource.insertDocument(document);
-      final createdDocument = await localDatasource.getDocumentById(id);
+      DocumentTableData? createdDocument = await localDatasource
+          .getDocumentById(id);
+
+      if (connectivityService.isOnline.value) {
+        final file = File(document.absolutePath);
+        final String? imageUrl = await remoteDatasource.uploadDocument(
+          file: file,
+          fileName: file.path.split('/').last,
+        );
+        createdDocument = createdDocument?.copyWith(url: Value(imageUrl));
+      }
+
       if (createdDocument != null) {
         return Right(DocumentModel.fromDatabaseModel(createdDocument));
       }
+
       return Left(DatabaseFailure('Failed to create document'));
     } catch (e) {
       return Left(DatabaseFailure(e.toString()));
@@ -144,5 +167,23 @@ class DocumentsRepository {
     } catch (e) {
       return Left(DatabaseFailure(e.toString()));
     }
+  }
+
+  /// Upload document to storage
+  Future<String?> uploadDocument({
+    required File file,
+    required String fileName,
+    String? oldFileName,
+  }) async {
+    return await remoteDatasource.uploadDocument(
+      file: file,
+      fileName: fileName,
+      oldFileName: oldFileName,
+    );
+  }
+
+  /// Delete document from storage
+  Future<void> deleteDocumentFromStorage(String fileName) async {
+    await remoteDatasource.deleteDocument(fileName: fileName);
   }
 }

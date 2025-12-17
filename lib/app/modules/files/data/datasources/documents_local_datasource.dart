@@ -20,6 +20,7 @@ class DocumentsLocalDatasource {
             type: Value(document.type.name),
             createdAt: Value(document.createdAt ?? DateTime.now()),
             supplierId: Value(document.supplierId),
+            isSynced: Value(document.isSynced),
           ),
         );
   }
@@ -65,6 +66,7 @@ class DocumentsLocalDatasource {
             type: Value(document.type.name),
             createdAt: Value(document.createdAt ?? DateTime.now()),
             supplierId: Value(document.supplierId),
+            isSynced: Value(document.isSynced),
           ),
         );
   }

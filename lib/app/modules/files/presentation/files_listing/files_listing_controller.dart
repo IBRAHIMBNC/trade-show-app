@@ -54,7 +54,6 @@ class FilesListingController extends GetxController {
 
     final relativePath = await filePickerService.saveFilePermanently(
       selectedFile.value!,
-      customName: fileNameCont.text.trim(),
       prefix: 'document_',
       subdirectory: 'documents',
     );
@@ -63,6 +62,7 @@ class FilesListingController extends GetxController {
       showErrorSnackbar(message: 'Failed to save the file. Please try again.');
       return;
     }
+
     final ext = filePickerService.getFileExtension(selectedFile.value!);
     final newDocument = DocumentModel(
       supplierId: supplierId!,

@@ -68,8 +68,9 @@ class EditProfileController extends GetxController {
   Future<String?> uploadProfileImage() async {
     if (selectedImage.value == null) return null;
     final newFileName = 'profile_${DateTime.now().millisecond}.jpg';
-    final oldFileName = globalService.currentUser.value?.imagePath;
-
+    final oldFileName = globalService.currentUser.value?.imagePath
+        ?.split('/')
+        .last;
     final result = await profileRepository.uploadProfileImage(
       selectedImage.value!,
       newFileName,

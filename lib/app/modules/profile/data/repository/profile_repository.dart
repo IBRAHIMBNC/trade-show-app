@@ -71,7 +71,7 @@ class ProfileRepository extends BaseRepository {
       if (!connectivityService.isOnline.value) {
         return Left(NetworkFailure(message: "No internet connection"));
       }
-      final imageUrl = await supbaseStorageService.uploadFile(
+      final imageUrl = await supbaseStorageService.uploadUserProfile(
         file: imageFile,
         fileName: newFileName,
         oldFileName: oldFileName,

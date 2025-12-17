@@ -12,6 +12,7 @@ class DocumentModel {
   final DocumentType type;
   final DateTime? createdAt;
   final int supplierId;
+  final bool isSynced;
 
   String get absolutePath => localPath.toAbsolutePath;
 
@@ -23,6 +24,7 @@ class DocumentModel {
     required this.type,
     this.createdAt,
     required this.supplierId,
+    this.isSynced = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -34,6 +36,7 @@ class DocumentModel {
       'type': type,
       'created_at': createdAt?.toIso8601String(),
       'supplier_id': supplierId,
+      'is_synced': isSynced,
     };
   }
 
@@ -48,6 +51,7 @@ class DocumentModel {
           ? DateTime.parse(map['created_at'])
           : null,
       supplierId: map['supplier_id']?.toInt() ?? 0,
+      isSynced: map['is_synced'] ?? false,
     );
   }
 
@@ -64,6 +68,7 @@ class DocumentModel {
     DocumentType? type,
     DateTime? createdAt,
     int? supplierId,
+    bool? isSynced,
   }) {
     return DocumentModel(
       id: id ?? this.id,
@@ -73,6 +78,7 @@ class DocumentModel {
       type: type ?? this.type,
       createdAt: createdAt ?? this.createdAt,
       supplierId: supplierId ?? this.supplierId,
+      isSynced: isSynced ?? this.isSynced,
     );
   }
 
@@ -85,6 +91,7 @@ class DocumentModel {
       type: DocumentType.fromString(data.type) ?? DocumentType.unknown,
       createdAt: data.createdAt,
       supplierId: data.supplierId!,
+      isSynced: data.isSynced,
     );
   }
 }

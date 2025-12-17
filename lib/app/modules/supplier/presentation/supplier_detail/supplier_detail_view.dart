@@ -78,6 +78,7 @@ class SupplierDetailView extends GetView<SupplierDetailController> {
               title: 'Notes',
               countingStream: controller.notesCountStream,
               onTap: controller.gotoNotes,
+              onAddTap: controller.gotoAddNote,
             ),
             _buildAddTile(
               title: 'Files',

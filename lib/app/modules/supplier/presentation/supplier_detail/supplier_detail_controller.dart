@@ -64,11 +64,8 @@ class SupplierDetailController extends GetxController
     );
   }
 
-  gotoAddFile() {
-    // Get.toNamed(Routes.ADD_FILE);
-  }
   gotoAddNote() {
-    // Get.toNamed(Routes.ADD_NOTE);
+    Get.toNamed(Routes.NOTE_DETAILS);
   }
 
   fetchSupplierDetails() async {
