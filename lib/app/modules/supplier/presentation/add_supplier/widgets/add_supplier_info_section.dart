@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:supplier_snap/app/core/enums/industry_type_enum.dart';
 import 'package:supplier_snap/app/core/enums/interest_level_enum.dart';
+import 'package:supplier_snap/app/core/enums/product_type_enum.dart';
 import 'package:supplier_snap/app/modules/supplier/presentation/add_supplier/add_supplier_controller.dart';
 import 'package:supplier_snap/app/utils/auth_validators.dart';
 import 'package:supplier_snap/app/widgets/custom_text/custom_text.dart';
@@ -62,9 +63,9 @@ class AddSupplierInfoSection extends GetView<AddSupplierController> {
             CustomTextField(
               controller: controller.locationController,
               onSave: (val) => controller.location = val!.trim(),
-              hinText: 'Location',
+              hinText: 'Country',
               textInputAction: TextInputAction.done,
-              validator: (val) => AuthValidators.requiredField(val, 'Location'),
+              validator: (val) => AuthValidators.requiredField(val, 'Country'),
             ),
             16.verticalSpace,
             MyDropDownButton(
@@ -88,6 +89,18 @@ class AddSupplierInfoSection extends GetView<AddSupplierController> {
               items: InterestLevelEnum.values
                   .map((e) => e.displayName)
                   .toList(),
+            ),
+            16.verticalSpace,
+            MyDropDownButton(
+              isExpanded: true,
+              hint: 'Product Type',
+              value: controller.productTypeEnum?.displayName,
+              onChanged: (val) {
+                controller.productTypeEnum = ProductTypeEnum.fromDisplayName(
+                  val,
+                );
+              },
+              items: ProductTypeEnum.values.map((e) => e.displayName).toList(),
             ),
           ],
         ),

@@ -3,9 +3,9 @@ import 'package:supplier_snap/app/modules/supplier/data/datasources/supplier_loc
 import 'package:supplier_snap/app/modules/supplier/data/datasources/supplier_remote_datasource.dart';
 import 'package:supplier_snap/app/modules/supplier/data/repository/supplier_repository.dart';
 
-import 'home_controller.dart';
+import 'comparison_controller.dart';
 
-class HomeBinding extends Bindings {
+class ComparisonBinding extends Bindings {
   @override
   void dependencies() {
     // Supplier
@@ -19,8 +19,11 @@ class HomeBinding extends Bindings {
         connectivityService: Get.find(),
       ),
     );
-    Get.lazyPut<HomeController>(
-      () => HomeController(supplierRepository: Get.find<SupplierRepository>()),
+
+    Get.lazyPut<ComparisonController>(
+      () => ComparisonController(
+        supplierRepository: Get.find<SupplierRepository>(),
+      ),
     );
   }
 }

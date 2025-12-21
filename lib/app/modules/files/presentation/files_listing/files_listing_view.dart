@@ -16,8 +16,8 @@ class FilesListingView extends GetView<FilesListingController> {
     return Scaffold(
       appBar: MyAppBar(
         title: 'Files',
-        addBtnTitle: 'Add File',
-        onAddBtnPressed: controller.showAddFileSheet,
+        actionBtnTitle: 'Add File',
+        onActionBtnPressed: controller.showAddFileSheet,
         onSearchChanged: (val) {},
       ),
       body: Obx(() => _builBody()),

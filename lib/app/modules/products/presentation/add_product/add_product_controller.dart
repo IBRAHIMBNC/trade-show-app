@@ -44,7 +44,7 @@ class AddProductController extends GetxController {
   late final ProductModel? product =
       (Get.arguments as AddProductViewArgs).product;
 
-  late bool isEdit = product != null;
+  late bool isEdit = (product != null);
   //onSave variables
   String name = '';
   String specifications = '';

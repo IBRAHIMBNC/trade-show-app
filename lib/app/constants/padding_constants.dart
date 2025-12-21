@@ -9,5 +9,6 @@ const double kPadding32 = 32;
 const double kPadding36 = 36;
 const double kPadding40 = 40;
 const double kPadding44 = 44;
-const double kPadding88 = 48;
+const double kPadding48 = 48;
+const double kPadding60 = 60;
 const double kPadding80 = 80;

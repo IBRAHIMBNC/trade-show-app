@@ -11,9 +11,9 @@ class Supplier extends Table {
   TextColumn get booth => text().withLength(min: 1, max: 50)();
   TextColumn get address => text().nullable().withLength(max: 200)();
   TextColumn get email => text().nullable().withLength(max: 100)();
-  TextColumn get phone => text().nullable().withLength(max: 15)();
+  TextColumn get phone => text().nullable().withLength(max: 20)();
   TextColumn get weChatID => text().nullable().withLength(max: 50)();
-  TextColumn get whatsAppNumber => text().nullable().withLength(max: 15)();
+  TextColumn get whatsAppNumber => text().nullable().withLength(max: 20)();
   TextColumn get notes => text().nullable().withLength(max: 500)();
   TextColumn get industry => text().nullable().withLength(max: 100)();
   TextColumn get interestLevel => text().nullable().withLength(max: 50)();
@@ -23,6 +23,7 @@ class Supplier extends Table {
   TextColumn get updatedAt => text().nullable()();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
   TextColumn get scores => text().nullable().map(const StringMapConverter())();
+  TextColumn get productType => text().nullable().withLength(max: 50)();
 }
 
 class StringMapConverter extends TypeConverter<Map<String, String>, String> {

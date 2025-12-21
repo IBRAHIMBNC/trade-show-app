@@ -67,7 +67,9 @@ class AddSupplierView extends GetView<AddSupplierController> {
                 () => RoundedButton(
                   controller.sections.length - 1 ==
                           controller.selectedIndex.value
-                      ? 'Add'
+                      ? controller.isEdit
+                            ? 'Update'
+                            : 'Add'
                       : 'Next',
                   onTap: controller.onNext,
                 ),

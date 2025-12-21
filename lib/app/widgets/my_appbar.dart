@@ -20,8 +20,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double? titleSpacing;
   final PreferredSizeWidget? bottom; // Added bottom property
   final Widget? leading;
-  final String? addBtnTitle;
-  final Function()? onAddBtnPressed;
+  final String? actionBtnTitle;
+  final String? actionBtnIcon;
+  final Function()? onActionBtnPressed;
   final Function(String? val)? onSearchChanged;
 
   const MyAppBar({
@@ -36,9 +37,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.titleSpacing,
     this.bottom,
     this.leading,
-    this.addBtnTitle,
-    this.onAddBtnPressed,
+    this.actionBtnTitle,
+    this.onActionBtnPressed,
     this.onSearchChanged,
+    this.actionBtnIcon,
   });
 
   @override
@@ -74,16 +76,19 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       titleSpacing: 8.w,
       actions: [
         ...?actions,
-        if (addBtnTitle != null && onAddBtnPressed != null)
+        if (actionBtnTitle != null && onActionBtnPressed != null)
           HighlightedEdgeButton(
-            onTap: onAddBtnPressed,
+            onTap: onActionBtnPressed,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
               child: Row(
                 children: [
-                  Icon(Icons.add, color: Colors.black, size: 20.sp),
+                  if (actionBtnIcon != null)
+                    CustomImage.icon(actionBtnIcon!, size: 15.sp)
+                  else
+                    Icon(Icons.add, color: Colors.black, size: 20.sp),
                   5.horizontalSpace,
-                  CustomText.label14b400(addBtnTitle!),
+                  CustomText.label14b400(actionBtnTitle!),
                 ],
               ),
             ),

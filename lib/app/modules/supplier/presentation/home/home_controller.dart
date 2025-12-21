@@ -33,8 +33,15 @@ class HomeController extends GetxController {
     }
   }
 
+  // init() {
+  //   for (var supplier in dummySuppliers) {
+  //     supplierRepository.createSupplier(supplier);
+  //   }
+  // }
+
   @override
   void onInit() {
+    // init();
     suppliers.bindStream(supplierRepository.watchMySuppliers);
     super.onInit();
   }

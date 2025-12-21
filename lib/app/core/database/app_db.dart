@@ -16,7 +16,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration {
@@ -25,36 +25,12 @@ class AppDatabase extends _$AppDatabase {
         await m.createAll();
       },
       onUpgrade: (Migrator m, int from, int to) async {
-        if (from < 3) {
-          // Add imageLocalPath column when upgrading to version 3
-          await m.addColumn(supplier, supplier.imageLocalPath);
-        }
-        if (from < 4) {
-          // Add ProductTable when upgrading to version 4
-          await m.createTable(productTable);
-        }
-        if (from < 5) {
-          // Add NotesTable and DocumentTable when upgrading to version 5
-          await m.createTable(notesTable);
-          await m.createTable(documentTable);
-        }
-        if (from < 6) {
-          // Recreate notes table with increased content length
-          await m.deleteTable('notes_table');
-          await m.createTable(notesTable);
-        }
-        if (from < 7) {
-          // Add isSynced column to all tables
-          await m.addColumn(supplier, supplier.isSynced);
-          await m.addColumn(productTable, productTable.isSynced);
-          await m.addColumn(notesTable, notesTable.isSynced);
-          await m.addColumn(documentTable, documentTable.isSynced);
-        }
-        if (from < 8) {
-          // Replace score field with scores field in supplier table
-          await m.addColumn(supplier, supplier.scores);
-          // Note: The old 'score' column will be automatically ignored if removed from the table definition
-        }
+        // Drop all tables and recreate them with the new schema
+        await m.deleteTable('supplier');
+        await m.deleteTable('product_table');
+        await m.deleteTable('notes_table');
+        await m.deleteTable('document_table');
+        await m.createAll();
       },
     );
   }

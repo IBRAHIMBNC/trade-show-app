@@ -48,4 +48,31 @@ class KColors {
   static const Color disabledFont = Color(0xffB8B8B8);
   static const Color errorFont = Color(0xffCE0E0F);
   static const Color successFont = Color(0xff00AF10);
+
+  // Badge colors for top sellers
+  static const Color firstBadge = Color(0xffFFD600);
+  static const Color secondBadge = Color(0xff52B030);
+  static const Color thirdBadge = Color(0xff0057FF);
+}
+
+class KGradients {
+  const KGradients._();
+
+  static const LinearGradient first = LinearGradient(
+    colors: [Color(0xffEEFFAA), Color(0xffFFF1CC)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const LinearGradient second = LinearGradient(
+    colors: [Color(0xffAAFFE3), Color(0xffD3FFCC)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const LinearGradient third = LinearGradient(
+    colors: [Color(0xffAAFAFF), Color(0xffE2FAFF)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }

@@ -1,12 +1,14 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:supplier_snap/app/core/database/app_db.dart';
 import 'package:supplier_snap/app/core/enums/industry_type_enum.dart';
 import 'package:supplier_snap/app/core/enums/interest_level_enum.dart';
+import 'package:supplier_snap/app/core/enums/product_type_enum.dart';
 import 'package:supplier_snap/app/core/extensions/string.dart';
 import 'package:supplier_snap/app/modules/supplier/data/models/scores_model.dart';
 
-class SupplierModel {
+class SupplierModel extends Equatable {
   final int? id;
   final String userId; // User who added this supplier
   final String name;
@@ -22,10 +24,10 @@ class SupplierModel {
   final InterestLevelEnum? interestLevel;
   final String? imageUrl;
   final String? _imageLocalPath;
-  final int? score;
   final ScoresModel scores;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final ProductTypeEnum? productType;
 
   String? get absoluteImagePath => _imageLocalPath?.toAbsolutePath;
 
@@ -47,10 +49,10 @@ class SupplierModel {
     this.interestLevel,
     this.imageUrl,
     String? imageLocalPath,
-    this.score,
     this.scores = ScoresModel.emptyScores,
     this.createdAt,
     this.updatedAt,
+    this.productType,
   }) : _imageLocalPath = imageLocalPath;
 
   Map<String, dynamic> toMap() {
@@ -66,14 +68,14 @@ class SupplierModel {
       'we_chat_id': weChatID,
       'whats_app_number': whatsAppNumber,
       'notes': notes,
-      'industry': industry,
-      'interest_level': interestLevel,
+      'industry': industry?.name,
+      'interest_level': interestLevel?.name,
       'image_url': imageUrl,
       'image_local_path': _imageLocalPath,
-      'score': score,
       'scores': scores.toMap(),
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
+      'product_type': productType?.name,
     };
   }
 
@@ -91,13 +93,13 @@ class SupplierModel {
       'weChatID': weChatID,
       'whatsAppNumber': whatsAppNumber,
       'notes': notes,
-      'industry': industry,
-      'interestLevel': interestLevel,
+      'industry': industry?.name,
+      'interestLevel': interestLevel?.name,
       'imageUrl': imageUrl,
-      'score': score,
       'scores': scores.toMap(),
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
+      'productType': productType?.name,
     };
   }
 
@@ -118,7 +120,6 @@ class SupplierModel {
       interestLevel: map['interest_level'],
       imageUrl: map['image_url'],
       imageLocalPath: map['image_local_path'],
-      score: map['score']?.toInt(),
       scores: map['scores'] != null
           ? ScoresModel.fromMap(map['scores'])
           : ScoresModel.emptyScores,
@@ -127,6 +128,9 @@ class SupplierModel {
           : null,
       updatedAt: map['updated_at'] != null
           ? DateTime.parse(map['updated_at'])
+          : null,
+      productType: map['productType'] != null
+          ? ProductTypeEnum.fromName(map['productType'])
           : null,
     );
   }
@@ -148,7 +152,6 @@ class SupplierModel {
       industry: map['industry'],
       interestLevel: map['interestLevel'],
       imageUrl: map['imageUrl'],
-      score: map['score']?.toInt(),
       scores: map['scores'] != null
           ? ScoresModel.fromMap(map['scores'])
           : ScoresModel.emptyScores,
@@ -157,6 +160,9 @@ class SupplierModel {
           : null,
       updatedAt: map['updatedAt'] != null
           ? DateTime.parse(map['updatedAt'])
+          : null,
+      productType: map['productType'] != null
+          ? ProductTypeEnum.fromName(map['productType'])
           : null,
     );
   }
@@ -185,6 +191,7 @@ class SupplierModel {
     ScoresModel? scores,
     DateTime? createdAt,
     DateTime? updatedAt,
+    ProductTypeEnum? productType,
   }) {
     return SupplierModel(
       id: id ?? this.id,
@@ -205,6 +212,7 @@ class SupplierModel {
       scores: scores ?? this.scores,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      productType: productType ?? this.productType,
     );
   }
 
@@ -232,6 +240,32 @@ class SupplierModel {
       updatedAt: data.updatedAt != null
           ? DateTime.parse(data.updatedAt!)
           : null,
+      productType: ProductTypeEnum.fromName(data.productType ?? ''),
     );
+  }
+
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      userId,
+      name,
+      company,
+      booth,
+      address,
+      email,
+      phone,
+      weChatID,
+      whatsAppNumber,
+      notes,
+      industry,
+      interestLevel,
+      imageUrl,
+      _imageLocalPath,
+      scores,
+      createdAt,
+      updatedAt,
+      productType,
+    ];
   }
 }

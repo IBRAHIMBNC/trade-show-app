@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:supplier_snap/app/constants/k_icons.dart';
 import 'package:supplier_snap/app/core/enums/industry_type_enum.dart';
 import 'package:supplier_snap/app/core/enums/interest_level_enum.dart';
+import 'package:supplier_snap/app/core/enums/product_type_enum.dart';
 import 'package:supplier_snap/app/core/extensions/string.dart';
 import 'package:supplier_snap/app/core/failures/failures.dart';
 import 'package:supplier_snap/app/core/services/file_picker_service.dart';
@@ -61,15 +62,17 @@ class AddSupplierController extends GetxController {
 
   InterestLevelEnum? selectedInterestLevel;
   IndustryTypeEnum? industryEnum;
+  ProductTypeEnum? productTypeEnum;
 
   Rxn<File> selectedImage = Rxn<File>();
-
   String? imageUrl;
   String? imageLocalPath; // Store permanent path
 
   late SupplierModel? supplier = Get.arguments as SupplierModel?;
 
   final RxInt selectedIndex = 0.obs;
+
+  late bool isEdit = (supplier != null);
 
   List<Widget> get sections => [
     const AddSupplierInfoSection(), // AddSupplierInfoSection
@@ -149,6 +152,7 @@ class AddSupplierController extends GetxController {
       imageUrl: imageUrl,
       imageLocalPath: imageLocalPath ?? supplier!.relativeImagePath,
       scores: scores.value,
+      productType: productTypeEnum,
     );
     return supplierRepository.updateSupplier(supplier!.id!, updatedSupplier);
   }
@@ -172,6 +176,7 @@ class AddSupplierController extends GetxController {
       imageUrl: imageUrl,
       imageLocalPath: imageLocalPath,
       scores: scores.value,
+      productType: productTypeEnum,
     );
     return supplierRepository.createSupplier(supplier);
   }
@@ -201,6 +206,7 @@ class AddSupplierController extends GetxController {
 
       industryEnum = supplier!.industry;
       selectedInterestLevel = supplier!.interestLevel;
+      productTypeEnum = supplier!.productType;
     }
   }
 

@@ -1,7 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class ScoresModel {
+import 'package:equatable/equatable.dart';
+
+class ScoresModel extends Equatable {
   final int cost;
   final int quality;
   final int leadTime;
@@ -15,6 +17,10 @@ class ScoresModel {
     required this.certifications,
     required this.fit,
   });
+
+  int get total {
+    return cost + quality + leadTime + certifications + fit;
+  }
 
   static const ScoresModel emptyScores = ScoresModel(
     cost: 0,
@@ -68,4 +74,7 @@ class ScoresModel {
       fit: fit ?? this.fit,
     );
   }
+
+  @override
+  List<Object> get props => [cost, quality, leadTime, certifications, fit];
 }

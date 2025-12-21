@@ -17,8 +17,8 @@ class ProductListingView extends GetView<ProductListingController> {
     return Scaffold(
       appBar: MyAppBar(
         title: 'Products',
-        onAddBtnPressed: controller.goToAddProduct,
-        addBtnTitle: 'Add Product',
+        onActionBtnPressed: controller.goToAddProduct,
+        actionBtnTitle: 'Add Product',
         onSearchChanged: (val) {},
       ),
       body: Obx(() => _buildBody()),

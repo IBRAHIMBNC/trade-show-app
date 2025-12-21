@@ -148,9 +148,17 @@ class SupplierRepository extends BaseRepository {
     return localSource
         .watchSuppliersByUserId(userId)
         .map(
-          (dataList) => dataList
-              .map((data) => SupplierModel.fromDatabaseModel(data))
-              .toList(),
+          (dataList) =>
+              dataList
+                  .map((data) => SupplierModel.fromDatabaseModel(data))
+                  .toList()
+                ..sort((a, b) {
+                  if ((b.updatedAt ?? b.createdAt) != null &&
+                      (a.updatedAt ?? a.createdAt) != null) {
+                    return b.updatedAt!.compareTo(a.updatedAt!);
+                  }
+                  return 0;
+                }),
         );
   }
 }

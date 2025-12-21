@@ -4,6 +4,7 @@ import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyUtils {
   MyUtils._privateConstructor();
@@ -58,5 +59,40 @@ class MyUtils {
       debugPrint('Error deleting file: $e');
       return false;
     }
+  }
+
+  static Future<void> redirectToWhatsapp(String phoneNumber) async {
+    final phoneNumberWithoutSpecialChars = phoneNumber.replaceAll(
+      RegExp(r'[^\d]'),
+      '',
+    );
+    final Uri iosUrl = Uri.parse(
+      "https://wa.me/$phoneNumberWithoutSpecialChars",
+    );
+    if (Platform.isIOS) {
+      if (await canLaunchUrl(iosUrl)) {
+        await launchUrl(iosUrl);
+      } else {
+        throw 'Could not launch $iosUrl';
+      }
+    } else {
+      final Uri androidUrl = Uri.parse("whatsapp://send?phone=$phoneNumber");
+      if (await canLaunchUrl(androidUrl)) {
+        await launchUrl(androidUrl);
+      } else {
+        throw 'Could not launch $androidUrl';
+      }
+    }
+    return;
+  }
+
+  static Future<void> redirectToWeChat() async {
+    final Uri weChatUrl = Uri.parse("weixin://");
+    if (await canLaunchUrl(weChatUrl)) {
+      await launchUrl(weChatUrl);
+    } else {
+      throw 'Could not launch $weChatUrl';
+    }
+    return;
   }
 }

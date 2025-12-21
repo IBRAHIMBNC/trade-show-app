@@ -104,7 +104,7 @@ class $SupplierTable extends Supplier
     'phone',
     aliasedName,
     true,
-    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 15),
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 20),
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
@@ -128,7 +128,7 @@ class $SupplierTable extends Supplier
     'whats_app_number',
     aliasedName,
     true,
-    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 15),
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 20),
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
@@ -235,6 +235,18 @@ class $SupplierTable extends Supplier
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   ).withConverter<Map<String, String>?>($SupplierTable.$converterscoresn);
+  static const VerificationMeta _productTypeMeta = const VerificationMeta(
+    'productType',
+  );
+  @override
+  late final GeneratedColumn<String> productType = GeneratedColumn<String>(
+    'product_type',
+    aliasedName,
+    true,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -256,6 +268,7 @@ class $SupplierTable extends Supplier
     updatedAt,
     isSynced,
     scores,
+    productType,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -391,6 +404,15 @@ class $SupplierTable extends Supplier
         isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
       );
     }
+    if (data.containsKey('product_type')) {
+      context.handle(
+        _productTypeMeta,
+        productType.isAcceptableOrUnknown(
+          data['product_type']!,
+          _productTypeMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -478,6 +500,10 @@ class $SupplierTable extends Supplier
           data['${effectivePrefix}scores'],
         ),
       ),
+      productType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}product_type'],
+      ),
     );
   }
 
@@ -512,6 +538,7 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
   final String? updatedAt;
   final bool isSynced;
   final Map<String, String>? scores;
+  final String? productType;
   const SupplierData({
     required this.id,
     required this.userId,
@@ -532,6 +559,7 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
     this.updatedAt,
     required this.isSynced,
     this.scores,
+    this.productType,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -583,6 +611,9 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
         $SupplierTable.$converterscoresn.toSql(scores),
       );
     }
+    if (!nullToAbsent || productType != null) {
+      map['product_type'] = Variable<String>(productType);
+    }
     return map;
   }
 
@@ -633,6 +664,9 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
       scores: scores == null && nullToAbsent
           ? const Value.absent()
           : Value(scores),
+      productType: productType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(productType),
     );
   }
 
@@ -661,6 +695,7 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
       updatedAt: serializer.fromJson<String?>(json['updatedAt']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       scores: serializer.fromJson<Map<String, String>?>(json['scores']),
+      productType: serializer.fromJson<String?>(json['productType']),
     );
   }
   @override
@@ -686,6 +721,7 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
       'updatedAt': serializer.toJson<String?>(updatedAt),
       'isSynced': serializer.toJson<bool>(isSynced),
       'scores': serializer.toJson<Map<String, String>?>(scores),
+      'productType': serializer.toJson<String?>(productType),
     };
   }
 
@@ -709,6 +745,7 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
     Value<String?> updatedAt = const Value.absent(),
     bool? isSynced,
     Value<Map<String, String>?> scores = const Value.absent(),
+    Value<String?> productType = const Value.absent(),
   }) => SupplierData(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -735,6 +772,7 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
     isSynced: isSynced ?? this.isSynced,
     scores: scores.present ? scores.value : this.scores,
+    productType: productType.present ? productType.value : this.productType,
   );
   SupplierData copyWithCompanion(SupplierCompanion data) {
     return SupplierData(
@@ -763,6 +801,9 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       scores: data.scores.present ? data.scores.value : this.scores,
+      productType: data.productType.present
+          ? data.productType.value
+          : this.productType,
     );
   }
 
@@ -787,7 +828,8 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('isSynced: $isSynced, ')
-          ..write('scores: $scores')
+          ..write('scores: $scores, ')
+          ..write('productType: $productType')
           ..write(')'))
         .toString();
   }
@@ -813,6 +855,7 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
     updatedAt,
     isSynced,
     scores,
+    productType,
   );
   @override
   bool operator ==(Object other) =>
@@ -836,7 +879,8 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.isSynced == this.isSynced &&
-          other.scores == this.scores);
+          other.scores == this.scores &&
+          other.productType == this.productType);
 }
 
 class SupplierCompanion extends UpdateCompanion<SupplierData> {
@@ -859,6 +903,7 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
   final Value<String?> updatedAt;
   final Value<bool> isSynced;
   final Value<Map<String, String>?> scores;
+  final Value<String?> productType;
   const SupplierCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
@@ -879,6 +924,7 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
     this.updatedAt = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.scores = const Value.absent(),
+    this.productType = const Value.absent(),
   });
   SupplierCompanion.insert({
     this.id = const Value.absent(),
@@ -900,6 +946,7 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
     this.updatedAt = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.scores = const Value.absent(),
+    this.productType = const Value.absent(),
   }) : userId = Value(userId),
        name = Value(name),
        company = Value(company),
@@ -924,6 +971,7 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
     Expression<String>? updatedAt,
     Expression<bool>? isSynced,
     Expression<String>? scores,
+    Expression<String>? productType,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -945,6 +993,7 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
       if (updatedAt != null) 'updated_at': updatedAt,
       if (isSynced != null) 'is_synced': isSynced,
       if (scores != null) 'scores': scores,
+      if (productType != null) 'product_type': productType,
     });
   }
 
@@ -968,6 +1017,7 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
     Value<String?>? updatedAt,
     Value<bool>? isSynced,
     Value<Map<String, String>?>? scores,
+    Value<String?>? productType,
   }) {
     return SupplierCompanion(
       id: id ?? this.id,
@@ -989,6 +1039,7 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
       updatedAt: updatedAt ?? this.updatedAt,
       isSynced: isSynced ?? this.isSynced,
       scores: scores ?? this.scores,
+      productType: productType ?? this.productType,
     );
   }
 
@@ -1054,6 +1105,9 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
         $SupplierTable.$converterscoresn.toSql(scores.value),
       );
     }
+    if (productType.present) {
+      map['product_type'] = Variable<String>(productType.value);
+    }
     return map;
   }
 
@@ -1078,7 +1132,8 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('isSynced: $isSynced, ')
-          ..write('scores: $scores')
+          ..write('scores: $scores, ')
+          ..write('productType: $productType')
           ..write(')'))
         .toString();
   }
@@ -2921,6 +2976,7 @@ typedef $$SupplierTableCreateCompanionBuilder =
       Value<String?> updatedAt,
       Value<bool> isSynced,
       Value<Map<String, String>?> scores,
+      Value<String?> productType,
     });
 typedef $$SupplierTableUpdateCompanionBuilder =
     SupplierCompanion Function({
@@ -2943,6 +2999,7 @@ typedef $$SupplierTableUpdateCompanionBuilder =
       Value<String?> updatedAt,
       Value<bool> isSynced,
       Value<Map<String, String>?> scores,
+      Value<String?> productType,
     });
 
 final class $$SupplierTableReferences
@@ -3114,6 +3171,11 @@ class $$SupplierTableFilterComposer
   get scores => $composableBuilder(
     column: $table.scores,
     builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<String> get productType => $composableBuilder(
+    column: $table.productType,
+    builder: (column) => ColumnFilters(column),
   );
 
   Expression<bool> productTableRefs(
@@ -3295,6 +3357,11 @@ class $$SupplierTableOrderingComposer
     column: $table.scores,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get productType => $composableBuilder(
+    column: $table.productType,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SupplierTableAnnotationComposer
@@ -3368,6 +3435,11 @@ class $$SupplierTableAnnotationComposer
 
   GeneratedColumnWithTypeConverter<Map<String, String>?, String> get scores =>
       $composableBuilder(column: $table.scores, builder: (column) => column);
+
+  GeneratedColumn<String> get productType => $composableBuilder(
+    column: $table.productType,
+    builder: (column) => column,
+  );
 
   Expression<T> productTableRefs<T extends Object>(
     Expression<T> Function($$ProductTableTableAnnotationComposer a) f,
@@ -3496,6 +3568,7 @@ class $$SupplierTableTableManager
                 Value<String?> updatedAt = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<Map<String, String>?> scores = const Value.absent(),
+                Value<String?> productType = const Value.absent(),
               }) => SupplierCompanion(
                 id: id,
                 userId: userId,
@@ -3516,6 +3589,7 @@ class $$SupplierTableTableManager
                 updatedAt: updatedAt,
                 isSynced: isSynced,
                 scores: scores,
+                productType: productType,
               ),
           createCompanionCallback:
               ({
@@ -3538,6 +3612,7 @@ class $$SupplierTableTableManager
                 Value<String?> updatedAt = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<Map<String, String>?> scores = const Value.absent(),
+                Value<String?> productType = const Value.absent(),
               }) => SupplierCompanion.insert(
                 id: id,
                 userId: userId,
@@ -3558,6 +3633,7 @@ class $$SupplierTableTableManager
                 updatedAt: updatedAt,
                 isSynced: isSynced,
                 scores: scores,
+                productType: productType,
               ),
           withReferenceMapper: (p0) => p0
               .map(

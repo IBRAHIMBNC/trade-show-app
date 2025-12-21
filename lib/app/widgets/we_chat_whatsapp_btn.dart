@@ -14,8 +14,8 @@ class WeChatAndWhatsappBtns extends StatelessWidget {
     this.bgColor,
   });
 
-  final Function? onWeChatTap;
-  final Function? onWhatsAppTap;
+  final Function()? onWeChatTap;
+  final Function()? onWhatsAppTap;
   final Color? bgColor;
 
   @override
@@ -35,6 +35,7 @@ class WeChatAndWhatsappBtns extends StatelessWidget {
                 ],
               ),
               backgroundColor: bgColor ?? KColors.white,
+              onTap: onWeChatTap,
             ),
           ),
           Expanded(
@@ -47,6 +48,7 @@ class WeChatAndWhatsappBtns extends StatelessWidget {
                 ],
               ),
               backgroundColor: bgColor ?? KColors.white,
+              onTap: onWhatsAppTap,
             ),
           ),
         ],

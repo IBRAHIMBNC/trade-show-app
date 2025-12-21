@@ -8,6 +8,7 @@ import 'package:supplier_snap/app/core/extensions/double.dart';
 import 'package:supplier_snap/app/modules/supplier/data/models/supplier_model.dart';
 import 'package:supplier_snap/app/modules/supplier/data/services/supplier_info_service.dart';
 import 'package:supplier_snap/app/routes/app_pages.dart';
+import 'package:supplier_snap/app/utils/my_utils.dart';
 import 'package:supplier_snap/app/widgets/custom_image.dart';
 import 'package:supplier_snap/app/widgets/custom_text/custom_text.dart';
 import 'package:supplier_snap/app/widgets/my_container.dart';
@@ -26,9 +27,6 @@ class SupplierDetailsCard extends StatelessWidget {
   final SupplierModel supplier;
   final Function()? onEditTap;
   final Function()? onDeleteTap;
-
-  SupplierInfoService get supplierCardService =>
-      Get.find<SupplierInfoService>();
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +58,7 @@ class SupplierDetailsCard extends StatelessWidget {
                 ),
               ),
             ),
+            horizontalSpacing: 10.w,
             title: IntrinsicHeight(
               child: Row(
                 children: [
@@ -74,8 +73,9 @@ class SupplierDetailsCard extends StatelessWidget {
                   ),
                   8.horizontalSpace,
                   CustomImage.icon(KIcons.ranking, size: 15.w),
+                  4.horizontalSpace,
                   CustomText.label14b600(
-                    ' ${supplier.score ?? '8'}',
+                    '${supplier.scores.total}',
                     color: KColors.black60,
                     autoSized: false,
                   ),
@@ -90,14 +90,16 @@ class SupplierDetailsCard extends StatelessWidget {
                 children: [
                   if (supplier.interestLevel != null)
                     MyContainer(
-                      color: KColors.white,
+                      color: supplier.interestLevel!.color.withValues(
+                        alpha: 0.1,
+                      ),
                       padding: EdgeInsets.symmetric(
                         vertical: 4.h,
                         horizontal: 12.w,
                       ),
                       child: CustomText.label10b400(
                         supplier.interestLevel!.displayName,
-                        color: KColors.black60,
+                        color: supplier.interestLevel!.color,
                       ),
                     ),
                   if (supplier.industry != null)
@@ -109,6 +111,18 @@ class SupplierDetailsCard extends StatelessWidget {
                       ),
                       child: CustomText.label10b400(
                         supplier.industry!.displayName,
+                        color: KColors.black60,
+                      ),
+                    ),
+                  if (supplier.productType != null)
+                    MyContainer(
+                      color: KColors.white,
+                      padding: EdgeInsets.symmetric(
+                        vertical: 4.h,
+                        horizontal: 12.w,
+                      ),
+                      child: CustomText.label10b400(
+                        supplier.productType!.displayName,
                         color: KColors.black60,
                       ),
                     ),
@@ -154,28 +168,29 @@ class SupplierDetailsCard extends StatelessWidget {
             children: [
               _buildStreamCountContainer(
                 title: 'Products',
-                countStream: supplierCardService.watchProductCountBySupplierId(
-                  supplier.id!,
-                ),
+                countStream: SupplierInfoService.instance
+                    .watchProductCountBySupplierId(supplier.id!),
               ),
 
               _buildStreamCountContainer(
                 title: 'Notes',
-                countStream: supplierCardService.watchNoteCountBySupplierId(
-                  supplier.id!,
-                ),
+                countStream: SupplierInfoService.instance
+                    .watchNoteCountBySupplierId(supplier.id!),
               ),
               _buildStreamCountContainer(
                 title: 'Files',
-                countStream: supplierCardService.watchDocumentCountBySupplierId(
-                  supplier.id!,
-                ),
+                countStream: SupplierInfoService.instance
+                    .watchDocumentCountBySupplierId(supplier.id!),
               ),
             ],
           ),
           12.verticalSpace,
 
-          WeChatAndWhatsappBtns(),
+          WeChatAndWhatsappBtns(
+            onWhatsAppTap: () {
+              MyUtils.redirectToWhatsapp(supplier.whatsAppNumber ?? '');
+            },
+          ),
         ],
       ),
     );

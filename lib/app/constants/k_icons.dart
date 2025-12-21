@@ -27,4 +27,11 @@ class KIcons {
   static const String emptyNotes = '${basePath}no_notes.svg';
   static const String emptyProducts = '${basePath}no_products.svg';
   static const String emptyFiles = '${basePath}no_files.svg';
+
+  //Compare Screen Icons
+  static const String startCompare = '${basePath}compare.svg';
+  static const String export = '${basePath}export.svg';
+  static const String greenCircle = '${basePath}green_circle.svg';
+
+  static const String exportFile = '${basePath}export_file.svg';
 }

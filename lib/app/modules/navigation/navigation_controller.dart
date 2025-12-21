@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:supplier_snap/app/modules/comparison/comparison_view.dart';
+import 'package:supplier_snap/app/modules/comparison/presentation/start_compare_screen.dart';
 import 'package:supplier_snap/app/modules/profile/presentation/profile_detils/profile_detils_view.dart';
 import 'package:supplier_snap/app/modules/supplier/presentation/home/home_view.dart';
 
@@ -12,7 +12,7 @@ class NavigationController extends GetxController {
 
   final List<Widget> pages = [
     HomeView(),
-    ComparisonView(),
+    StartCompareScreen(),
     ProfileDetilsView(),
   ];
 

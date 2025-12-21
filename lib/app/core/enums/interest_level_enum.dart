@@ -1,7 +1,9 @@
+import 'dart:ui';
+
 enum InterestLevelEnum {
-  high('High'),
-  medium('Medium'),
-  low('Low');
+  high('High', Color(0xFF4CAF50)),
+  medium('Medium', Color(0xFFFFC107)),
+  low('Low', Color(0xFFF44336));
 
   static InterestLevelEnum fromString(String? value) {
     if (value == null) {
@@ -13,9 +15,6 @@ enum InterestLevelEnum {
     );
   }
 
-  final String displayName;
-  const InterestLevelEnum(this.displayName);
-
   static InterestLevelEnum? fromDisplayName(String val) {
     try {
       return InterestLevelEnum.values.firstWhere(
@@ -25,4 +24,8 @@ enum InterestLevelEnum {
       return null;
     }
   }
+
+  final String displayName;
+  final Color color;
+  const InterestLevelEnum(this.displayName, this.color);
 }

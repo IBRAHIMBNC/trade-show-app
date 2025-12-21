@@ -296,7 +296,7 @@ class CustomText extends StatelessWidget {
         overflow: overflow,
         style:
             style ??
-            TextStyle(
+            AppTextStyles.label14b400.copyWith(
               color: color ?? defaultColor,
               fontSize: size.sp,
               fontWeight: fontWeight,

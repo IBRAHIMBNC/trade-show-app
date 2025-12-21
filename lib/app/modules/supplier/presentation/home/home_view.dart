@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:supplier_snap/app/constants/colors.dart';
 import 'package:supplier_snap/app/constants/k_icons.dart';
-import 'package:supplier_snap/app/constants/k_images.dart';
 import 'package:supplier_snap/app/constants/padding_constants.dart';
 import 'package:supplier_snap/app/core/extensions/double.dart';
 import 'package:supplier_snap/app/modules/supplier/presentation/home/widgets/supplier_details_card.dart';
@@ -96,7 +95,7 @@ class HomeView extends GetView<HomeController> {
               },
             );
           }),
-          45.verticalSpaceSliver,
+          110.verticalSpaceSliver,
         ],
       ),
     );
@@ -198,10 +197,7 @@ class HomeView extends GetView<HomeController> {
                           _buildCircleOverlappedProfiles(
                             controller.suppliers
                                 .take(3)
-                                .map(
-                                  (e) =>
-                                      e.absoluteImagePath ?? KImages.blackLogo,
-                                )
+                                .map((e) => e.absoluteImagePath)
                                 .toList(),
                           ),
                           8.horizontalSpace,
@@ -251,7 +247,7 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  _buildCircleOverlappedProfiles(List<String> imagePaths) {
+  _buildCircleOverlappedProfiles(List<String?> imagePaths) {
     return SizedBox(
       height: 40.h,
       child: Row(
@@ -259,9 +255,15 @@ class HomeView extends GetView<HomeController> {
           return Align(
             widthFactor: 0.5,
             child: CustomImage.cirlce(
-              imagePaths[index],
+              imagePaths[index] ?? '',
               size: 30.r,
-              backgroundColor: Colors.red,
+              hideChild: imagePaths[index] != null,
+              backgroundColor: KColors.white,
+              child: CustomImage.icon(
+                KIcons.user,
+                size: 15.sp,
+                color: KColors.black,
+              ),
             ),
           );
         }),

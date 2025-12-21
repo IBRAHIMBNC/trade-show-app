@@ -31,6 +31,7 @@ class SupplierLocalDatasource {
             scores: Value(supplier.scores.toMap()),
             createdAt: Value(supplier.createdAt?.toIso8601String()),
             updatedAt: Value(supplier.updatedAt?.toIso8601String()),
+            productType: Value(supplier.productType?.name),
           ),
         );
   }
@@ -85,6 +86,7 @@ class SupplierLocalDatasource {
             scores: Value(supplier.scores.toMap()),
             createdAt: Value(supplier.createdAt?.toIso8601String()),
             updatedAt: Value(supplier.updatedAt?.toIso8601String()),
+            productType: Value(supplier.productType?.name),
           ),
         );
   }

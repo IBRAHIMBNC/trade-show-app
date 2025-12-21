@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:supplier_snap/app/modules/comparison/presentation/select_suppliers_screen.dart';
 
 import '../modules/auth/presentation/forgot_password/forgot_password_binding.dart';
 import '../modules/auth/presentation/forgot_password/forgot_password_view.dart';
@@ -6,8 +7,7 @@ import '../modules/auth/presentation/login/login_binding.dart';
 import '../modules/auth/presentation/login/login_view.dart';
 import '../modules/auth/presentation/sign_up/sign_up_binding.dart';
 import '../modules/auth/presentation/sign_up/sign_up_view.dart';
-import '../modules/comparison/comparison_binding.dart';
-import '../modules/comparison/comparison_view.dart';
+import '../modules/comparison/presentation/comparison_binding.dart';
 import '../modules/file_viewer/file_viewer_binding.dart';
 import '../modules/file_viewer/file_viewer_view.dart';
 import '../modules/files/presentation/files_listing/files_listing_binding.dart';
@@ -82,7 +82,7 @@ class AppPages {
       bindings: [
         NavigationBinding(),
         HomeBinding(),
-        ComparisonBinding(),
+        // ComparisonBinding(),
         ProfileDetilsBinding(),
       ],
     ),
@@ -158,7 +158,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.COMPARISON,
-      page: () => const ComparisonView(),
+      page: () => const SelectSuppliersScreen(),
       binding: ComparisonBinding(),
     ),
   ];

@@ -37,16 +37,14 @@ class SupplierDetailController extends GetxController
 
   final RxBool isLoading = false.obs;
 
-  final supplierInfoServie = Get.find<SupplierInfoService>();
-
   Stream<int> get productsCountStream =>
-      supplierInfoServie.watchProductCountBySupplierId(supplierId);
+      SupplierInfoService.instance.watchProductCountBySupplierId(supplierId);
 
   Stream<int> get filesCountStream =>
-      supplierInfoServie.watchDocumentCountBySupplierId(supplierId);
+      SupplierInfoService.instance.watchDocumentCountBySupplierId(supplierId);
 
   Stream<int> get notesCountStream =>
-      supplierInfoServie.watchNoteCountBySupplierId(supplierId);
+      SupplierInfoService.instance.watchNoteCountBySupplierId(supplierId);
 
   gotoProductListing() {
     Get.toNamed(Routes.PRODUCT_LISTING);
@@ -126,10 +124,12 @@ class SupplierDetailController extends GetxController
   @override
   void onClose() {
     tabController.dispose();
-    supplierRepository.updateSupplier(
-      supplierId,
-      supplier.copyWith(scores: scores.value),
-    );
+    if (supplier.scores != scores.value) {
+      supplierRepository.updateSupplier(
+        supplierId,
+        supplier.copyWith(scores: scores.value),
+      );
+    }
     super.onClose();
   }
 }

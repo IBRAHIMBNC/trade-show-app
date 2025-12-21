@@ -6,6 +6,7 @@ import 'package:supplier_snap/app/constants/colors.dart';
 import 'package:supplier_snap/app/constants/k_icons.dart';
 import 'package:supplier_snap/app/constants/padding_constants.dart';
 import 'package:supplier_snap/app/core/extensions/double.dart';
+import 'package:supplier_snap/app/utils/my_utils.dart';
 import 'package:supplier_snap/app/widgets/custom_image.dart';
 import 'package:supplier_snap/app/widgets/custom_tabbar.dart';
 import 'package:supplier_snap/app/widgets/custom_text/custom_text.dart';
@@ -44,7 +45,17 @@ class SupplierDetailView extends GetView<SupplierDetailController> {
           children: [
             topPadding.verticalSpace,
             _buildProfileCard(),
-            WeChatAndWhatsappBtns(bgColor: KColors.primaryBg),
+            WeChatAndWhatsappBtns(
+              bgColor: KColors.primaryBg,
+              onWeChatTap: () {
+                // MyUtils.redirectToWeChat(controller.supplier.weChatID ?? '');
+              },
+              onWhatsAppTap: () {
+                MyUtils.redirectToWhatsapp(
+                  controller.supplier.whatsAppNumber ?? '',
+                );
+              },
+            ),
             MyContainer(
               width: double.infinity,
               padding: kPadding8.all,
@@ -184,21 +195,26 @@ class SupplierDetailView extends GetView<SupplierDetailController> {
         ],
       ),
       trailing: MyContainer(
-        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
-        color: KColors.primaryBg,
-        radius: 30.r,
-        child: Row(
-          children: [
-            MyContainer(
-              radius: 30.r,
-              padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
-              color: KColors.white,
-              child: CustomImage.icon(KIcons.ranking, size: 22.w),
-            ),
-            8.horizontalSpace,
-            CustomText.label16b600('8', fontWeight: FontWeight.normal),
-            8.horizontalSpace,
-          ],
+        padding: kPadding4.all,
+        radius: 50.r,
+        child: MyContainer(
+          padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+          color: KColors.white,
+          radius: 50.r,
+          child: Row(
+            children: [
+              4.horizontalSpace,
+              CustomImage.icon(KIcons.ranking, size: 16.w),
+              4.horizontalSpace,
+              Obx(
+                () => CustomText.label14b600(
+                  controller.scores.value.total.toString(),
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              8.horizontalSpace,
+            ],
+          ),
         ),
       ),
     );

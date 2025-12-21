@@ -20,8 +20,8 @@ class NotesListingView extends GetView<NotesListingController> {
     return Scaffold(
       appBar: MyAppBar(
         title: 'Notes',
-        addBtnTitle: 'Add Note',
-        onAddBtnPressed: controller.addEditNote,
+        actionBtnTitle: 'Add Note',
+        onActionBtnPressed: controller.addEditNote,
         onSearchChanged: (val) {},
       ),
       body: Obx(() => _buildBody()),
