@@ -8,6 +8,9 @@ import 'package:supplier_snap/app/core/extensions/double.dart';
 import 'package:supplier_snap/app/modules/comparison/presentation/comparison_controller.dart';
 import 'package:supplier_snap/app/modules/comparison/presentation/widgets/supplier_profile_card.dart';
 import 'package:supplier_snap/app/modules/supplier/data/models/supplier_model.dart';
+import 'package:supplier_snap/app/routes/app_pages.dart';
+import 'package:supplier_snap/app/widgets/custom_image.dart';
+import 'package:supplier_snap/app/widgets/custom_text/custom_text.dart';
 import 'package:supplier_snap/app/widgets/my_appbar.dart';
 import 'package:supplier_snap/app/widgets/my_container.dart';
 import 'package:supplier_snap/app/widgets/rounded_button/my_rounded_button.dart';
@@ -24,34 +27,98 @@ class SelectSuppliersScreen extends GetView<ComparisonController> {
         actionBtnIcon: KIcons.greenCircle,
         onActionBtnPressed: controller.selectAllSuppliers,
       ),
-      body: Obx(
-        () => ListView.separated(
-          padding: kPadding16.all,
-          itemBuilder: (context, index) {
-            return Obx(
-              () => _buildProfileCard(
-                supplier: controller.suppliers[index],
-                isSelected: controller.selectedSuppliers.contains(
-                  controller.suppliers[index],
+      body: Obx(() => _buildBody()),
+
+      bottomNavigationBar: Obx(
+        () =>
+            (controller.suppliers.isEmpty ||
+                controller.selectedSuppliers.isEmpty)
+            ? SizedBox.shrink()
+            : MyContainer(
+                color: KColors.white,
+                shadow: BoxShadow(
+                  color: KColors.black10,
+                  blurRadius: 10.r,
+                  offset: Offset(0, -2.h),
+                ),
+                padding: kPadding20.all,
+                child: RoundedButton(
+                  'Compare',
+                  onTap: controller.goToComparisonView,
                 ),
               ),
-            );
-          },
-          separatorBuilder: (context, index) => 12.verticalSpace,
-          itemCount: controller.suppliers.length,
-        ),
       ),
+    );
+  }
 
-      bottomNavigationBar: MyContainer(
-        color: KColors.white,
-        shadow: BoxShadow(
-          color: KColors.black10,
-          blurRadius: 10.r,
-          offset: Offset(0, -2.h),
+  Widget _buildBody() {
+    if (controller.suppliers.isEmpty) {
+      return _buildEmptyState();
+    }
+    return ListView.separated(
+      padding: kPadding16.all,
+      itemBuilder: (context, index) {
+        return Obx(
+          () => _buildProfileCard(
+            supplier: controller.suppliers[index],
+            isSelected: controller.selectedSuppliers.contains(
+              controller.suppliers[index],
+            ),
+          ),
+        );
+      },
+      separatorBuilder: (context, index) => 12.verticalSpace,
+      itemCount: controller.suppliers.length,
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        MyContainer(
+          radius: 200.r,
+          width: 133.w,
+          height: 133.h,
+          color: null,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: KColors.primaryBg,
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(left: 12.w),
+            child: CustomImage.icon(KIcons.emptySuppliers, size: 120.w),
+          ),
         ),
-        padding: kPadding20.all,
-        child: RoundedButton('Compare', onTap: controller.goToComparisonView),
-      ),
+        24.verticalSpace,
+        CustomText.label24b800(
+          'No Suppliers Added Yet',
+          fontWeight: FontWeight.w600,
+        ),
+        12.verticalSpace,
+        Padding(
+          padding: kPadding16.hp,
+          child: CustomText.label12b400(
+            'Start building your supplier database by adding your first contact.',
+            color: KColors.black60,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        24.verticalSpace,
+        RoundedButton(
+          Row(
+            children: [
+              Icon(Icons.add, color: KColors.black, size: 25.sp),
+              8.horizontalSpace,
+              CustomText.label16b600('Add New Supplier', color: KColors.black),
+            ],
+          ),
+          onTap: () {
+            Get.toNamed(Routes.ADD_SUPPLIER);
+          },
+        ),
+        80.verticalSpace,
+      ],
     );
   }
 

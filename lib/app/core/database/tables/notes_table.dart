@@ -9,7 +9,7 @@ class NotesTable extends Table {
   DateTimeColumn get createdAt =>
       dateTime().withDefault(currentDateAndTime)(); // Note creation timestamp
   IntColumn get supplierId => integer().nullable().customConstraint(
-    'REFERENCES supplier(id) NOT NULL',
+    'REFERENCES supplier(id) ON DELETE CASCADE NOT NULL',
   )();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
 }

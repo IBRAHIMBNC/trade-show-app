@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:supplier_snap/app/core/database/app_db.dart';
+import 'package:supplier_snap/app/core/extensions/string.dart';
 import 'package:supplier_snap/app/modules/supplier/data/models/supplier_model.dart';
 import 'package:supplier_snap/app/utils/my_utils.dart';
 
@@ -94,10 +95,37 @@ class SupplierLocalDatasource {
   /// Delete a supplier from local database
   Future<int> deleteSupplier(int id) async {
     final supplier = await getSupplierById(id);
+
+    // Get all related products to delete their images
+    final products = await (database.select(
+      database.productTable,
+    )..where((tbl) => tbl.supplierId.equals(id))).get();
+
+    // Get all related documents to delete their files
+    final documents = await (database.select(
+      database.documentTable,
+    )..where((tbl) => tbl.supplierId.equals(id))).get();
+
     // Delete supplier image
     if (supplier != null && supplier.imageLocalPath != null) {
-      MyUtils.deletePermanentFile(supplier.imageLocalPath!);
+      MyUtils.deletePermanentFile(supplier.imageLocalPath!.toAbsolutePath);
     }
+
+    // Delete all product images
+    for (final product in products) {
+      if (product.imageLocalPaths != null) {
+        for (final imagePath in product.imageLocalPaths!) {
+          MyUtils.deletePermanentFile(imagePath.toAbsolutePath);
+        }
+      }
+    }
+
+    // Delete all document files
+    for (final document in documents) {
+      MyUtils.deletePermanentFile(document.localPath.toAbsolutePath);
+    }
+
+    // Delete supplier (CASCADE will delete related products, notes, and documents)
     return await (database.delete(
       database.supplier,
     )..where((tbl) => tbl.id.equals(id))).go();

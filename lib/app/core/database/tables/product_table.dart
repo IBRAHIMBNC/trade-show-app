@@ -14,7 +14,7 @@ class ProductTable extends Table {
   TextColumn get category => text().nullable().withLength(min: 1, max: 100)();
   IntColumn get leadTimeDays => integer().nullable()();
   IntColumn get supplierId => integer().nullable().customConstraint(
-    'REFERENCES supplier(id) NOT NULL',
+    'REFERENCES supplier(id) ON DELETE CASCADE NOT NULL',
   )();
   IntColumn get moq => integer().nullable()();
   TextColumn get moqUnit => text().nullable().withLength(min: 1, max: 50)();

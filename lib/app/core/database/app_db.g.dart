@@ -1248,7 +1248,7 @@ class $ProductTableTable extends ProductTable
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    $customConstraints: 'REFERENCES supplier(id) NOT NULL',
+    $customConstraints: 'REFERENCES supplier(id) ON DELETE CASCADE NOT NULL',
   );
   static const VerificationMeta _moqMeta = const VerificationMeta('moq');
   @override
@@ -2093,7 +2093,7 @@ class $NotesTableTable extends NotesTable
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    $customConstraints: 'REFERENCES supplier(id) NOT NULL',
+    $customConstraints: 'REFERENCES supplier(id) ON DELETE CASCADE NOT NULL',
   );
   static const VerificationMeta _isSyncedMeta = const VerificationMeta(
     'isSynced',
@@ -2516,7 +2516,7 @@ class $DocumentTableTable extends DocumentTable
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    $customConstraints: 'REFERENCES supplier(id) NOT NULL',
+    $customConstraints: 'REFERENCES supplier(id) ON DELETE CASCADE NOT NULL',
   );
   static const VerificationMeta _isSyncedMeta = const VerificationMeta(
     'isSynced',
@@ -2953,6 +2953,30 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     notesTable,
     documentTable,
   ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'supplier',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('product_table', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'supplier',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('notes_table', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'supplier',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('document_table', kind: UpdateKind.delete)],
+    ),
+  ]);
 }
 
 typedef $$SupplierTableCreateCompanionBuilder =

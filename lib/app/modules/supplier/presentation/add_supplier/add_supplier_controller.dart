@@ -118,8 +118,7 @@ class AddSupplierController extends GetxController {
               content: 'Supplier successfully added to your list.',
             );
           }
-
-          Get.until((route) => route.isFirst);
+          Get.back(); // Close the Add Supplier Screen
         },
       );
     }

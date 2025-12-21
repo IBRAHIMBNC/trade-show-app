@@ -10,7 +10,7 @@ class DocumentTable extends Table {
   TextColumn get type => text().withLength(min: 1, max: 50)();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   IntColumn get supplierId => integer().nullable().customConstraint(
-    'REFERENCES supplier(id) NOT NULL',
+    'REFERENCES supplier(id) ON DELETE CASCADE NOT NULL',
   )();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
 }

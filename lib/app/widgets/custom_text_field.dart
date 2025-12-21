@@ -171,7 +171,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         filled: true,
         fillColor: widget.bgColor ?? defaultTextFieldColor,
         hintStyle: AppTextStyles.label14b400.copyWith(color: KColors.black60),
-        hintText: widget.hinText,
+        // hintText: widget.hinText,
         errorStyle: AppTextStyles.label14b400.copyWith(
           color: errorColor,
           fontSize: 12.sp,
@@ -179,11 +179,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         constraints: BoxConstraints(minHeight: widget.size.height.h),
         alignLabelWithHint: true,
         suffixText: widget.suffixText,
-        // label: widget.labelText == null ? null : Text(widget.labelText!),
-        // labelStyle: AppTextStyles.paragraph14.copyWith(
-        //   color: AppColors.textColor2,
-        // ),
-        labelText: widget.labelText,
+        labelText: widget.hinText,
         labelStyle: AppTextStyles.label14b400.copyWith(
           color: KColors.textColor2,
         ),
@@ -203,7 +199,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(widget.borderRadius!),
-          borderSide: const BorderSide(color: Colors.transparent),
+          borderSide: const BorderSide(color: KColors.blue),
         ),
         prefix: widget.prefix,
         prefixIcon: widget.prefixIcon == null
