@@ -34,7 +34,7 @@ class NavigationView extends GetView<NavigationController> {
                 ),
                 color: KColors.successColor.withValues(alpha: 0.2),
               ),
-              height: controller.isSyncing.value ? 110.h : 50.h,
+              height: controller.isSyncing.value ? 110.h : 40.h,
               alignment: Alignment.center,
               padding: EdgeInsets.only(
                 top: MediaQuery.paddingOf(Get.context!).top,

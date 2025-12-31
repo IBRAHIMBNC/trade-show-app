@@ -34,4 +34,7 @@ class KIcons {
   static const String greenCircle = '${basePath}green_circle.svg';
 
   static const String exportFile = '${basePath}export_file.svg';
+
+  static const String filter = '${basePath}filter.svg';
+  static const String sort = '${basePath}sort.svg';
 }

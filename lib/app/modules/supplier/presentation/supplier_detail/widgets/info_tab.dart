@@ -67,6 +67,12 @@ class InfoTab extends GetView<SupplierDetailController> {
         'value': controller.supplier.interestLevel!.displayName,
       });
     }
+    if (controller.supplier.productType != null) {
+      detailItems.add({
+        'title': 'Product Type',
+        'value': controller.supplier.productType!.displayName,
+      });
+    }
 
     return MyContainer(
       width: double.infinity,
@@ -104,7 +110,7 @@ class InfoTab extends GetView<SupplierDetailController> {
             10.horizontalSpace,
             GestureDetector(
               onTap: () => controller.copyToClipboard(value),
-              child: CustomImage.icon(KIcons.edit, size: 20),
+              child: CustomImage.icon(KIcons.edit, size: 16.sp),
             ),
           ],
         ),

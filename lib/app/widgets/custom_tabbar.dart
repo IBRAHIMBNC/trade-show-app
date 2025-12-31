@@ -12,26 +12,28 @@ class CustomTabbar extends StatelessWidget {
     this.tabController,
     this.onTabChanged,
     this.isDisabled = false,
+    this.bgColor,
   });
 
   final List<Tab> tabs;
   final TabController? tabController;
   final Function(int index)? onTabChanged;
   final bool isDisabled;
+  final Color? bgColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 55.h,
       decoration: ShapeDecoration(
-        color: KColors.white,
+        color: bgColor ?? KColors.white,
         shape: RoundedSuperellipseBorder(
           borderRadius: BorderRadius.circular(50.r),
         ),
       ),
       padding: kPadding8.all,
       child: IgnorePointer(
-        ignoring: onTabChanged == null || isDisabled,
+        ignoring: onTabChanged == null,
         child: TabBar(
           labelColor: isDisabled ? KColors.textColor2 : KColors.white,
           labelStyle: AppTextStyles.label14b400.copyWith(color: KColors.white),

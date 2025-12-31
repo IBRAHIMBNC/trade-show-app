@@ -24,6 +24,7 @@ class MyDropDownButton extends StatefulWidget {
     this.radius,
     this.fontSize,
     this.validator,
+    this.labelText,
   });
 
   /// The list of items to display in the drop-down menu.
@@ -58,6 +59,8 @@ class MyDropDownButton extends StatefulWidget {
 
   final String? Function(String? val)? validator;
 
+  final String? labelText;
+
   @override
   State<MyDropDownButton> createState() => _MyDropDownButtonState();
 }
@@ -75,7 +78,7 @@ class _MyDropDownButtonState extends State<MyDropDownButton> {
   Widget build(BuildContext context) {
     return MyContainer(
       radius: widget.radius ?? 15.r,
-      height: widget.height ?? 53.h,
+      // height: widget.height ?? 70.h,
       width: widget.width ?? (widget.isExpanded == true ? null : 0.35.sw),
       // width: widget.width ?? 0.35.sw,
       color: widget.bgColor ?? KColors.primaryBg,
@@ -100,6 +103,10 @@ class _MyDropDownButtonState extends State<MyDropDownButton> {
             : CustomText.label14b400(widget.hint!, color: KColors.textColor2),
         icon: Icon(CupertinoIcons.chevron_down, size: 15.sp),
         decoration: InputDecoration(
+          labelText: widget.labelText,
+          labelStyle: AppTextStyles.label14b400.copyWith(
+            color: KColors.textColor2,
+          ),
           border: InputBorder.none,
           fillColor: widget.bgColor ?? KColors.primaryBg,
         ),

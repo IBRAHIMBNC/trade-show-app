@@ -70,7 +70,7 @@ class AddSupplierInfoSection extends GetView<AddSupplierController> {
             16.verticalSpace,
             MyDropDownButton(
               isExpanded: true,
-              hint: 'Select Industry',
+              labelText: 'Select Industry',
               value: controller.industryEnum?.displayName,
               onChanged: (val) {
                 controller.industryEnum = IndustryTypeEnum.fromDisplayName(val);
@@ -80,7 +80,7 @@ class AddSupplierInfoSection extends GetView<AddSupplierController> {
             16.verticalSpace,
             MyDropDownButton(
               isExpanded: true,
-              hint: 'Interest Level',
+              labelText: 'Interest Level',
               value: controller.selectedInterestLevel?.displayName,
               onChanged: (val) {
                 controller.selectedInterestLevel =
@@ -93,7 +93,7 @@ class AddSupplierInfoSection extends GetView<AddSupplierController> {
             16.verticalSpace,
             MyDropDownButton(
               isExpanded: true,
-              hint: 'Product Type',
+              labelText: 'Product Type',
               value: controller.productTypeEnum?.displayName,
               onChanged: (val) {
                 controller.productTypeEnum = ProductTypeEnum.fromDisplayName(

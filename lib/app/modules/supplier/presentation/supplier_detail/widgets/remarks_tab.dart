@@ -26,7 +26,7 @@ class RemarksTab extends GetView<SupplierDetailController> {
               controller.supplier.notes!.trim().isEmpty)
             CustomText.label14b400('No remarks added yet.')
           else
-            CustomText.label14b400(controller.supplier.notes!),
+            CustomText.label14b400(controller.supplier.notes!, maxlines: 50),
           12.verticalSpace,
           GestureDetector(
             onTap: controller.onEditSupplierTap,

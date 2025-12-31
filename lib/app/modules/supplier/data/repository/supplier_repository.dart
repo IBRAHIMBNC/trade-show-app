@@ -6,6 +6,7 @@ import 'package:supplier_snap/app/core/services/auth_service.dart';
 import 'package:supplier_snap/app/modules/auth/data/repository/auth_repository.dart';
 import 'package:supplier_snap/app/modules/supplier/data/datasources/supplier_local_datasource.dart';
 import 'package:supplier_snap/app/modules/supplier/data/datasources/supplier_remote_datasource.dart';
+import 'package:supplier_snap/app/modules/supplier/data/models/filter_sorting_model.dart';
 import 'package:supplier_snap/app/modules/supplier/data/models/supplier_model.dart';
 
 class SupplierRepository extends BaseRepository {
@@ -119,11 +120,15 @@ class SupplierRepository extends BaseRepository {
   }
 
   /// Search suppliers
-  Future<Either<Failure, List<SupplierModel>>> searchSuppliers(
-    String query,
-  ) async {
+  Future<Either<Failure, List<SupplierModel>>> getSuppliersByCriteria({
+    String? query,
+    FilterSortingModel? filterSorting,
+  }) async {
     try {
-      final localData = await localSource.searchSuppliers(query);
+      final localData = await localSource.searchAndFilterSuppliers(
+        searchQuery: query,
+        filterSorting: filterSorting,
+      );
       final suppliers = localData
           .map((e) => SupplierModel.fromDatabaseModel(e))
           .toList();

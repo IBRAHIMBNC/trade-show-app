@@ -42,7 +42,7 @@ class AddProductView extends GetView<AddProductController> {
                 ),
                 MyDropDownButton(
                   isExpanded: true,
-                  hint: 'Select Category',
+                  labelText: 'Select Category',
                   value: controller.selectedCategory?.displayName,
                   items: ProductCategoryEnum.values
                       .map((e) => e.displayName)

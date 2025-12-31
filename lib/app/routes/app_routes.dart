@@ -24,6 +24,7 @@ abstract class Routes {
   static const F_A_QS = _Paths.F_A_QS;
   static const FILE_VIEWER = _Paths.FILE_VIEWER;
   static const COMPARISON = _Paths.COMPARISON;
+  static const FILTER = _Paths.FILTER;
 }
 
 abstract class _Paths {
@@ -49,4 +50,5 @@ abstract class _Paths {
   static const F_A_QS = '/f-a-qs';
   static const FILE_VIEWER = '/file-viewer';
   static const COMPARISON = '/comparison';
+  static const FILTER = '/filter';
 }

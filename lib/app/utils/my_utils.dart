@@ -69,20 +69,12 @@ class MyUtils {
     final Uri iosUrl = Uri.parse(
       "https://wa.me/$phoneNumberWithoutSpecialChars",
     );
-    if (Platform.isIOS) {
-      if (await canLaunchUrl(iosUrl)) {
-        await launchUrl(iosUrl);
-      } else {
-        throw 'Could not launch $iosUrl';
-      }
+    if (await canLaunchUrl(iosUrl)) {
+      await launchUrl(iosUrl);
     } else {
-      final Uri androidUrl = Uri.parse("whatsapp://send?phone=$phoneNumber");
-      if (await canLaunchUrl(androidUrl)) {
-        await launchUrl(androidUrl);
-      } else {
-        throw 'Could not launch $androidUrl';
-      }
+      throw 'Could not launch $iosUrl';
     }
+
     return;
   }
 

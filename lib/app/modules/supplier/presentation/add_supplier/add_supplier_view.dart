@@ -13,7 +13,7 @@ class AddSupplierView extends GetView<AddSupplierController> {
 
   @override
   Widget build(BuildContext context) {
-    final topPadding = MediaQuery.of(context).padding.top;
+    final topPadding = MediaQuery.of(context).padding.top + 10;
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.only(

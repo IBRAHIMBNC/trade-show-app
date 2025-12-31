@@ -42,6 +42,8 @@ class CustomTextField extends StatefulWidget {
   final EdgeInsetsGeometry? margin;
   final Color? fontColor;
   final List<String>? autofillHints;
+  final bool showLabel;
+  final bool enableDebounce;
 
   const CustomTextField({
     super.key,
@@ -78,6 +80,8 @@ class CustomTextField extends StatefulWidget {
     this.fontColor,
     this.focusNode,
     this.autofillHints,
+    this.showLabel = true,
+    this.enableDebounce = false,
   });
 
   @override
@@ -132,7 +136,17 @@ class _CustomTextFieldState extends State<CustomTextField> {
       onTap: widget.isDisabled ? null : widget.onTap,
       textInputAction: widget.textInputAction,
       onFieldSubmitted: widget.onFieldSubmitted,
-      onChanged: (value) => widget.onChanged?.call(value),
+      onChanged: (value) {
+        if (widget.enableDebounce) {
+          Future.delayed(const Duration(milliseconds: 300), () {
+            if (value == widget.controller?.text) {
+              widget.onChanged?.call(value);
+            }
+          });
+        } else {
+          widget.onChanged?.call(value);
+        }
+      },
       readOnly: widget.readOnly,
       maxLines: widget.lines ?? 1,
       style: AppTextStyles.label14b400.copyWith(
@@ -171,7 +185,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         filled: true,
         fillColor: widget.bgColor ?? defaultTextFieldColor,
         hintStyle: AppTextStyles.label14b400.copyWith(color: KColors.black60),
-        // hintText: widget.hinText,
+        hintText: widget.hinText,
         errorStyle: AppTextStyles.label14b400.copyWith(
           color: errorColor,
           fontSize: 12.sp,
@@ -179,7 +193,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         constraints: BoxConstraints(minHeight: widget.size.height.h),
         alignLabelWithHint: true,
         suffixText: widget.suffixText,
-        labelText: widget.hinText,
+        labelText: widget.showLabel ? widget.labelText ?? widget.hinText : null,
         labelStyle: AppTextStyles.label14b400.copyWith(
           color: KColors.textColor2,
         ),
@@ -210,11 +224,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     EdgeInsets.only(
                       left: kPadding16.w,
                       right: kPadding4.w,
-                      bottom: kPadding12.h,
-                      top: kPadding12.h,
+                      bottom: kPadding8.h,
+                      top: kPadding8.h,
                     ),
                 child: SvgPicture.asset(
-                  color: _isFocused ? KColors.brand : KColors.textColor2,
+                  color: KColors.textColor2,
                   widget.prefixIcon.toString(),
                 ),
               ),

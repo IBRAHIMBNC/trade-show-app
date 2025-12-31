@@ -30,7 +30,20 @@ class HomeView extends GetView<HomeController> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 if (controller.suppliers.isNotEmpty) ...[
-                  _buildSearchBar(),
+                  Row(
+                    children: [
+                      Expanded(child: _buildSearchBar()),
+                      8.horizontalSpace,
+                      MyContainer(
+                        onTap: controller.gotoSortingScreen,
+                        alignment: Alignment.center,
+                        radius: 50.r,
+                        width: 52.w,
+                        height: 52.w,
+                        child: CustomImage.icon(KIcons.sort, size: 22.sp),
+                      ),
+                    ],
+                  ),
                   10.verticalSpace,
                 ],
                 _buildSupplierList(),
@@ -64,9 +77,21 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  Expanded _buildSupplierList() {
+  Widget _buildSupplierList() {
     if (controller.suppliers.isEmpty) {
       return _buildEmptyState();
+    } else if ((controller.isSearching.value || controller.isFilterApplied) &&
+        controller.filteredSuppliers.isEmpty) {
+      return Expanded(
+        child: Center(
+          child: CustomText.label16b600(
+            'No suppliers found',
+            color: KColors.black60,
+          ),
+        ),
+      );
+    } else if ((controller.isSearching.value || controller.isFilterApplied)) {
+      return _buildSearchedSupplierList();
     }
     return Expanded(
       child: CustomScrollView(
@@ -235,14 +260,26 @@ class HomeView extends GetView<HomeController> {
     return CustomTextField(
       borderRadius: 50.r,
       hinText: 'Search',
-      suffixWidget: MyContainer(
-        height: 40.h,
-        width: 52.w,
-        margin: EdgeInsets.only(right: 8.w),
-        radius: 50.r,
-        color: KColors.white,
-        alignment: Alignment.center,
-        child: CustomImage(KIcons.search, width: 20.h, height: 20.h),
+      prefixIcon: KIcons.search,
+      showLabel: false,
+      onChanged: (value) {
+        final query = value?.trim() ?? '';
+        controller.searchSupplier(query);
+      },
+      suffixWidget: Badge(
+        isLabelVisible: controller.isFilterApplied,
+        alignment: Alignment(0.5, -1),
+        smallSize: 12.h,
+        child: MyContainer(
+          onTap: controller.gotoFilterScreen,
+          height: 40.h,
+          width: 52.w,
+          margin: EdgeInsets.only(right: 8.w, top: 4.h, bottom: 4.h),
+          radius: 50.r,
+          color: KColors.white,
+          alignment: Alignment.center,
+          child: CustomImage(KIcons.filter, width: 20.h, height: 20.h),
+        ),
       ),
     );
   }
@@ -267,6 +304,39 @@ class HomeView extends GetView<HomeController> {
             ),
           );
         }),
+      ),
+    );
+  }
+
+  Widget _buildSearchedSupplierList() {
+    return Expanded(
+      child: CustomScrollView(
+        slivers: [
+          Obx(() {
+            return SliverList.separated(
+              itemCount: controller.filteredSuppliers.length,
+              itemBuilder: (context, index) {
+                return SupplierDetailsCard(
+                  supplier: controller.filteredSuppliers[index],
+                  onDeleteTap: () {
+                    controller.onDeleteSupplierTap(
+                      controller.filteredSuppliers[index].id!,
+                    );
+                  },
+                  onEditTap: () {
+                    controller.onEditSupplierTap(
+                      controller.filteredSuppliers[index],
+                    );
+                  },
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return 16.verticalSpace;
+              },
+            );
+          }),
+          110.verticalSpaceSliver,
+        ],
       ),
     );
   }

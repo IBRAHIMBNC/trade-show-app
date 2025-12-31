@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:supplier_snap/app/modules/comparison/presentation/select_suppliers_screen.dart';
 
 import '../modules/auth/presentation/forgot_password/forgot_password_binding.dart';
 import '../modules/auth/presentation/forgot_password/forgot_password_view.dart';
@@ -8,6 +7,7 @@ import '../modules/auth/presentation/login/login_view.dart';
 import '../modules/auth/presentation/sign_up/sign_up_binding.dart';
 import '../modules/auth/presentation/sign_up/sign_up_view.dart';
 import '../modules/comparison/presentation/comparison_binding.dart';
+import '../modules/comparison/presentation/select_suppliers_screen.dart';
 import '../modules/file_viewer/file_viewer_binding.dart';
 import '../modules/file_viewer/file_viewer_view.dart';
 import '../modules/files/presentation/files_listing/files_listing_binding.dart';
@@ -38,6 +38,8 @@ import '../modules/splash_screen/splash_screen_binding.dart';
 import '../modules/splash_screen/splash_screen_view.dart';
 import '../modules/supplier/presentation/add_supplier/add_supplier_binding.dart';
 import '../modules/supplier/presentation/add_supplier/add_supplier_view.dart';
+import '../modules/supplier/presentation/filter/filter_binding.dart';
+import '../modules/supplier/presentation/filter/filter_view.dart';
 import '../modules/supplier/presentation/home/home_binding.dart';
 import '../modules/supplier/presentation/home/home_view.dart';
 import '../modules/supplier/presentation/supplier_detail/supplier_detail_binding.dart';
@@ -160,6 +162,11 @@ class AppPages {
       name: _Paths.COMPARISON,
       page: () => const SelectSuppliersScreen(),
       binding: ComparisonBinding(),
+    ),
+    GetPage(
+      name: _Paths.FILTER,
+      page: () => const FilterView(),
+      binding: FilterBinding(),
     ),
   ];
 }

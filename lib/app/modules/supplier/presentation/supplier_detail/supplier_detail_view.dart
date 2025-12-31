@@ -74,7 +74,10 @@ class SupplierDetailView extends GetView<SupplierDetailController> {
                       ],
                     ),
                     12.verticalSpace,
-                    controller.tabViews[controller.tabIndex.value],
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 300),
+                      child: controller.tabViews[controller.tabIndex.value],
+                    ),
                   ],
                 ),
               ),
@@ -113,34 +116,36 @@ class SupplierDetailView extends GetView<SupplierDetailController> {
       stream: countingStream,
       builder: (context, snap) {
         final countingStream = snap.data ?? 0;
-        return MyContainer(
-          padding: kPadding4.all,
+        return MyListTile(
+          color: KColors.primaryBg,
+          onTap: onTap,
+          padding: EdgeInsets.symmetric(
+            horizontal: kPadding8.w,
+            vertical: kPadding4.h,
+          ),
           radius: 40.r,
-          child: MyListTile(
-            onTap: onTap,
-            horizontalSpacing: 8.w,
-            leading: CircleAvatar(
-              radius: 17.r,
-              backgroundColor: KColors.white,
-              child: CustomText.label14b400(countingStream.toString()),
-            ),
+          horizontalSpacing: 8.w,
+          leading: CircleAvatar(
+            radius: 17.r,
+            backgroundColor: KColors.white,
+            child: CustomText.label14b400(countingStream.toString()),
+          ),
 
-            title: CustomText.label12b400(title),
-            trailing: Row(
-              children: [
-                HighlightedEdgeButton(
-                  onTap: onAddTap,
-                  child: Icon(Icons.add, color: KColors.black, size: 20.sp),
-                ),
-                20.horizontalSpace,
-                Icon(
-                  CupertinoIcons.chevron_forward,
-                  size: 15.w,
-                  color: KColors.black60,
-                ),
-                8.horizontalSpace,
-              ],
-            ),
+          title: CustomText.label12b400(title),
+          trailing: Row(
+            children: [
+              HighlightedEdgeButton(
+                onTap: onAddTap,
+                child: Icon(Icons.add, color: KColors.black, size: 20.sp),
+              ),
+              10.horizontalSpace,
+              Icon(
+                CupertinoIcons.chevron_forward,
+                size: 15.w,
+                color: KColors.black60,
+              ),
+              8.horizontalSpace,
+            ],
           ),
         );
       },

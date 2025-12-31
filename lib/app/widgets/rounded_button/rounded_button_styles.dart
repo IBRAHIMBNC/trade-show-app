@@ -31,7 +31,7 @@ class ElevatedButtonStyles {
 
   static ButtonStyle get filledMediumStyle => filledStyle.copyWith(
     fixedSize: WidgetStateProperty.all<Size?>(_defaultMediumButtonSize),
-    maximumSize: WidgetStateProperty.all<Size?>(_defaultMediumButtonSize),
+    // maximumSize: WidgetStateProperty.all<Size?>(_defaultMediumButtonSize),
   );
 
   static ButtonStyle get filledLightStyle => filledStyle.copyWith(
@@ -41,7 +41,7 @@ class ElevatedButtonStyles {
 
   static ButtonStyle get filledLightSmallStyle => filledLightStyle.copyWith(
     fixedSize: WidgetStateProperty.all(_defaultSmallButtonSize),
-    maximumSize: WidgetStateProperty.all(_defaultSmallButtonSize),
+    // maximumSize: WidgetStateProperty.all(_defaultSmallButtonSize),
   );
 
   static ButtonStyle get filledLightMediumStyle => filledLightStyle.copyWith(
