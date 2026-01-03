@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:supplier_snap/app/core/database/app_db.dart';
+import 'package:supplier_snap/app/modules/supplier/data/models/filter_sorting_model.dart';
 import 'package:supplier_snap/app/modules/supplier/data/models/supplier_model.dart';
 
 class SupplierLocalDatasource {
@@ -147,17 +148,59 @@ class SupplierLocalDatasource {
     );
   }
 
-  /// Search suppliers by name or company (excluding soft-deleted)
-  Future<List<SupplierData>> searchSuppliers(String query) async {
-    final lowerQuery = query.toLowerCase();
-    return await (database.select(database.supplier)
-          ..where((tbl) => tbl.deletedAt.isNull())
-          ..where(
-            (tbl) =>
-                tbl.name.lower().contains(lowerQuery) |
-                tbl.company.lower().contains(lowerQuery),
-          ))
-        .get();
+  /// Search and filter suppliers by query and/or filters
+  Future<List<SupplierData>> searchAndFilterSuppliers({
+    String? searchQuery,
+    FilterSortingModel? filterSorting,
+  }) async {
+    if (filterSorting == null && (searchQuery == null || searchQuery.isEmpty)) {
+      return [];
+    }
+
+    final query = database.select(database.supplier);
+
+    // Apply search query if provided
+    if (searchQuery != null && searchQuery.isNotEmpty) {
+      final lowerQuery = searchQuery.toLowerCase();
+      query.where(
+        (tbl) =>
+            tbl.name.lower().contains(lowerQuery) |
+            tbl.company.lower().contains(lowerQuery) |
+            tbl.booth.lower().contains(lowerQuery) |
+            tbl.productType.lower().contains(lowerQuery),
+      );
+    }
+
+    // Apply filters if provided
+    if (filterSorting != null) {
+      if (filterSorting.interestLevel != null) {
+        query.where(
+          (tbl) => tbl.interestLevel.equals(filterSorting.interestLevel!.name),
+        );
+      }
+
+      if (filterSorting.industryType.isNotEmpty) {
+        final conditions = filterSorting.industryType.map((industry) {
+          return database.supplier.industry.equals(industry.name);
+        }).toList();
+
+        query.where(
+          (tbl) => conditions.reduce((value, element) => value | element),
+        );
+      }
+
+      if (filterSorting.productType.isNotEmpty) {
+        final conditions = filterSorting.productType.map((productType) {
+          return database.supplier.productType.equals(productType.name);
+        }).toList();
+
+        query.where(
+          (tbl) => conditions.reduce((value, element) => value | element),
+        );
+      }
+    }
+
+    return await query.get();
   }
 
   /// Clear all suppliers from local database
