@@ -10,6 +10,7 @@ class ProductsLocalDatasource {
 
   /// Insert a new product into local database
   Future<int> insertProduct(ProductModel product) async {
+    final now = DateTime.now();
     return await database
         .into(database.productTable)
         .insert(
@@ -18,7 +19,7 @@ class ProductsLocalDatasource {
             price: Value(product.price),
             specifications: Value(product.specifications),
             notes: Value(product.notes),
-            createdAt: Value(product.createdAt ?? DateTime.now()),
+            createdAt: Value(product.createdAt ?? now),
             category: Value(product.category.name),
             leadTimeDays: Value(product.leadTimeDays),
             supplierId: Value(product.supplierId),
@@ -27,38 +28,46 @@ class ProductsLocalDatasource {
             imageLocalPaths: Value(product.relativeImagePaths),
             imageUrls: Value(product.imageUrls),
             certifications: Value(product.certifications),
+            updatedAt: Value(now),
+            isSynced: const Value(false), // Mark as unsynced for cloud sync
           ),
         );
   }
 
-  /// Get all products from local database
+  /// Get all products from local database (excluding soft-deleted)
   Future<List<ProductTableData>> getAllProducts() async {
-    return await database.select(database.productTable).get();
+    return await (database.select(
+      database.productTable,
+    )..where((tbl) => tbl.deletedAt.isNull())).get();
   }
 
-  /// Get products by supplier ID
+  /// Get products by supplier ID (excluding soft-deleted)
   Future<List<ProductTableData>> getProductsBySupplierId(int supplierId) async {
-    return await (database.select(
-      database.productTable,
-    )..where((tbl) => tbl.supplierId.equals(supplierId))).get();
+    return await (database.select(database.productTable)
+          ..where((tbl) => tbl.supplierId.equals(supplierId))
+          ..where((tbl) => tbl.deletedAt.isNull()))
+        .get();
   }
 
-  /// Watch products by supplier ID (Stream for real-time updates)
+  /// Watch products by supplier ID (Stream for real-time updates, excluding soft-deleted)
   Stream<List<ProductTableData>> watchProductsBySupplierId(int supplierId) {
-    return (database.select(
-      database.productTable,
-    )..where((tbl) => tbl.supplierId.equals(supplierId))).watch();
+    return (database.select(database.productTable)
+          ..where((tbl) => tbl.supplierId.equals(supplierId))
+          ..where((tbl) => tbl.deletedAt.isNull()))
+        .watch();
   }
 
-  /// Get a single product by ID
+  /// Get a single product by ID (excluding soft-deleted)
   Future<ProductTableData?> getProductById(int id) async {
-    return await (database.select(
-      database.productTable,
-    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+    return await (database.select(database.productTable)
+          ..where((tbl) => tbl.id.equals(id))
+          ..where((tbl) => tbl.deletedAt.isNull()))
+        .getSingleOrNull();
   }
 
   /// Update a product in local database
   Future<bool> updateProduct(int id, ProductModel product) async {
+    final now = DateTime.now();
     return await database
         .update(database.productTable)
         .replace(
@@ -77,41 +86,46 @@ class ProductsLocalDatasource {
             imageLocalPaths: Value(product.relativeImagePaths),
             imageUrls: Value(product.imageUrls),
             certifications: Value(product.certifications),
+            updatedAt: Value(now),
+            isSynced: const Value(false), // Mark as unsynced for cloud sync
           ),
         );
   }
 
-  /// Delete a product from local database
+  /// Soft delete a product (mark as deleted instead of removing)
   Future<int> deleteProduct(int id) async {
-    final product = await getProductById(id);
-
-    // Delete product images
-    if (product != null) {
-      await deleteProductImages(product.imageLocalPaths);
-    }
-
-    return await (database.delete(
+    final now = DateTime.now();
+    return await (database.update(
       database.productTable,
-    )..where((tbl) => tbl.id.equals(id))).go();
+    )..where((tbl) => tbl.id.equals(id))).write(
+      ProductTableCompanion(
+        deletedAt: Value(now),
+        updatedAt: Value(now),
+        isSynced: const Value(false),
+      ),
+    );
   }
 
-  /// Search products by name, category, or specifications
+  /// Search products by name, category, or specifications (excluding soft-deleted)
   Future<List<ProductTableData>> searchProducts(String query) async {
     final lowerQuery = query.toLowerCase();
-    return await (database.select(database.productTable)..where(
-          (tbl) =>
-              tbl.name.lower().contains(lowerQuery) |
-              tbl.category.lower().contains(lowerQuery) |
-              tbl.specifications.lower().contains(lowerQuery),
-        ))
+    return await (database.select(database.productTable)
+          ..where((tbl) => tbl.deletedAt.isNull())
+          ..where(
+            (tbl) =>
+                tbl.name.lower().contains(lowerQuery) |
+                tbl.category.lower().contains(lowerQuery) |
+                tbl.specifications.lower().contains(lowerQuery),
+          ))
         .get();
   }
 
-  /// Get products by category
+  /// Get products by category (excluding soft-deleted)
   Future<List<ProductTableData>> getProductsByCategory(String category) async {
-    return await (database.select(
-      database.productTable,
-    )..where((tbl) => tbl.category.equals(category))).get();
+    return await (database.select(database.productTable)
+          ..where((tbl) => tbl.category.equals(category))
+          ..where((tbl) => tbl.deletedAt.isNull()))
+        .get();
   }
 
   /// Clear all products from local database

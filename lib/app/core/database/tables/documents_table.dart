@@ -13,4 +13,10 @@ class DocumentTable extends Table {
     'REFERENCES supplier(id) ON DELETE CASCADE NOT NULL',
   )();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+
+  // Sync columns
+  DateTimeColumn get updatedAt => dateTime().nullable()();
+  TextColumn get remoteId => text().nullable()(); // UUID from Supabase
+  DateTimeColumn get deletedAt =>
+      dateTime().nullable()(); // Soft delete timestamp
 }

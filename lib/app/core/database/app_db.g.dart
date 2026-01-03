@@ -247,6 +247,28 @@ class $SupplierTable extends Supplier
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _remoteIdMeta = const VerificationMeta(
+    'remoteId',
+  );
+  @override
+  late final GeneratedColumn<String> remoteId = GeneratedColumn<String>(
+    'remote_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -269,6 +291,8 @@ class $SupplierTable extends Supplier
     isSynced,
     scores,
     productType,
+    remoteId,
+    deletedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -413,6 +437,18 @@ class $SupplierTable extends Supplier
         ),
       );
     }
+    if (data.containsKey('remote_id')) {
+      context.handle(
+        _remoteIdMeta,
+        remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta),
+      );
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -504,6 +540,14 @@ class $SupplierTable extends Supplier
         DriftSqlType.string,
         data['${effectivePrefix}product_type'],
       ),
+      remoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}remote_id'],
+      ),
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
     );
   }
 
@@ -539,6 +583,8 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
   final bool isSynced;
   final Map<String, String>? scores;
   final String? productType;
+  final String? remoteId;
+  final DateTime? deletedAt;
   const SupplierData({
     required this.id,
     required this.userId,
@@ -560,6 +606,8 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
     required this.isSynced,
     this.scores,
     this.productType,
+    this.remoteId,
+    this.deletedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -614,6 +662,12 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
     if (!nullToAbsent || productType != null) {
       map['product_type'] = Variable<String>(productType);
     }
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<String>(remoteId);
+    }
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     return map;
   }
 
@@ -667,6 +721,12 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
       productType: productType == null && nullToAbsent
           ? const Value.absent()
           : Value(productType),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
     );
   }
 
@@ -696,6 +756,8 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       scores: serializer.fromJson<Map<String, String>?>(json['scores']),
       productType: serializer.fromJson<String?>(json['productType']),
+      remoteId: serializer.fromJson<String?>(json['remoteId']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
     );
   }
   @override
@@ -722,6 +784,8 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
       'isSynced': serializer.toJson<bool>(isSynced),
       'scores': serializer.toJson<Map<String, String>?>(scores),
       'productType': serializer.toJson<String?>(productType),
+      'remoteId': serializer.toJson<String?>(remoteId),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
     };
   }
 
@@ -746,6 +810,8 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
     bool? isSynced,
     Value<Map<String, String>?> scores = const Value.absent(),
     Value<String?> productType = const Value.absent(),
+    Value<String?> remoteId = const Value.absent(),
+    Value<DateTime?> deletedAt = const Value.absent(),
   }) => SupplierData(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -773,6 +839,8 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
     isSynced: isSynced ?? this.isSynced,
     scores: scores.present ? scores.value : this.scores,
     productType: productType.present ? productType.value : this.productType,
+    remoteId: remoteId.present ? remoteId.value : this.remoteId,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   SupplierData copyWithCompanion(SupplierCompanion data) {
     return SupplierData(
@@ -804,6 +872,8 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
       productType: data.productType.present
           ? data.productType.value
           : this.productType,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
 
@@ -829,13 +899,15 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
           ..write('updatedAt: $updatedAt, ')
           ..write('isSynced: $isSynced, ')
           ..write('scores: $scores, ')
-          ..write('productType: $productType')
+          ..write('productType: $productType, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     userId,
     name,
@@ -856,7 +928,9 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
     isSynced,
     scores,
     productType,
-  );
+    remoteId,
+    deletedAt,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -880,7 +954,9 @@ class SupplierData extends DataClass implements Insertable<SupplierData> {
           other.updatedAt == this.updatedAt &&
           other.isSynced == this.isSynced &&
           other.scores == this.scores &&
-          other.productType == this.productType);
+          other.productType == this.productType &&
+          other.remoteId == this.remoteId &&
+          other.deletedAt == this.deletedAt);
 }
 
 class SupplierCompanion extends UpdateCompanion<SupplierData> {
@@ -904,6 +980,8 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
   final Value<bool> isSynced;
   final Value<Map<String, String>?> scores;
   final Value<String?> productType;
+  final Value<String?> remoteId;
+  final Value<DateTime?> deletedAt;
   const SupplierCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
@@ -925,6 +1003,8 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
     this.isSynced = const Value.absent(),
     this.scores = const Value.absent(),
     this.productType = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.deletedAt = const Value.absent(),
   });
   SupplierCompanion.insert({
     this.id = const Value.absent(),
@@ -947,6 +1027,8 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
     this.isSynced = const Value.absent(),
     this.scores = const Value.absent(),
     this.productType = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.deletedAt = const Value.absent(),
   }) : userId = Value(userId),
        name = Value(name),
        company = Value(company),
@@ -972,6 +1054,8 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
     Expression<bool>? isSynced,
     Expression<String>? scores,
     Expression<String>? productType,
+    Expression<String>? remoteId,
+    Expression<DateTime>? deletedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -994,6 +1078,8 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
       if (isSynced != null) 'is_synced': isSynced,
       if (scores != null) 'scores': scores,
       if (productType != null) 'product_type': productType,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (deletedAt != null) 'deleted_at': deletedAt,
     });
   }
 
@@ -1018,6 +1104,8 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
     Value<bool>? isSynced,
     Value<Map<String, String>?>? scores,
     Value<String?>? productType,
+    Value<String?>? remoteId,
+    Value<DateTime?>? deletedAt,
   }) {
     return SupplierCompanion(
       id: id ?? this.id,
@@ -1040,6 +1128,8 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
       isSynced: isSynced ?? this.isSynced,
       scores: scores ?? this.scores,
       productType: productType ?? this.productType,
+      remoteId: remoteId ?? this.remoteId,
+      deletedAt: deletedAt ?? this.deletedAt,
     );
   }
 
@@ -1108,6 +1198,12 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
     if (productType.present) {
       map['product_type'] = Variable<String>(productType.value);
     }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<String>(remoteId.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     return map;
   }
 
@@ -1133,7 +1229,9 @@ class SupplierCompanion extends UpdateCompanion<SupplierData> {
           ..write('updatedAt: $updatedAt, ')
           ..write('isSynced: $isSynced, ')
           ..write('scores: $scores, ')
-          ..write('productType: $productType')
+          ..write('productType: $productType, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
@@ -1318,6 +1416,39 @@ class $ProductTableTable extends ProductTable
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _remoteIdMeta = const VerificationMeta(
+    'remoteId',
+  );
+  @override
+  late final GeneratedColumn<String> remoteId = GeneratedColumn<String>(
+    'remote_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1335,6 +1466,9 @@ class $ProductTableTable extends ProductTable
     imageUrls,
     certifications,
     isSynced,
+    updatedAt,
+    remoteId,
+    deletedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1436,6 +1570,24 @@ class $ProductTableTable extends ProductTable
         isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
       );
     }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(
+        _remoteIdMeta,
+        remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta),
+      );
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -1509,6 +1661,18 @@ class $ProductTableTable extends ProductTable
         DriftSqlType.bool,
         data['${effectivePrefix}is_synced'],
       )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
+      remoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}remote_id'],
+      ),
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
     );
   }
 
@@ -1544,6 +1708,9 @@ class ProductTableData extends DataClass
   final List<String>? imageUrls;
   final String? certifications;
   final bool isSynced;
+  final DateTime? updatedAt;
+  final String? remoteId;
+  final DateTime? deletedAt;
   const ProductTableData({
     required this.id,
     required this.name,
@@ -1560,6 +1727,9 @@ class ProductTableData extends DataClass
     this.imageUrls,
     this.certifications,
     required this.isSynced,
+    this.updatedAt,
+    this.remoteId,
+    this.deletedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1603,6 +1773,15 @@ class ProductTableData extends DataClass
       map['certifications'] = Variable<String>(certifications);
     }
     map['is_synced'] = Variable<bool>(isSynced);
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<String>(remoteId);
+    }
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     return map;
   }
 
@@ -1641,6 +1820,15 @@ class ProductTableData extends DataClass
           ? const Value.absent()
           : Value(certifications),
       isSynced: Value(isSynced),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
     );
   }
 
@@ -1667,6 +1855,9 @@ class ProductTableData extends DataClass
       imageUrls: serializer.fromJson<List<String>?>(json['imageUrls']),
       certifications: serializer.fromJson<String?>(json['certifications']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+      remoteId: serializer.fromJson<String?>(json['remoteId']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
     );
   }
   @override
@@ -1688,6 +1879,9 @@ class ProductTableData extends DataClass
       'imageUrls': serializer.toJson<List<String>?>(imageUrls),
       'certifications': serializer.toJson<String?>(certifications),
       'isSynced': serializer.toJson<bool>(isSynced),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+      'remoteId': serializer.toJson<String?>(remoteId),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
     };
   }
 
@@ -1707,6 +1901,9 @@ class ProductTableData extends DataClass
     Value<List<String>?> imageUrls = const Value.absent(),
     Value<String?> certifications = const Value.absent(),
     bool? isSynced,
+    Value<DateTime?> updatedAt = const Value.absent(),
+    Value<String?> remoteId = const Value.absent(),
+    Value<DateTime?> deletedAt = const Value.absent(),
   }) => ProductTableData(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -1729,6 +1926,9 @@ class ProductTableData extends DataClass
         ? certifications.value
         : this.certifications,
     isSynced: isSynced ?? this.isSynced,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    remoteId: remoteId.present ? remoteId.value : this.remoteId,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   ProductTableData copyWithCompanion(ProductTableCompanion data) {
     return ProductTableData(
@@ -1757,6 +1957,9 @@ class ProductTableData extends DataClass
           ? data.certifications.value
           : this.certifications,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
 
@@ -1777,7 +1980,10 @@ class ProductTableData extends DataClass
           ..write('imageLocalPaths: $imageLocalPaths, ')
           ..write('imageUrls: $imageUrls, ')
           ..write('certifications: $certifications, ')
-          ..write('isSynced: $isSynced')
+          ..write('isSynced: $isSynced, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
@@ -1799,6 +2005,9 @@ class ProductTableData extends DataClass
     imageUrls,
     certifications,
     isSynced,
+    updatedAt,
+    remoteId,
+    deletedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -1818,7 +2027,10 @@ class ProductTableData extends DataClass
           other.imageLocalPaths == this.imageLocalPaths &&
           other.imageUrls == this.imageUrls &&
           other.certifications == this.certifications &&
-          other.isSynced == this.isSynced);
+          other.isSynced == this.isSynced &&
+          other.updatedAt == this.updatedAt &&
+          other.remoteId == this.remoteId &&
+          other.deletedAt == this.deletedAt);
 }
 
 class ProductTableCompanion extends UpdateCompanion<ProductTableData> {
@@ -1837,6 +2049,9 @@ class ProductTableCompanion extends UpdateCompanion<ProductTableData> {
   final Value<List<String>?> imageUrls;
   final Value<String?> certifications;
   final Value<bool> isSynced;
+  final Value<DateTime?> updatedAt;
+  final Value<String?> remoteId;
+  final Value<DateTime?> deletedAt;
   const ProductTableCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -1853,6 +2068,9 @@ class ProductTableCompanion extends UpdateCompanion<ProductTableData> {
     this.imageUrls = const Value.absent(),
     this.certifications = const Value.absent(),
     this.isSynced = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.deletedAt = const Value.absent(),
   });
   ProductTableCompanion.insert({
     this.id = const Value.absent(),
@@ -1870,6 +2088,9 @@ class ProductTableCompanion extends UpdateCompanion<ProductTableData> {
     this.imageUrls = const Value.absent(),
     this.certifications = const Value.absent(),
     this.isSynced = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.deletedAt = const Value.absent(),
   }) : name = Value(name),
        price = Value(price);
   static Insertable<ProductTableData> custom({
@@ -1888,6 +2109,9 @@ class ProductTableCompanion extends UpdateCompanion<ProductTableData> {
     Expression<String>? imageUrls,
     Expression<String>? certifications,
     Expression<bool>? isSynced,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? remoteId,
+    Expression<DateTime>? deletedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1905,6 +2129,9 @@ class ProductTableCompanion extends UpdateCompanion<ProductTableData> {
       if (imageUrls != null) 'image_urls': imageUrls,
       if (certifications != null) 'certifications': certifications,
       if (isSynced != null) 'is_synced': isSynced,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (deletedAt != null) 'deleted_at': deletedAt,
     });
   }
 
@@ -1924,6 +2151,9 @@ class ProductTableCompanion extends UpdateCompanion<ProductTableData> {
     Value<List<String>?>? imageUrls,
     Value<String?>? certifications,
     Value<bool>? isSynced,
+    Value<DateTime?>? updatedAt,
+    Value<String?>? remoteId,
+    Value<DateTime?>? deletedAt,
   }) {
     return ProductTableCompanion(
       id: id ?? this.id,
@@ -1941,6 +2171,9 @@ class ProductTableCompanion extends UpdateCompanion<ProductTableData> {
       imageUrls: imageUrls ?? this.imageUrls,
       certifications: certifications ?? this.certifications,
       isSynced: isSynced ?? this.isSynced,
+      updatedAt: updatedAt ?? this.updatedAt,
+      remoteId: remoteId ?? this.remoteId,
+      deletedAt: deletedAt ?? this.deletedAt,
     );
   }
 
@@ -1998,6 +2231,15 @@ class ProductTableCompanion extends UpdateCompanion<ProductTableData> {
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
     }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<String>(remoteId.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     return map;
   }
 
@@ -2018,7 +2260,10 @@ class ProductTableCompanion extends UpdateCompanion<ProductTableData> {
           ..write('imageLocalPaths: $imageLocalPaths, ')
           ..write('imageUrls: $imageUrls, ')
           ..write('certifications: $certifications, ')
-          ..write('isSynced: $isSynced')
+          ..write('isSynced: $isSynced, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
@@ -2110,6 +2355,39 @@ class $NotesTableTable extends NotesTable
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _remoteIdMeta = const VerificationMeta(
+    'remoteId',
+  );
+  @override
+  late final GeneratedColumn<String> remoteId = GeneratedColumn<String>(
+    'remote_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2118,6 +2396,9 @@ class $NotesTableTable extends NotesTable
     createdAt,
     supplierId,
     isSynced,
+    updatedAt,
+    remoteId,
+    deletedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2168,6 +2449,24 @@ class $NotesTableTable extends NotesTable
         isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
       );
     }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(
+        _remoteIdMeta,
+        remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta),
+      );
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -2201,6 +2500,18 @@ class $NotesTableTable extends NotesTable
         DriftSqlType.bool,
         data['${effectivePrefix}is_synced'],
       )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
+      remoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}remote_id'],
+      ),
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
     );
   }
 
@@ -2217,6 +2528,9 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
   final DateTime createdAt;
   final int? supplierId;
   final bool isSynced;
+  final DateTime? updatedAt;
+  final String? remoteId;
+  final DateTime? deletedAt;
   const NotesTableData({
     required this.id,
     required this.title,
@@ -2224,6 +2538,9 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
     required this.createdAt,
     this.supplierId,
     required this.isSynced,
+    this.updatedAt,
+    this.remoteId,
+    this.deletedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2236,6 +2553,15 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
       map['supplier_id'] = Variable<int>(supplierId);
     }
     map['is_synced'] = Variable<bool>(isSynced);
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<String>(remoteId);
+    }
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     return map;
   }
 
@@ -2249,6 +2575,15 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
           ? const Value.absent()
           : Value(supplierId),
       isSynced: Value(isSynced),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
     );
   }
 
@@ -2264,6 +2599,9 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       supplierId: serializer.fromJson<int?>(json['supplierId']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+      remoteId: serializer.fromJson<String?>(json['remoteId']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
     );
   }
   @override
@@ -2276,6 +2614,9 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'supplierId': serializer.toJson<int?>(supplierId),
       'isSynced': serializer.toJson<bool>(isSynced),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+      'remoteId': serializer.toJson<String?>(remoteId),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
     };
   }
 
@@ -2286,6 +2627,9 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
     DateTime? createdAt,
     Value<int?> supplierId = const Value.absent(),
     bool? isSynced,
+    Value<DateTime?> updatedAt = const Value.absent(),
+    Value<String?> remoteId = const Value.absent(),
+    Value<DateTime?> deletedAt = const Value.absent(),
   }) => NotesTableData(
     id: id ?? this.id,
     title: title ?? this.title,
@@ -2293,6 +2637,9 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
     createdAt: createdAt ?? this.createdAt,
     supplierId: supplierId.present ? supplierId.value : this.supplierId,
     isSynced: isSynced ?? this.isSynced,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    remoteId: remoteId.present ? remoteId.value : this.remoteId,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   NotesTableData copyWithCompanion(NotesTableCompanion data) {
     return NotesTableData(
@@ -2304,6 +2651,9 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
           ? data.supplierId.value
           : this.supplierId,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
 
@@ -2315,14 +2665,26 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
           ..write('content: $content, ')
           ..write('createdAt: $createdAt, ')
           ..write('supplierId: $supplierId, ')
-          ..write('isSynced: $isSynced')
+          ..write('isSynced: $isSynced, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, title, content, createdAt, supplierId, isSynced);
+  int get hashCode => Object.hash(
+    id,
+    title,
+    content,
+    createdAt,
+    supplierId,
+    isSynced,
+    updatedAt,
+    remoteId,
+    deletedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2332,7 +2694,10 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
           other.content == this.content &&
           other.createdAt == this.createdAt &&
           other.supplierId == this.supplierId &&
-          other.isSynced == this.isSynced);
+          other.isSynced == this.isSynced &&
+          other.updatedAt == this.updatedAt &&
+          other.remoteId == this.remoteId &&
+          other.deletedAt == this.deletedAt);
 }
 
 class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
@@ -2342,6 +2707,9 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
   final Value<DateTime> createdAt;
   final Value<int?> supplierId;
   final Value<bool> isSynced;
+  final Value<DateTime?> updatedAt;
+  final Value<String?> remoteId;
+  final Value<DateTime?> deletedAt;
   const NotesTableCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -2349,6 +2717,9 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
     this.createdAt = const Value.absent(),
     this.supplierId = const Value.absent(),
     this.isSynced = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.deletedAt = const Value.absent(),
   });
   NotesTableCompanion.insert({
     this.id = const Value.absent(),
@@ -2357,6 +2728,9 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
     this.createdAt = const Value.absent(),
     this.supplierId = const Value.absent(),
     this.isSynced = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.deletedAt = const Value.absent(),
   }) : title = Value(title),
        content = Value(content);
   static Insertable<NotesTableData> custom({
@@ -2366,6 +2740,9 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
     Expression<DateTime>? createdAt,
     Expression<int>? supplierId,
     Expression<bool>? isSynced,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? remoteId,
+    Expression<DateTime>? deletedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2374,6 +2751,9 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
       if (createdAt != null) 'created_at': createdAt,
       if (supplierId != null) 'supplier_id': supplierId,
       if (isSynced != null) 'is_synced': isSynced,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (deletedAt != null) 'deleted_at': deletedAt,
     });
   }
 
@@ -2384,6 +2764,9 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
     Value<DateTime>? createdAt,
     Value<int?>? supplierId,
     Value<bool>? isSynced,
+    Value<DateTime?>? updatedAt,
+    Value<String?>? remoteId,
+    Value<DateTime?>? deletedAt,
   }) {
     return NotesTableCompanion(
       id: id ?? this.id,
@@ -2392,6 +2775,9 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
       createdAt: createdAt ?? this.createdAt,
       supplierId: supplierId ?? this.supplierId,
       isSynced: isSynced ?? this.isSynced,
+      updatedAt: updatedAt ?? this.updatedAt,
+      remoteId: remoteId ?? this.remoteId,
+      deletedAt: deletedAt ?? this.deletedAt,
     );
   }
 
@@ -2416,6 +2802,15 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
     }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<String>(remoteId.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     return map;
   }
 
@@ -2427,7 +2822,10 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
           ..write('content: $content, ')
           ..write('createdAt: $createdAt, ')
           ..write('supplierId: $supplierId, ')
-          ..write('isSynced: $isSynced')
+          ..write('isSynced: $isSynced, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
@@ -2533,6 +2931,39 @@ class $DocumentTableTable extends DocumentTable
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _remoteIdMeta = const VerificationMeta(
+    'remoteId',
+  );
+  @override
+  late final GeneratedColumn<String> remoteId = GeneratedColumn<String>(
+    'remote_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2543,6 +2974,9 @@ class $DocumentTableTable extends DocumentTable
     createdAt,
     supplierId,
     isSynced,
+    updatedAt,
+    remoteId,
+    deletedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2607,6 +3041,24 @@ class $DocumentTableTable extends DocumentTable
         isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
       );
     }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(
+        _remoteIdMeta,
+        remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta),
+      );
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -2648,6 +3100,18 @@ class $DocumentTableTable extends DocumentTable
         DriftSqlType.bool,
         data['${effectivePrefix}is_synced'],
       )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
+      remoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}remote_id'],
+      ),
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
     );
   }
 
@@ -2667,6 +3131,9 @@ class DocumentTableData extends DataClass
   final DateTime createdAt;
   final int? supplierId;
   final bool isSynced;
+  final DateTime? updatedAt;
+  final String? remoteId;
+  final DateTime? deletedAt;
   const DocumentTableData({
     required this.id,
     required this.title,
@@ -2676,6 +3143,9 @@ class DocumentTableData extends DataClass
     required this.createdAt,
     this.supplierId,
     required this.isSynced,
+    this.updatedAt,
+    this.remoteId,
+    this.deletedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2692,6 +3162,15 @@ class DocumentTableData extends DataClass
       map['supplier_id'] = Variable<int>(supplierId);
     }
     map['is_synced'] = Variable<bool>(isSynced);
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<String>(remoteId);
+    }
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     return map;
   }
 
@@ -2707,6 +3186,15 @@ class DocumentTableData extends DataClass
           ? const Value.absent()
           : Value(supplierId),
       isSynced: Value(isSynced),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
     );
   }
 
@@ -2724,6 +3212,9 @@ class DocumentTableData extends DataClass
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       supplierId: serializer.fromJson<int?>(json['supplierId']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+      remoteId: serializer.fromJson<String?>(json['remoteId']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
     );
   }
   @override
@@ -2738,6 +3229,9 @@ class DocumentTableData extends DataClass
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'supplierId': serializer.toJson<int?>(supplierId),
       'isSynced': serializer.toJson<bool>(isSynced),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+      'remoteId': serializer.toJson<String?>(remoteId),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
     };
   }
 
@@ -2750,6 +3244,9 @@ class DocumentTableData extends DataClass
     DateTime? createdAt,
     Value<int?> supplierId = const Value.absent(),
     bool? isSynced,
+    Value<DateTime?> updatedAt = const Value.absent(),
+    Value<String?> remoteId = const Value.absent(),
+    Value<DateTime?> deletedAt = const Value.absent(),
   }) => DocumentTableData(
     id: id ?? this.id,
     title: title ?? this.title,
@@ -2759,6 +3256,9 @@ class DocumentTableData extends DataClass
     createdAt: createdAt ?? this.createdAt,
     supplierId: supplierId.present ? supplierId.value : this.supplierId,
     isSynced: isSynced ?? this.isSynced,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    remoteId: remoteId.present ? remoteId.value : this.remoteId,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   DocumentTableData copyWithCompanion(DocumentTableCompanion data) {
     return DocumentTableData(
@@ -2772,6 +3272,9 @@ class DocumentTableData extends DataClass
           ? data.supplierId.value
           : this.supplierId,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
 
@@ -2785,7 +3288,10 @@ class DocumentTableData extends DataClass
           ..write('type: $type, ')
           ..write('createdAt: $createdAt, ')
           ..write('supplierId: $supplierId, ')
-          ..write('isSynced: $isSynced')
+          ..write('isSynced: $isSynced, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
@@ -2800,6 +3306,9 @@ class DocumentTableData extends DataClass
     createdAt,
     supplierId,
     isSynced,
+    updatedAt,
+    remoteId,
+    deletedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -2812,7 +3321,10 @@ class DocumentTableData extends DataClass
           other.type == this.type &&
           other.createdAt == this.createdAt &&
           other.supplierId == this.supplierId &&
-          other.isSynced == this.isSynced);
+          other.isSynced == this.isSynced &&
+          other.updatedAt == this.updatedAt &&
+          other.remoteId == this.remoteId &&
+          other.deletedAt == this.deletedAt);
 }
 
 class DocumentTableCompanion extends UpdateCompanion<DocumentTableData> {
@@ -2824,6 +3336,9 @@ class DocumentTableCompanion extends UpdateCompanion<DocumentTableData> {
   final Value<DateTime> createdAt;
   final Value<int?> supplierId;
   final Value<bool> isSynced;
+  final Value<DateTime?> updatedAt;
+  final Value<String?> remoteId;
+  final Value<DateTime?> deletedAt;
   const DocumentTableCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -2833,6 +3348,9 @@ class DocumentTableCompanion extends UpdateCompanion<DocumentTableData> {
     this.createdAt = const Value.absent(),
     this.supplierId = const Value.absent(),
     this.isSynced = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.deletedAt = const Value.absent(),
   });
   DocumentTableCompanion.insert({
     this.id = const Value.absent(),
@@ -2843,6 +3361,9 @@ class DocumentTableCompanion extends UpdateCompanion<DocumentTableData> {
     this.createdAt = const Value.absent(),
     this.supplierId = const Value.absent(),
     this.isSynced = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.deletedAt = const Value.absent(),
   }) : title = Value(title),
        localPath = Value(localPath),
        type = Value(type);
@@ -2855,6 +3376,9 @@ class DocumentTableCompanion extends UpdateCompanion<DocumentTableData> {
     Expression<DateTime>? createdAt,
     Expression<int>? supplierId,
     Expression<bool>? isSynced,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? remoteId,
+    Expression<DateTime>? deletedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2865,6 +3389,9 @@ class DocumentTableCompanion extends UpdateCompanion<DocumentTableData> {
       if (createdAt != null) 'created_at': createdAt,
       if (supplierId != null) 'supplier_id': supplierId,
       if (isSynced != null) 'is_synced': isSynced,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (deletedAt != null) 'deleted_at': deletedAt,
     });
   }
 
@@ -2877,6 +3404,9 @@ class DocumentTableCompanion extends UpdateCompanion<DocumentTableData> {
     Value<DateTime>? createdAt,
     Value<int?>? supplierId,
     Value<bool>? isSynced,
+    Value<DateTime?>? updatedAt,
+    Value<String?>? remoteId,
+    Value<DateTime?>? deletedAt,
   }) {
     return DocumentTableCompanion(
       id: id ?? this.id,
@@ -2887,6 +3417,9 @@ class DocumentTableCompanion extends UpdateCompanion<DocumentTableData> {
       createdAt: createdAt ?? this.createdAt,
       supplierId: supplierId ?? this.supplierId,
       isSynced: isSynced ?? this.isSynced,
+      updatedAt: updatedAt ?? this.updatedAt,
+      remoteId: remoteId ?? this.remoteId,
+      deletedAt: deletedAt ?? this.deletedAt,
     );
   }
 
@@ -2917,6 +3450,15 @@ class DocumentTableCompanion extends UpdateCompanion<DocumentTableData> {
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
     }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<String>(remoteId.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     return map;
   }
 
@@ -2930,7 +3472,10 @@ class DocumentTableCompanion extends UpdateCompanion<DocumentTableData> {
           ..write('type: $type, ')
           ..write('createdAt: $createdAt, ')
           ..write('supplierId: $supplierId, ')
-          ..write('isSynced: $isSynced')
+          ..write('isSynced: $isSynced, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
@@ -3001,6 +3546,8 @@ typedef $$SupplierTableCreateCompanionBuilder =
       Value<bool> isSynced,
       Value<Map<String, String>?> scores,
       Value<String?> productType,
+      Value<String?> remoteId,
+      Value<DateTime?> deletedAt,
     });
 typedef $$SupplierTableUpdateCompanionBuilder =
     SupplierCompanion Function({
@@ -3024,6 +3571,8 @@ typedef $$SupplierTableUpdateCompanionBuilder =
       Value<bool> isSynced,
       Value<Map<String, String>?> scores,
       Value<String?> productType,
+      Value<String?> remoteId,
+      Value<DateTime?> deletedAt,
     });
 
 final class $$SupplierTableReferences
@@ -3199,6 +3748,16 @@ class $$SupplierTableFilterComposer
 
   ColumnFilters<String> get productType => $composableBuilder(
     column: $table.productType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3386,6 +3945,16 @@ class $$SupplierTableOrderingComposer
     column: $table.productType,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SupplierTableAnnotationComposer
@@ -3464,6 +4033,12 @@ class $$SupplierTableAnnotationComposer
     column: $table.productType,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
   Expression<T> productTableRefs<T extends Object>(
     Expression<T> Function($$ProductTableTableAnnotationComposer a) f,
@@ -3593,6 +4168,8 @@ class $$SupplierTableTableManager
                 Value<bool> isSynced = const Value.absent(),
                 Value<Map<String, String>?> scores = const Value.absent(),
                 Value<String?> productType = const Value.absent(),
+                Value<String?> remoteId = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
               }) => SupplierCompanion(
                 id: id,
                 userId: userId,
@@ -3614,6 +4191,8 @@ class $$SupplierTableTableManager
                 isSynced: isSynced,
                 scores: scores,
                 productType: productType,
+                remoteId: remoteId,
+                deletedAt: deletedAt,
               ),
           createCompanionCallback:
               ({
@@ -3637,6 +4216,8 @@ class $$SupplierTableTableManager
                 Value<bool> isSynced = const Value.absent(),
                 Value<Map<String, String>?> scores = const Value.absent(),
                 Value<String?> productType = const Value.absent(),
+                Value<String?> remoteId = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
               }) => SupplierCompanion.insert(
                 id: id,
                 userId: userId,
@@ -3658,6 +4239,8 @@ class $$SupplierTableTableManager
                 isSynced: isSynced,
                 scores: scores,
                 productType: productType,
+                remoteId: remoteId,
+                deletedAt: deletedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -3789,6 +4372,9 @@ typedef $$ProductTableTableCreateCompanionBuilder =
       Value<List<String>?> imageUrls,
       Value<String?> certifications,
       Value<bool> isSynced,
+      Value<DateTime?> updatedAt,
+      Value<String?> remoteId,
+      Value<DateTime?> deletedAt,
     });
 typedef $$ProductTableTableUpdateCompanionBuilder =
     ProductTableCompanion Function({
@@ -3807,6 +4393,9 @@ typedef $$ProductTableTableUpdateCompanionBuilder =
       Value<List<String>?> imageUrls,
       Value<String?> certifications,
       Value<bool> isSynced,
+      Value<DateTime?> updatedAt,
+      Value<String?> remoteId,
+      Value<DateTime?> deletedAt,
     });
 
 final class $$ProductTableTableReferences
@@ -3915,6 +4504,21 @@ class $$ProductTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$SupplierTableFilterComposer get supplierId {
     final $$SupplierTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -4018,6 +4622,21 @@ class $$ProductTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$SupplierTableOrderingComposer get supplierId {
     final $$SupplierTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -4102,6 +4721,15 @@ class $$ProductTableTableAnnotationComposer
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
 
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
   $$SupplierTableAnnotationComposer get supplierId {
     final $$SupplierTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -4169,6 +4797,9 @@ class $$ProductTableTableTableManager
                 Value<List<String>?> imageUrls = const Value.absent(),
                 Value<String?> certifications = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<String?> remoteId = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
               }) => ProductTableCompanion(
                 id: id,
                 name: name,
@@ -4185,6 +4816,9 @@ class $$ProductTableTableTableManager
                 imageUrls: imageUrls,
                 certifications: certifications,
                 isSynced: isSynced,
+                updatedAt: updatedAt,
+                remoteId: remoteId,
+                deletedAt: deletedAt,
               ),
           createCompanionCallback:
               ({
@@ -4203,6 +4837,9 @@ class $$ProductTableTableTableManager
                 Value<List<String>?> imageUrls = const Value.absent(),
                 Value<String?> certifications = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<String?> remoteId = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
               }) => ProductTableCompanion.insert(
                 id: id,
                 name: name,
@@ -4219,6 +4856,9 @@ class $$ProductTableTableTableManager
                 imageUrls: imageUrls,
                 certifications: certifications,
                 isSynced: isSynced,
+                updatedAt: updatedAt,
+                remoteId: remoteId,
+                deletedAt: deletedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -4295,6 +4935,9 @@ typedef $$NotesTableTableCreateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<int?> supplierId,
       Value<bool> isSynced,
+      Value<DateTime?> updatedAt,
+      Value<String?> remoteId,
+      Value<DateTime?> deletedAt,
     });
 typedef $$NotesTableTableUpdateCompanionBuilder =
     NotesTableCompanion Function({
@@ -4304,6 +4947,9 @@ typedef $$NotesTableTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<int?> supplierId,
       Value<bool> isSynced,
+      Value<DateTime?> updatedAt,
+      Value<String?> remoteId,
+      Value<DateTime?> deletedAt,
     });
 
 final class $$NotesTableTableReferences
@@ -4361,6 +5007,21 @@ class $$NotesTableTableFilterComposer
 
   ColumnFilters<bool> get isSynced => $composableBuilder(
     column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -4422,6 +5083,21 @@ class $$NotesTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$SupplierTableOrderingComposer get supplierId {
     final $$SupplierTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -4469,6 +5145,15 @@ class $$NotesTableTableAnnotationComposer
 
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
   $$SupplierTableAnnotationComposer get supplierId {
     final $$SupplierTableAnnotationComposer composer = $composerBuilder(
@@ -4528,6 +5213,9 @@ class $$NotesTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int?> supplierId = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<String?> remoteId = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
               }) => NotesTableCompanion(
                 id: id,
                 title: title,
@@ -4535,6 +5223,9 @@ class $$NotesTableTableTableManager
                 createdAt: createdAt,
                 supplierId: supplierId,
                 isSynced: isSynced,
+                updatedAt: updatedAt,
+                remoteId: remoteId,
+                deletedAt: deletedAt,
               ),
           createCompanionCallback:
               ({
@@ -4544,6 +5235,9 @@ class $$NotesTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int?> supplierId = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<String?> remoteId = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
               }) => NotesTableCompanion.insert(
                 id: id,
                 title: title,
@@ -4551,6 +5245,9 @@ class $$NotesTableTableTableManager
                 createdAt: createdAt,
                 supplierId: supplierId,
                 isSynced: isSynced,
+                updatedAt: updatedAt,
+                remoteId: remoteId,
+                deletedAt: deletedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -4629,6 +5326,9 @@ typedef $$DocumentTableTableCreateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<int?> supplierId,
       Value<bool> isSynced,
+      Value<DateTime?> updatedAt,
+      Value<String?> remoteId,
+      Value<DateTime?> deletedAt,
     });
 typedef $$DocumentTableTableUpdateCompanionBuilder =
     DocumentTableCompanion Function({
@@ -4640,6 +5340,9 @@ typedef $$DocumentTableTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<int?> supplierId,
       Value<bool> isSynced,
+      Value<DateTime?> updatedAt,
+      Value<String?> remoteId,
+      Value<DateTime?> deletedAt,
     });
 
 final class $$DocumentTableTableReferences
@@ -4715,6 +5418,21 @@ class $$DocumentTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$SupplierTableFilterComposer get supplierId {
     final $$SupplierTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -4783,6 +5501,21 @@ class $$DocumentTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$SupplierTableOrderingComposer get supplierId {
     final $$SupplierTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -4836,6 +5569,15 @@ class $$DocumentTableTableAnnotationComposer
 
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
   $$SupplierTableAnnotationComposer get supplierId {
     final $$SupplierTableAnnotationComposer composer = $composerBuilder(
@@ -4897,6 +5639,9 @@ class $$DocumentTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int?> supplierId = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<String?> remoteId = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
               }) => DocumentTableCompanion(
                 id: id,
                 title: title,
@@ -4906,6 +5651,9 @@ class $$DocumentTableTableTableManager
                 createdAt: createdAt,
                 supplierId: supplierId,
                 isSynced: isSynced,
+                updatedAt: updatedAt,
+                remoteId: remoteId,
+                deletedAt: deletedAt,
               ),
           createCompanionCallback:
               ({
@@ -4917,6 +5665,9 @@ class $$DocumentTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int?> supplierId = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<String?> remoteId = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
               }) => DocumentTableCompanion.insert(
                 id: id,
                 title: title,
@@ -4926,6 +5677,9 @@ class $$DocumentTableTableTableManager
                 createdAt: createdAt,
                 supplierId: supplierId,
                 isSynced: isSynced,
+                updatedAt: updatedAt,
+                remoteId: remoteId,
+                deletedAt: deletedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(

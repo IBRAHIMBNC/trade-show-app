@@ -4,10 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supplier_snap/app/constants/colors.dart';
+import 'package:supplier_snap/app/core/services/sync/app_lifecycle_sync_observer.dart';
 import 'package:supplier_snap/generated/locales.g.dart';
 import 'package:supplier_snap/init_services.dart';
 
 import 'app/routes/app_pages.dart';
+
+// Global lifecycle observer instance
+final AppLifecycleSyncObserver _lifecycleObserver = AppLifecycleSyncObserver();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +21,10 @@ void main() async {
     anonKey: dotenv.env['anonKey']!,
   );
   await InitServices.init();
+
+  // Register lifecycle observer for sync on app resume
+  _lifecycleObserver.register();
+
   runApp(MyApp());
 }
 

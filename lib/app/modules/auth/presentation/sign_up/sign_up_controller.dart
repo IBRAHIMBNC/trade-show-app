@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:supplier_snap/app/core/services/sync/sync_service.dart';
 import 'package:supplier_snap/app/modules/auth/data/repository/auth_repository.dart';
 import 'package:supplier_snap/app/routes/app_pages.dart';
 import 'package:supplier_snap/app/utils/snackbars.dart';
@@ -30,6 +31,8 @@ class SignUpController extends GetxController {
         },
         (appUser) {
           isLoading.value = false;
+          // Trigger initial sync after signup
+          Get.find<SyncService>().onUserLoggedIn();
           Get.offAllNamed(Routes.NAVIGATION);
         },
       );

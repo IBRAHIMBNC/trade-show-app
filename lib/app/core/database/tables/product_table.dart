@@ -28,6 +28,12 @@ class ProductTable extends Table {
 
   TextColumn get certifications => text().nullable()();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+
+  // Sync columns
+  DateTimeColumn get updatedAt => dateTime().nullable()();
+  TextColumn get remoteId => text().nullable()(); // UUID from Supabase
+  DateTimeColumn get deletedAt =>
+      dateTime().nullable()(); // Soft delete timestamp
 }
 
 // Converter to store List<String> as JSON in database

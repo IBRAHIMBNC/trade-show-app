@@ -16,7 +16,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -25,12 +25,29 @@ class AppDatabase extends _$AppDatabase {
         await m.createAll();
       },
       onUpgrade: (Migrator m, int from, int to) async {
-        // Drop all tables and recreate them with the new schema
-        await m.deleteTable('supplier');
-        await m.deleteTable('product_table');
-        await m.deleteTable('notes_table');
-        await m.deleteTable('document_table');
-        await m.createAll();
+        if (from < 3) {
+          // Add sync columns: remoteId, deletedAt to all tables
+          // Add updatedAt to tables that don't have it
+
+          // Supplier table - already has updatedAt as text, add remoteId and deletedAt
+          await m.addColumn(supplier, supplier.remoteId);
+          await m.addColumn(supplier, supplier.deletedAt);
+
+          // ProductTable - add updatedAt, remoteId, deletedAt
+          await m.addColumn(productTable, productTable.updatedAt);
+          await m.addColumn(productTable, productTable.remoteId);
+          await m.addColumn(productTable, productTable.deletedAt);
+
+          // NotesTable - add updatedAt, remoteId, deletedAt
+          await m.addColumn(notesTable, notesTable.updatedAt);
+          await m.addColumn(notesTable, notesTable.remoteId);
+          await m.addColumn(notesTable, notesTable.deletedAt);
+
+          // DocumentTable - add updatedAt, remoteId, deletedAt
+          await m.addColumn(documentTable, documentTable.updatedAt);
+          await m.addColumn(documentTable, documentTable.remoteId);
+          await m.addColumn(documentTable, documentTable.deletedAt);
+        }
       },
     );
   }

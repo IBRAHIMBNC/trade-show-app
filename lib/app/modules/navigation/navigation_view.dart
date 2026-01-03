@@ -22,7 +22,7 @@ class NavigationView extends GetView<NavigationController> {
         appBar: PreferredSize(
           preferredSize: Size(double.infinity, 100.h),
           child: Opacity(
-            opacity: controller.isSyncing.value ? 1.0 : 0.0,
+            opacity: controller.syncProgress.value.isSyncing ? 1.0 : 0.0,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
               decoration: ShapeDecoration(
@@ -34,15 +34,36 @@ class NavigationView extends GetView<NavigationController> {
                 ),
                 color: KColors.successColor.withValues(alpha: 0.2),
               ),
-              height: controller.isSyncing.value ? 110.h : 40.h,
+              height: controller.syncProgress.value.isSyncing ? 110.h : 50.h,
               alignment: Alignment.center,
               padding: EdgeInsets.only(
                 top: MediaQuery.paddingOf(Get.context!).top,
               ),
               width: double.infinity,
-              child: CustomText.label16b600(
-                'Syncing...',
-                color: KColors.successColor,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomText.label16b600(
+                    controller.syncProgressText,
+                    color: KColors.successColor,
+                  ),
+                  if (controller.syncProgress.value.totalItems > 0) ...[
+                    SizedBox(height: 4.h),
+                    SizedBox(
+                      width: 200.w,
+                      child: LinearProgressIndicator(
+                        value: controller.syncPercentage,
+                        backgroundColor: KColors.successColor.withValues(
+                          alpha: 0.3,
+                        ),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          KColors.successColor,
+                        ),
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
           ),

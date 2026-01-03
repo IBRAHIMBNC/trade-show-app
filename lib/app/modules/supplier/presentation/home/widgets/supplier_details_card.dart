@@ -47,9 +47,10 @@ class SupplierDetailsCard extends StatelessWidget {
               radius: 32.r,
               backgroundColor: KColors.brand,
               child: CustomImage.cirlce(
-                supplier.absoluteImagePath ?? '',
+                supplier.absoluteImagePath ?? supplier.imageUrl ?? "",
                 size: 60.w,
-                hideChild: supplier.absoluteImagePath != null,
+                hideChild:
+                    (supplier.absoluteImagePath ?? supplier.imageUrl) != null,
                 backgroundColor: KColors.white,
                 child: CustomImage.icon(
                   KIcons.user,

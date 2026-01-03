@@ -24,6 +24,11 @@ class Supplier extends Table {
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
   TextColumn get scores => text().nullable().map(const StringMapConverter())();
   TextColumn get productType => text().nullable().withLength(max: 50)();
+
+  // Sync columns
+  TextColumn get remoteId => text().nullable()(); // UUID from Supabase
+  DateTimeColumn get deletedAt =>
+      dateTime().nullable()(); // Soft delete timestamp
 }
 
 class StringMapConverter extends TypeConverter<Map<String, String>, String> {

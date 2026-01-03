@@ -7,6 +7,7 @@ import 'package:supplier_snap/app/core/services/file_picker_service.dart';
 import 'package:supplier_snap/app/core/services/global_service.dart';
 import 'package:supplier_snap/app/core/services/shared_prefrences_service.dart';
 import 'package:supplier_snap/app/core/services/supbase_storage_service.dart';
+import 'package:supplier_snap/app/core/services/sync/sync_service.dart';
 
 class InitServices {
   static Future<void> init() async {
@@ -22,6 +23,15 @@ class InitServices {
 
     await Get.putAsync<GlobalService>(
       () => GlobalService(supabaseClient: Supabase.instance.client).init(),
+    );
+
+    // Initialize SyncService after GlobalService (needs database and connectivity)
+    await Get.putAsync<SyncService>(
+      () => SyncService(
+        database: Get.find<AppDatabase>(),
+        supabaseClient: Supabase.instance.client,
+        connectivityService: Get.find<ConnectivityService>(),
+      ).init(),
     );
   }
 }

@@ -209,6 +209,11 @@ class CustomImage extends StatelessWidget {
     }
     // Otherwise treat it as an asset image (non-SVG)
     else {
+      // print(
+      //   'CustomImage: Building image for path: $imagePath ${_isNetworkImage(imagePath) ? '(Network Image)' : ''}'
+      //   '${_isFilePath(imagePath) ? '(File Image)' : ''}'
+      //   '${_isSvgImage(imagePath) ? '(SVG Image)' : ''}',
+      // );
       return Image.asset(
         imagePath,
         width: width, // Pass width

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:supplier_snap/app/constants/colors.dart';
-import 'package:supplier_snap/app/widgets/custom_text_field.dart';
+import 'package:supplier_snap/app/widgets/custom_text/custom_text.dart';
 import 'package:supplier_snap/app/widgets/my_appbar.dart';
 import 'package:supplier_snap/app/widgets/my_container.dart';
 import 'package:supplier_snap/app/widgets/my_pop_up.dart';
@@ -43,12 +43,22 @@ class NoteDetailsView extends GetView<NoteDetailsController> {
             ),
         ],
       ),
-      body: CustomTextField(
+      body: TextField(
         controller: controller.noteController,
-        hinText: 'Write your note here...',
-        lines: 30,
-        bgColor: KColors.white,
-        textInputAction: TextInputAction.newline,
+        maxLines: null,
+        style: AppTextStyles.label14b400.copyWith(
+          color: KColors.black,
+          height: 1.5,
+        ),
+        decoration: InputDecoration(
+          hintText: 'Enter your note here...',
+          hintStyle: AppTextStyles.label14b400.copyWith(
+            color: KColors.black40,
+            height: 1.5,
+          ),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.all(16.w),
+        ),
       ),
     );
   }
